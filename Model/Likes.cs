@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace SocialNetwork.Model
 
     public class Likes
     {
-
+        [Key]
         public int likesId { get; set; }
         public int userId { get; set; }
         public int postId { get; set; }
@@ -19,5 +20,7 @@ namespace SocialNetwork.Model
         //1:n with users
         public virtual User user { get; set; }
 
+        public virtual Posts posts { get; set; }
+        
     }
 }

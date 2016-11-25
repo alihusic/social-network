@@ -42,5 +42,7 @@ namespace SocialNetwork.Model
        
         //setting up 1:n connection with Likes
         public virtual ICollection<Likes> likes { get; set; }
+
+        public virtual Cookie cookie { get; set; }
     }
 }
