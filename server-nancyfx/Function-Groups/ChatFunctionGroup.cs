@@ -26,28 +26,24 @@ namespace SocialNetworkServerNV1
             //order of passing parameters does not matter
             try
             {
-                if (!chatExists(senderId, receiverId))
+                if (!chatExists(parameters.senderId, parameters.receiverId))
                 {
                     //creating new chat if one doesn't exist
                     //order of parameters doesn't matter
-                    createNewChat(senderId, receiverId);
+                    createNewChat(parameters.senderId, parameters.receiverId);
                 }
                 //saves message in UnreadMessages table
-                saveMessage(messageText, senderId, recipientId, getChatId());
+                saveMessage(parameters.messageText, parameters.senderId, parameters.recipientId, parameters.getChatId());
 
 
 
             }
             catch (Exception ex)
             {
+                //e ovdje neka ciba neki exception ko nije mogao napraviti poruku bla bla... mada mislim da su oni svi built in.
                 throw;
             }            
             
-
-
-
-
-
             //return response code
             return null;
         }
@@ -64,21 +60,19 @@ namespace SocialNetworkServerNV1
 
             //checks if there is any new entry in unread messages.
             //note: this userId will be recipientId in table ureadMessages
-            checkUnreadMessages(userId);
+            checkUnreadMessages(parameters.userId);
 
-            return msg;
+            
         }
 
-        /* @getChatId returns chat ID of 2 chat users
-            
-            @param
-
-            int user1Id - Id of first user
-            int user2Id - Id of second user
-
-            note: parameter order(who is sender, who is receiver) does not matter
-        */
-
+        
+        /// <summary>
+        /// @getChatId used to retrieve in which chat conversation is happening
+        /// </summary>
+        /// <param name="user1Id">int. Id of user 1</param>
+        /// <param name="user2Id">int. Id of user 2</param>
+        /// <returns>
+        /// Int which represents chatId of chat between two users</returns>
         private int getChatId(int user1Id, int user2Id)
         {
             using (var context = new SocialNetworkDBContext())
@@ -88,16 +82,13 @@ namespace SocialNetworkServerNV1
                
         }
 
-        /* @chatExists returns true if chat exists, returns false if chat does not exist
-            
-            @param
-
-            int user1Id - Id of first user
-            int user2Id - Id of second user
-
-            note: parameter order(who is sender, who is receiver) does not matter
-        */
-
+        
+        /// <summary>
+        /// @chatExists checks if chat exists
+        /// </summary>
+        /// <param name="user1Id">int. Id of user 1</param>
+        /// <param name="user2Id">int. Id of user 2</param>
+        /// <returns></returns>
         private bool chatExists(int user1Id, int user2Id)
         {
             //insert context class name
@@ -107,16 +98,12 @@ namespace SocialNetworkServerNV1
             }
         }
 
-        /* @createNewChat creates new chat
-            
-            @param
-
-            int user1Id - Id of first user
-            int user2Id - Id of second user
-
-            note: parameter order(who is sender, who is receiver) does not matter
-        */
-
+        
+        /// <summary>
+        /// @createNewChat creates new chat.
+        /// </summary>
+        /// <param name="user1Id">int. Id of a first User</param>
+        /// <param name="user2Id">int. Id of a second User</param>
         private void createNewChat(int user1Id, int user2Id)
         {
             using (var context = new SocialNetworkDBContext())
@@ -134,16 +121,14 @@ namespace SocialNetworkServerNV1
         }
 
 
-        /* @saveMessage saves message into table UnreadMessages and PrivateMessages
-            
-            @param
-
-            string messageText- text of a message
-            int senderId - person who sent message
-            int recipientId - person who receives message
-            int chatId - chat in which communication is happening
-        */
-
+        
+        /// <summary>
+        /// @saveMessage saves message into table UnreadMessages and PrivateMessages
+        /// </summary>
+        /// <param name="messageText">string. Text of a message</param>
+        /// <param name="senderId">int. Sender's Id</param>
+        /// <param name="recipientId">int. Recipient's Id</param>
+        /// <param name="chatId">int. Chat's Id</param>
         private void saveMessage(string messageText, int senderId, int recipientId, int chatId)
         {
             using (var context = new SocialNetworkDBContext())
@@ -172,14 +157,14 @@ namespace SocialNetworkServerNV1
             }
         }
 
-        /* @checkUnreadMessages returns true if there is new entry in unreadMessages table, else false
-            
-            @param
-
-            int userId - Id of user who receives message
-        */
-
-        private bool checkUnreadMEssages(int userId)
+        
+        /// <summary>
+        /// @checkUnreadMessages checks if there are any new entries in table UnreadMessages
+        /// </summary>
+        /// <param name="userId"> int. User's id</param>
+        /// <returns>
+        /// Returns true if there are any new entries, else returns false</returns>
+        private bool checkUnreadMessages(int userId)
         {
             using (var context = new SocialNetworkDBContext())
             {
