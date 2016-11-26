@@ -17,7 +17,8 @@ namespace SocialNetwork.Model
         public int postsId { get; set; }
         public string postContent { get; set; }
         public DateTime postCreationDate { get; set; }
-        public int userId { get; set; }
+        public int creatorId { get; set; }
+        public int targetId { get; set; }
         public int numOfLikes { get; set; }
 
         //creating 1:n connection with user
