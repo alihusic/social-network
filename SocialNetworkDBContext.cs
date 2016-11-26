@@ -21,7 +21,7 @@ namespace SocialNetwork
         public virtual DbSet<Posts> posts { get; set; }
         public virtual DbSet<UnreadMessages> unreadMessages { get; set; }
         public virtual DbSet<Likes> likes { get; set; }
-        public virtual DbSet<Cookie> cookies { get; set; }
+        public virtual DbSet<Token> tokens { get; set; }
 
 
 
