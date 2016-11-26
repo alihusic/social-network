@@ -17,10 +17,10 @@ namespace SocialNetwork.Model
     {
         [Key]
         public int pendingFriendRequestId { get; set; }
-        public int userId { get; set; }
-        public int user2 { get; set; }
+        public int senderId { get; set; }
+        public int receiverId { get; set; }
         public DateTime friendRequestSent { get; set; }
-        public bool firendRequestConfirmed { get; set; }
+        public bool friendRequestConfirmed { get; set; }
 
         
         
