@@ -25,36 +25,36 @@ namespace SocialNetwork
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void openLogin(object sender, RoutedEventArgs e)
         {
             Main.Content = new Login();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void openSignup(object sender, RoutedEventArgs e)
         {
             Main.Content = new Signup();
         }
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void openChat(object sender, RoutedEventArgs e)
         {
             Main.Content = new Chat();
         }
 
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        private void openCheckNewMessages(object sender, RoutedEventArgs e)
         {
             Main.Content = new CheckNewMessages();
         }
 
-        private void Button_Click_4(object sender, RoutedEventArgs e)
+        private void openNewsfeed(object sender, RoutedEventArgs e)
         {
             Main.Content = new Newsfeed();
         }
 
-        private void Button_Click_5(object sender, RoutedEventArgs e)
+        private void openViewPost(object sender, RoutedEventArgs e)
         {
             Main.Content = new ViewPost();
         }
 
-        private void Button_Click_6(object sender, RoutedEventArgs e)
+        private void openCreatePost(object sender, RoutedEventArgs e)
         {
             Main.Content = new CreatePost();
         }

@@ -24,5 +24,10 @@ namespace SocialNetwork
         {
             InitializeComponent();
         }
+
+        private void loadNewsfeed(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

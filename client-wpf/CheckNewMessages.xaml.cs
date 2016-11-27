@@ -24,5 +24,10 @@ namespace SocialNetwork
         {
             InitializeComponent();
         }
+
+        private void loadNewMessages(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

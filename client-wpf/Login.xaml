@@ -11,8 +11,8 @@
     <Grid HorizontalAlignment="Center" Margin="0" Width="145">
         <TextBox x:Name="username" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top" Width="145" Margin="0,95,-25,0" FontStyle="Italic"/>
         <PasswordBox x:Name="passwordBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,145,-25,0" Height="25" Width="145" MaxLength="20"/>
-        <Button x:Name="submit" Content="Log In" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="70,195,0,0"/>
-        <Button x:Name="load" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="0,195,0,0"/>
+        <Button x:Name="loginButton" Content="Log In" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="70,195,0,0" Click="login"/>
+        <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="0,195,0,0" Click="loadLogin"/>
 
 
     </Grid>

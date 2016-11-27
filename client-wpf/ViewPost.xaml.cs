@@ -25,7 +25,17 @@ namespace SocialNetwork
             InitializeComponent();
         }
 
-        private void textBox1_TextChanged(object sender, TextChangedEventArgs e)
+        private void loadPost(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void likePost(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void commentPost(object sender, RoutedEventArgs e)
         {
 
         }

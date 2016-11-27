@@ -10,7 +10,7 @@
 
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <TextBox x:Name="newMessageContent" HorizontalAlignment="Left" Height="108" TextWrapping="Wrap" Text="Content" VerticalAlignment="Top" Width="300" Margin="-150,-108,-150,0"/>
-        <Button x:Name="load" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Width="51" Margin="99,15,-144,-15"/>
+        <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" Width="51" Margin="99,15,-144,-15" Click="loadNewMessages"/>
 
     </Grid>
 </Page>

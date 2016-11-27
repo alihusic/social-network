@@ -10,7 +10,7 @@
 
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <TextBox x:Name="postContent" HorizontalAlignment="Left" Height="80" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="290" Margin="0,35,0,0"/>
-        <Button x:Name="postButton" Content="Post" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="215,130,0,0" RenderTransformOrigin="0.533,0.682" Click="button_Click"/>
+        <Button x:Name="postButton" Content="Post" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="215,130,0,0" RenderTransformOrigin="0.533,0.682" Click="post"/>
 
     </Grid>
 </Page>

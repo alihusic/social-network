@@ -9,8 +9,8 @@
       Title="Newsfeed">
 
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-        <TextBox x:Name="newsfeed" HorizontalAlignment="Left" Height="250" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="300"/>
-        <Button x:Name="load" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="225,278,0,0"/>
+        <TextBox x:Name="newsfeedContent" HorizontalAlignment="Left" Height="250" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="300"/>
+        <Button x:Name="loadNewsfeedButton" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="225,278,0,0" Click="loadNewsfeed"/>
 
     </Grid>
 </Page>

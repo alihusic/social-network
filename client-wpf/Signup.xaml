@@ -24,6 +24,6 @@
         <TextBox x:Name="day" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="40" Margin="60,242,0,0"/>
         <TextBox x:Name="month" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="90" Margin="115,242,0,0"/>
         <TextBox x:Name="year" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="80" Margin="220,242,0,0"/>
-        <Button x:Name="submit" Content="Submit" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="225,278,0,0" Click="submit_Click"/>
+        <Button x:Name="submitRegistrationButton" Content="Submit" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="225,278,0,0" Click="submitRegistration"/>
     </Grid>
 </Page>

@@ -24,5 +24,15 @@ namespace SocialNetwork
         {
             InitializeComponent();
         }
+
+        private void login(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void loadLogin(object sender, RoutedEventArgs e)
+        {
+            //probably unnecessary
+        }
     }
 }

@@ -11,10 +11,10 @@
     <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
         <TextBox x:Name="postId" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="enter postID" VerticalAlignment="Top" Width="120" FontStyle="Italic"/>
         <TextBox x:Name="postContent" HorizontalAlignment="Left" Height="120" TextWrapping="Wrap" Text="post content" VerticalAlignment="Top" Width="300" Margin="0,60,0,0"/>
-        <Button x:Name="load" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="225,0,0,0"/>
-        <Button x:Name="like" Content="Like" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="0,198,0,0"/>
-        <Button x:Name="submitComment" Content="Comment" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="90,198,0,0"/>
-        <TextBox x:Name="commentContent" HorizontalAlignment="Left" Height="35" TextWrapping="Wrap" Text="Comment" VerticalAlignment="Top" Width="300" Margin="0,225,0,0" TextChanged="textBox1_TextChanged"/>
+        <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="225,0,0,0" Click="loadPost"/>
+        <Button x:Name="likeButton" Content="Like" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="0,198,0,0" Click="likePost"/>
+        <Button x:Name="submitComment" Content="Comment" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="90,198,0,0" Click="commentPost"/>
+        <TextBox x:Name="commentContent" HorizontalAlignment="Left" Height="35" TextWrapping="Wrap" Text="Comment" VerticalAlignment="Top" Width="300" Margin="0,225,0,0"/>
        
 
     </Grid>

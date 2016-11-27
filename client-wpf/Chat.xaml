@@ -10,9 +10,9 @@
 
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <TextBox x:Name="chatId" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="enter id" VerticalAlignment="Top" Width="120" FontStyle="Italic"/>
-        <Button x:Name="load" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="225,0,0,0"/>
+        <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="225,0,0,0" Click="loadChat"/>
         <TextBox x:Name="messageContent" HorizontalAlignment="Left" Height="123" TextWrapping="Wrap" Text="Enter message" VerticalAlignment="Top" Width="300" Margin="0,47,0,0" FontStyle="Italic"/>
-        <Button x:Name="send" Content="Send" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="225,183,0,0"/>
+        <Button x:Name="sendButton" Content="Send" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="225,183,0,0" Click="sendMessage"/>
 
     </Grid>
 </Page>

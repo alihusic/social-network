@@ -25,7 +25,7 @@ namespace SocialNetwork
             InitializeComponent();
         }
 
-        private void submit_Click(object sender, RoutedEventArgs e)
+        private void submitRegistration(object sender, RoutedEventArgs e)
         {
 
         }

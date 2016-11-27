@@ -24,5 +24,15 @@ namespace SocialNetwork
         {
             InitializeComponent();
         }
+
+        private void sendMessage(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void loadChat(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

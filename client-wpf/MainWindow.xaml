@@ -8,13 +8,13 @@
         Title="MainWindow" Height="500" Width="500">
     <Grid>
         <StackPanel Orientation="Horizontal" Height="35" VerticalAlignment="Top">
-            <Button Content="Login" MinWidth="50" Margin="10,0,0,0" Click="Button_Click"></Button>
-            <Button Content="Signup" MinWidth="50" Margin="5,0,0,0" Click="Button_Click_1"></Button>
-            <Button Content="Chat" MinWidth="50" Margin="5,0,0,0" Click="Button_Click_2"></Button>
-            <Button Content="CheckNewMessages" MinWidth="50" Margin="5,0,0,0" Click="Button_Click_3"></Button>
-            <Button Content="Newsfeed" MinWidth="50" Margin="5,0,0,0" Click="Button_Click_4"></Button>
-            <Button Content="ViewPost" MinWidth="50" Margin="5,0,0,0" Click="Button_Click_5"></Button>
-            <Button Content="CreatePost" MinWidth="50" Margin="5,0,0,0" Click="Button_Click_6"></Button>
+            <Button Content="Login" MinWidth="50" Margin="10,0,0,0" Click="openLogin"></Button>
+            <Button Content="Signup" MinWidth="50" Margin="5,0,0,0" Click="openSignup"></Button>
+            <Button Content="Chat" MinWidth="50" Margin="5,0,0,0" Click="openChat"></Button>
+            <Button Content="CheckNewMessages" MinWidth="50" Margin="5,0,0,0" Click="openCheckNewMessages"></Button>
+            <Button Content="Newsfeed" MinWidth="50" Margin="5,0,0,0" Click="openNewsfeed"></Button>
+            <Button Content="ViewPost" MinWidth="50" Margin="5,0,0,0" Click="openViewPost"></Button>
+            <Button Content="CreatePost" MinWidth="50" Margin="5,0,0,0" Click="openCreatePost"></Button>
         </StackPanel>
         <Frame x:Name="Main" Margin="0,35,0,0" NavigationUIVisibility="Hidden"/>
     </Grid>
