@@ -102,7 +102,7 @@ namespace SocialNetworkServerNV1
         {
             var token = cookieFactory.generateToken(userId);
             tokenList.Add(token);
-            insertNewCookie(token);
+            insertNewToken(token);
             return token;
         }
 
@@ -194,7 +194,38 @@ namespace SocialNetworkServerNV1
             }
         }
 
-        
+
+        /// <summary>
+        /// @getAllFriendsId is used to find id's of all friends user has
+        /// </summary>
+        /// <param name="userId">int. User's Id</param>
+        /// <returns>
+        /// Returns List<int></returns>
+        public List<int> getAllFriendsId(int userId)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+
+                List<int> friendsList = new List<int>();
+
+                var friends = context.friendRequest;
+
+                foreach (var f in friends)
+                {
+                    if (f.receiverId == userId && f.friendRequestConfirmed == true)
+                    {
+                        friendsList.Add(f.senderId);
+                    }
+                    else if (f.senderId == userId && f.friendRequestConfirmed == true)
+                    {
+                        friendsList.Add(f.receiverId);
+                    }
+                }
+
+                return friendsList;
+            }
+
+        }
 
 
     }
