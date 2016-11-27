@@ -4,22 +4,23 @@ using System.Linq;
 using System.Web;
 using SocialNetwork.Model;
 using System.Security.Cryptography;
+using SocialNetwork;
 
 namespace SocialNetworkServerNV1
 {
     //TODO: RENAME COOKIES TO TOKENS
     /// <summary>
-    /// Interface used to enrich CookieFactory/ies
+    /// Interface used to enrich TokenFactory/ies
     /// </summary>
-    interface ICreateCookies
+    interface ICreateTokens
     {
-        Cookie generateCookie(int userId);
+        Token generateToken(int userId);
     }
 
     /// <summary>
-    /// Class used to generate new cookies for user sessions
+    /// Class used to generate new tokens for user sessions
     /// </summary>
-    public class CookieFactory : ICreateCookies
+    public class TokenFactory : ICreateTokens
     {
         static readonly char[] AvailableCharacters = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -37,7 +38,7 @@ namespace SocialNetworkServerNV1
         /// Method used to randomly generate a cookie string
         /// </summary>
         /// <returns>String containing the generated token</returns>
-        private static string generateCookieString()
+        private static string generateTokenString()
         {
             char[] token = new char[tokenLength];
             byte[] randomData = new byte[tokenLength];
@@ -64,11 +65,11 @@ namespace SocialNetworkServerNV1
         /// <param name="userIdToSet"></param>
         /// <returns>Randomly generated Cookie from the randomly generated cookie string</returns>
 
-        public Cookie generateCookie(int userIdToSet)
+        public Token generateToken(int userIdToSet)
         {
-            return new Cookie
+            return new Token
             {
-                cookieHash = generateCookieString(),
+                tokenHash = generateTokenString(),
                 userId = userIdToSet,
             };
                 
@@ -82,47 +83,119 @@ namespace SocialNetworkServerNV1
     public class FunctionGroup
     {
         /// <summary>
-        /// Static List of Cookie objects containing the currently active cookies
+        /// Static List of Token objects containing the currently active tokens
         /// </summary>
-        static List<Cookie> cookieList = new List<Cookie>();
+        static List<Token> tokenList = new List<Token>();
 
         /// <summary>
-        /// Static instance of a CookieFactory
+        /// Static instance of a TokenFactory
         /// </summary>
-        static CookieFactory cookieFactory = new CookieFactory();
-        
+        static TokenFactory cookieFactory = new TokenFactory();
+
         /// <summary>
-        /// Static method returning a newly generated cookie on a proper authentication request
+        /// Static method returning a newly generated token on a proper authentication request
         /// maybe add an expiry property later
         /// </summary>
         /// <param name="userId">ID of a user in  the database, sent as a parameter</param>
-        /// <returns>Cookie object for response</returns>       
-        static Cookie createNewCookie(int userId)
+        /// <returns>Token object for response</returns>       
+        static Token createNewToken(int userId)
         {
-            var cookie = cookieFactory.generateCookie(userId);
-            cookieList.Add(cookie);
-            insertNewCookie(cookie);
-            return cookie;
+            var token = cookieFactory.generateToken(userId);
+            tokenList.Add(token);
+            insertNewCookie(token);
+            return token;
         }
 
         /// <summary>
-        /// Inserts a new cookie into database
+        /// Method used to check whether the token exists
         /// </summary>
-        /// <param name="cookie">a Cookie generated from the factory</param>
-        private static void insertNewCookie(Cookie cookie)
+        /// <param name="token">Token which is checked</param>
+        /// <returns>Truth value of existance</returns>
+        public bool checkToken(Token token)
+        {
+            return tokenList.Exists(e => e.Equals(token));
+        }
+
+        /// <summary>
+        /// Inserts a new token into database
+        /// </summary>
+        /// <param name="cookie">a Token generated from the factory</param>
+        public static void insertNewToken(Token token)
         {
             using (var context = new SocialNetworkDBContext())
             {
-                var cookieToInsert = new Cookie()
+                var tokenToInsert = new Token()
                 {
-                    userId=cookie.userId,
-                    cookieHash=cookie.cookieHash
+                    userId=token.userId,
+                    tokenHash=token.tokenHash
                 };
 
-                context.cookies.Add(cookieToInsert);
+                context.tokens.Add(tokenToInsert);
                 context.SaveChanges();
             }
         }
+
+        /// <summary>
+        /// Helper method used to check if there is a user with a certain Id
+        /// </summary>
+        /// <param name="userId"> Type int. Users id that is sent to the method. </param>
+        /// <returns>
+        /// Returns boolean. True if user exists, false if doesn't.</returns>
+        public bool userExists(int userId)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                return context.users.Any(u => (u.userId == userId));
+            }
+
+        }
+
+        /// <summary>
+        /// @chatExists checks if chat exists
+        /// </summary>
+        /// <param name="user1Id">int. Id of user 1</param>
+        /// <param name="user2Id">int. Id of user 2</param>
+        /// <returns></returns>
+        public bool chatExists(int user1Id, int user2Id)
+        {
+            //insert context class name
+            using (var context = new SocialNetworkDBContext())
+            {
+                return context.privateChat.Any(n => (n.user1 == user1Id && n.user2 == user2Id) || (n.user1 == user2Id && n.user2 == user1Id));
+            }
+        }
+
+        /// <summary>
+        /// @friendshipExists checks if two users are already friends
+        /// </summary>
+        /// <param name="user1Id"> int. represents id of first user</param>
+        /// <param name="user2Id">int. represents id of second user</param>
+        /// <returns>
+        /// Returns boolean. If true then friendship exists, if false friendship doesn't exist</returns>
+        public bool friendshipExists(int user1Id, int user2Id)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                return context.friendRequest.Any(fr => ((fr.senderId == user1Id && fr.receiverId == user2Id && fr.friendRequestConfirmed == true) || (fr.senderId == user2Id && fr.receiverId == user1Id && fr.friendRequestConfirmed == true)));
+            }
+        }
+
+        /// <summary>
+        /// Method used to check if there exists a friendship request in the database 
+        /// </summary>
+        /// <param name="user1Id">ID of the first user</param>
+        /// <param name="user2Id">ID of the second users</param>
+        /// <returns>Returns the truth value of existance</returns>
+        public bool pendingFriendshipRequestExists(int user1Id, int user2Id)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                return context.friendRequest.Any(fr => ((fr.senderId == user1Id && fr.receiverId == user2Id && fr.friendRequestConfirmed == false) || (fr.senderId == user2Id && fr.receiverId == user1Id && fr.friendRequestConfirmed == false)));
+            }
+        }
+
+        
+
 
     }
 } 
