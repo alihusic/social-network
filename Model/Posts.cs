@@ -24,7 +24,10 @@ namespace SocialNetwork.Model
         //creating 1:n connection with user
         public virtual User user { get; set; }
 
+        //creating 1:n connection with likes
         public virtual ICollection<Likes> likes { get; set; }
 
+        //setting up 1:n relation with comments
+        public virtual ICollection<Comments> comments { get; set; }
     }
 }
