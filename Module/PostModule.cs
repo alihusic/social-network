@@ -1,4 +1,4 @@
-using Nancy;
+﻿using Nancy;
 using Nancy.ModelBinding;
 using SocialNetwork;
 using SocialNetwork.Model;
@@ -12,7 +12,7 @@ namespace SocialNetworkServerNV1
     {
         private FunctionGroup helpers = new FunctionGroup();
 
-        public PostModule():base("/post")
+        public PostModule() : base("/post")
         {
             //Get["/"] = _ => "Hello!";
             Get["/create"] = parameters => Create(parameters);
@@ -57,20 +57,38 @@ namespace SocialNetworkServerNV1
         //method used to handle the action of commenting on a post
         public dynamic Comment(dynamic parameters)
         {
-            //ovo ce se naknadno dodati
 
-            /* TODO:
-             * check user cookie
-             * check if post exists
-             * check if post visible to user
-             * add the comment to the database
-             * return status code
-             */
+            // TODO:
+            //check user cookie
+            //check if post exists
+            //check if post visible to user
+            // add the comment to the database
+            if (postExists(parameters.postId))
+            {
+                //here I am nesting if statements because it is probably easier to handle exceptions. this can be done ofc in one if.
+                if (isPostVisible(parameters.creatorId, parameters.targetId))
+                {
+                    addComment(parameters.userId, parameters.postId, parameters.commentText);
+                }
+                else
+                {
+                    //thorws postNotVisibleException
+                }
+
+            }
+            else
+            {
+                //thorws postDoenstExist exception
+            }
+            
+            //return status code
+
 
 
             return null;
         }
 
+       
         //method used to handle the action of creating a new post
         public dynamic Create(dynamic parameters)
         {
@@ -214,6 +232,22 @@ namespace SocialNetworkServerNV1
                 context.posts.Add(post);
                 context.SaveChanges();
             }
+        }
+    }
+
+    private void addComment(int userId, int postId, string commentText)
+    {
+        using (var context = new SocialNetworkDBContext())
+        {
+            Comments comment = new Comments()
+            {
+                commentText = commentText,
+                postId = postId,
+                userId = userId
+            };
+
+            context.comments.Add(comment);
+            context.SaveChanges();
         }
     }
 
