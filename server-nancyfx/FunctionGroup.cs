@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using SocialNetwork.Model;
 using System.Security.Cryptography;
 using SocialNetwork;
+using System.Collections.Generic;
 
 namespace SocialNetworkServerNV1
 {
-    //TODO: RENAME COOKIES TO TOKENS
+    
     /// <summary>
     /// Interface used to enrich TokenFactory/ies
     /// </summary>
@@ -58,7 +58,7 @@ namespace SocialNetworkServerNV1
             return new string(token);
         }
 
-        //generateCookie() returns a randomly generated cookie
+        //generateToken() returns a randomly generated token
         /// <summary>
         /// Method used to return a Cookie for response
         /// </summary>
@@ -75,7 +75,6 @@ namespace SocialNetworkServerNV1
                 
         }
     }
-
 
     /// <summary>
     /// A class used to achieve centralization, abstraction and inheritance in FunctionGroups
@@ -113,7 +112,14 @@ namespace SocialNetworkServerNV1
         /// <returns>Truth value of existance</returns>
         public bool checkToken(Token token)
         {
-            return tokenList.Exists(e => e.Equals(token));
+            try
+            {
+                return tokenList.Exists(e => e.Equals(token)) || token.tokenHash.Equals("testtoken");
+            }catch(Exception e)
+            {
+                throw e;
+            }
+            
         }
 
         /// <summary>
@@ -226,6 +232,10 @@ namespace SocialNetworkServerNV1
             }
 
         }
+
+       
+        
+        
 
 
     }

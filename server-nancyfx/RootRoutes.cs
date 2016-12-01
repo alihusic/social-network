@@ -1,6 +1,8 @@
 using Nancy;
 using Nancy.ModelBinding;
+using SocialNetwork;
 using SocialNetwork.Model;
+using System;
 
 namespace SocialNetworkServerNV1
 {
@@ -24,7 +26,82 @@ namespace SocialNetworkServerNV1
             
             //easter egg
             Get["/"] = _ => "hail, crawler";
+            Get["/populate"] = _ =>
+            {
+                try
+                {
+                    var context = new SocialNetworkDBContext();
 
+                    var user = new User()
+                    {
+                        name = "ermin",
+                        lastName = "sabotic",
+                        username = "dsada",
+                        password = "dsada",
+                        city = "Sarajevo",
+                        country = "bosna",
+                        dateOfBirth = DateTime.Now,
+                        gender = "Male",
+                        region = "balkan"
+                    };
+
+                    context.users.Add(user);
+                    context.SaveChanges();
+
+                    var user1 = new User()
+                    {
+                        name = "Nedim",
+                        lastName = "Sladic",
+                        username = "dsada",
+                        password = "dsada",
+                        city = "Sarajevo",
+                        country = "bosna",
+                        dateOfBirth = DateTime.Now,
+                        gender = "Male",
+                        region = "balkan"
+                    };
+
+                    context.users.Add(user1);
+                    context.SaveChanges();
+
+                    var user2 = new User()
+                    {
+                        name = "Ali",
+                        lastName = "Husic",
+                        username = "dsada",
+                        password = "dsada",
+                        city = "Sarajevo",
+                        country = "bosna",
+                        dateOfBirth = DateTime.Now,
+                        gender = "Male",
+                        region = "balkan"
+                    };
+                    context.users.Add(user2);
+                    context.SaveChanges();
+
+                    var user3 = new User()
+                    {
+                        name = "Tarik",
+                        lastName = "Pasic",
+                        username = "dsada",
+                        password = "dsada",
+                        city = "Sarajevo",
+                        country = "bosna",
+                        dateOfBirth = DateTime.Now,
+                        gender = "Male",
+                        region = "balkan"
+                    };
+
+                    context.users.Add(user3);
+                    context.SaveChanges();
+
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+                return "OK";
+            };
 
             //Newsfeed handling routes
             

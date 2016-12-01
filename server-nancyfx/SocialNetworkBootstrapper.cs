@@ -13,7 +13,7 @@ namespace SocialNetworkServerNV1
         // dynamic function customErrorHandle used to handle custom exceptions and behavior
         private dynamic customErrorHandle(dynamic context, dynamic exception)
         {
-            return null;
+            return exception.ToString();
         }
         /**
          ApplicationStartup overriden to introduce custom-made error handling
