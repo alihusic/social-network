@@ -14,7 +14,7 @@ namespace SocialNetworkServerNV1
 
         public PostModule():base("/post")
         {
-            //Get["/"] = _ => "Hello!";
+            //change some of these to post requests
             Get["/create"] = parameters => Create(parameters);
             Get["/like"] = parameters => Like(parameters);
             Get["/comment"] = parameters => Comment(parameters);
@@ -63,38 +63,40 @@ namespace SocialNetworkServerNV1
         /// </summary>
         /// <param name="parameters">Request parameters</param>
         /// <returns>Response</returns>
-
         public dynamic Comment(dynamic parameters)
         {
+            //map request to object
+            var commentQuery = this.Bind<CommentQuery>();
 
-            // TODO:
             //check user cookie
-            //check if post exists
-            //check if post visible to user
-            // add the comment to the database
-            if (postExists(parameters.postId))
+            if (!helpers.checkToken(commentQuery.userToken))
+            {
+                return false;
+            }
+
+            //checking the existance of the post by ID
+            if (postExists(commentQuery.postId))
             {
                 //here I am nesting if statements because it is probably easier to handle exceptions. this can be done ofc in one if.
-                if (isPostVisible(parameters.creatorId, parameters.targetId))
+                if (isPostVisible(commentQuery.creatorId, commentQuery.targetId))
                 {
-                    addComment(parameters.userId, parameters.postId, parameters.commentText);
+                    addComment(commentQuery.userId, commentQuery.postId, commentQuery.commentText);
                 }
                 else
                 {
+                    return false;
                     //thorws postNotVisibleException
                 }
 
             }
             else
             {
+                return false;
                 //thorws postDoenstExist exception
             }
 
             //return status code
-
-
-
-            return null;
+            return Negotiate.WithStatusCode(200);
         }
 
         /// <summary>
@@ -104,12 +106,6 @@ namespace SocialNetworkServerNV1
         /// <returns>Response</returns>
         public dynamic Create(dynamic parameters)
         {
-            /* TODO:
-             * check user cookie
-             * check sender ID - za ova dva polje ako ces inheritat ono, stavi u klasu neka inherita i da li posotji user funkciju(userExists iz FriendsFunctionGroup)
-             * check receiver ID
-            */
-
             //bind request to object
             var createQuery = this.Bind<CreateQuery>();
 
@@ -134,9 +130,7 @@ namespace SocialNetworkServerNV1
                 return false;
             }
 
-
-            /* return status code
-            */
+            //return status code
             return Negotiate.WithStatusCode(200);
         }
 
@@ -172,7 +166,7 @@ namespace SocialNetworkServerNV1
         /// <param name="postCreationDate">DateTime. time when post was created</param>
         /// <returns>
         /// Object of type Posts</returns>
-        private Posts getPost(DateTime postCreationDate)
+        public Posts getPost(DateTime postCreationDate)
         {
             using (var context = new SocialNetworkDBContext())
             {
@@ -186,7 +180,7 @@ namespace SocialNetworkServerNV1
         /// <param name="postId">int. User's Id </param>
         /// <returns>
         /// Returns true if post exists, otherwise returns false</returns>
-        private bool postExists(int postId)
+        public bool postExists(int postId)
         {
             using (var context = new SocialNetworkDBContext())
             {
@@ -200,7 +194,7 @@ namespace SocialNetworkServerNV1
         /// <param name="userID">int. User's Id</param>
         /// <returns>
         /// Returns true if user is in friend list, else returns false</returns>
-        private bool isPostVisible(int creatorId, int targetId)
+        public bool isPostVisible(int creatorId, int targetId)
         {
             //ovdje bi mu trebao baciti inheritance. treba ubaciti u Function group metodu iz FriendsFunctionGroup-a getAllFriendsId. Ona treba vratiti listu prijatelja jednog usera.
             List<int> friends = helpers.getAllFriendsId(targetId);
@@ -215,7 +209,7 @@ namespace SocialNetworkServerNV1
         /// <param name="postId">int. Post Id</param>
         /// <returns>
         /// Returns true if user liked, else returns false</returns>
-        private bool isLiked(int userId, int postId)
+        public bool isLiked(int userId, int postId)
         {
             using (var context = new SocialNetworkDBContext())
             {
@@ -228,7 +222,7 @@ namespace SocialNetworkServerNV1
         /// </summary>
         /// <param name="userId">int. User's Id</param>
         /// <param name="postId">int. Post Id</param>
-        private void addLike(int userId, int postId)
+        public void addLike(int userId, int postId)
         {
             using (var context = new SocialNetworkDBContext())
             {
@@ -256,7 +250,7 @@ namespace SocialNetworkServerNV1
         /// <param name="userId">User ID</param>
         /// <param name="postId">Post ID</param>
         /// <param name="commentText">Textual content of the comment</param>
-        private void addComment(int userId, int postId, string commentText)
+        public void addComment(int userId, int postId, string commentText)
         {
             using (var context = new SocialNetworkDBContext())
             {
@@ -298,6 +292,16 @@ namespace SocialNetworkServerNV1
     }
 
     //todo: improve Queries, put them in one file, make them inherit from an ancestor class
+
+    class CommentQuery
+    {
+        public int userId { get; set; }
+        public int postId { get; set; }
+        public int creatorId { get; set; }
+        public int targetId { get; set; }
+        public string commentText { get; set; }
+        public Token userToken { get; set; }
+    }
 
     class CreateQuery
     {

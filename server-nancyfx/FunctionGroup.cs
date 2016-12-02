@@ -97,7 +97,7 @@ namespace SocialNetworkServerNV1
         /// </summary>
         /// <param name="userId">ID of a user in  the database, sent as a parameter</param>
         /// <returns>Token object for response</returns>       
-        static Token createNewToken(int userId)
+        public static Token createNewToken(int userId)
         {
             var token = cookieFactory.generateToken(userId);
             tokenList.Add(token);
@@ -120,6 +120,23 @@ namespace SocialNetworkServerNV1
                 throw e;
             }
             
+        }
+
+        /// <summary>
+        /// Method used to check whether a token with a certain user ID exists
+        /// </summary>
+        /// <param name="userId">User ID to check with</param>
+        /// <returns>Truth value of existance</returns>
+        public bool checkTokenByUserId(int userId)
+        {
+            try
+            {
+                return tokenList.Exists(e => e.userId==userId);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         /// <summary>

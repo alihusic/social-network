@@ -36,7 +36,7 @@ namespace SocialNetworkServerNV1
                     {
                         name = "ermin",
                         lastName = "sabotic",
-                        username = "dsada",
+                        username = "ermin1",
                         password = "dsada",
                         city = "Sarajevo",
                         country = "bosna",
@@ -52,7 +52,7 @@ namespace SocialNetworkServerNV1
                     {
                         name = "Nedim",
                         lastName = "Sladic",
-                        username = "dsada",
+                        username = "nedim1",
                         password = "dsada",
                         city = "Sarajevo",
                         country = "bosna",
@@ -68,7 +68,7 @@ namespace SocialNetworkServerNV1
                     {
                         name = "Ali",
                         lastName = "Husic",
-                        username = "dsada",
+                        username = "ali1",
                         password = "dsada",
                         city = "Sarajevo",
                         country = "bosna",
@@ -83,7 +83,7 @@ namespace SocialNetworkServerNV1
                     {
                         name = "Tarik",
                         lastName = "Pasic",
-                        username = "dsada",
+                        username = "tarik1",
                         password = "dsada",
                         city = "Sarajevo",
                         country = "bosna",
