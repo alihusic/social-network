@@ -639,5 +639,22 @@ namespace SocialNetworkServerNV1
             }
         }
 
+
+        /// <summary>
+        /// getRecentPosts is used to retrieve recent posts that user will see on newsfeed
+        /// </summary>
+        /// <param name="interval">int. Interval of posts</param>
+        /// <param name="userId">int. User's Id</param>
+        /// <returns></returns>
+
+        public List<Posts> getRecentPosts(int interval, int userId)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                var friends = helpers.getAllFriendsId(userId);
+
+                return context.posts.Where(p => friends.Contains(p.creatorId) && friends.Contains(p.targetId)).OrderByDescending(p => p.postCreationDate).Skip(interval).Take(10).ToList();
+            }
+        }
     }
 } 
