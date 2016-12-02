@@ -42,7 +42,7 @@ namespace SocialNetworkServerNV1
             //check if friendship exists - order of paramaters doesn't matter
             if (!helpers.friendshipExists(addQuery.senderId, addQuery.receiverId))
             {
-                addNewPendingFriendshipRequest(addQuery.senderId, addQuery.receiverId);
+                helpers.addNewPendingFriendshipRequest(addQuery.senderId, addQuery.receiverId);
             }
             else
             {
@@ -69,7 +69,7 @@ namespace SocialNetworkServerNV1
             if (helpers.pendingFriendshipRequestExists(confirmQuery.senderId, confirmQuery.receiverId))
             {
                 // update database - ova ce ako Bog da raditi. Nemam vremena sad za testiranje detaljno, uglavnom treba sto prije testirati.
-                confirmFriendshipRequest(confirmQuery.senderId, confirmQuery.receiverId);
+                helpers.confirmFriendshipRequest(confirmQuery.senderId, confirmQuery.receiverId);
             }
             else
             {
@@ -97,7 +97,7 @@ namespace SocialNetworkServerNV1
             if (helpers.friendshipExists(deleteQuery.senderId, deleteQuery.receiverId))
             {
                 //deletes friendship if 2 users are friends
-                deleteFriendship(deleteQuery.senderId, deleteQuery.receiverId);
+                helpers.deleteFriendship(deleteQuery.senderId, deleteQuery.receiverId);
             }
             else
             {
@@ -123,7 +123,7 @@ namespace SocialNetworkServerNV1
             }
 
             //e jebes ga, ovo bi trebalo radit
-            List<User> friends = getAllFriends(getAllQuery.userId);
+            List<User> friends = helpers.getAllFriends(getAllQuery.userId);
 
             /* bind the result to a model
             * return model&status code
@@ -140,86 +140,6 @@ namespace SocialNetworkServerNV1
          */
 
 
-        /// <summary>
-        /// @confirmFriendRequest confirms friend request between two users
-        /// </summary>
-        /// <param name="senderId">int. id of first user</param>
-        /// <param name="receiverId">int. ide of second user</param>
-        protected void confirmFriendshipRequest(int senderId, int receiverId)
-        {
-            using (var context = new SocialNetworkDBContext())
-            {
-                var friendRequest = new PendingFriendRequests()
-                {
-                    senderId = senderId,
-                    receiverId = receiverId,
-                    friendRequestConfirmed = true
-                };
-
-                context.friendRequest.Attach(friendRequest);
-                context.Entry(friendRequest).Property(fr => fr.friendRequestConfirmed).IsModified = true;
-                context.SaveChanges();
-            }
-        }
-
-        /// <summary>
-        /// @addNewFriendship creates new pending friendship request
-        /// </summary>
-        /// <param name="senderId"> int. Sender's Id</param>
-        /// <param name="receiverId">int. Receiver's Id</param>
-        protected void addNewPendingFriendshipRequest(int senderId, int receiverId)
-        {
-            using (var context = new SocialNetworkDBContext())
-            {
-                var newFriendship = new PendingFriendRequests()
-                {
-                    senderId = senderId,
-                    receiverId = receiverId,
-                    friendRequestSent = DateTime.Now,
-                    friendRequestConfirmed = false
-                };
-
-                context.friendRequest.Add(newFriendship);
-                context.SaveChanges();
-            }
-        }
-
-        /// <summary>
-        /// @deleteFriendship removes friendship of two users :(
-        /// </summary>
-        /// <param name="senderId">int. Sender's Id</param>
-        /// <param name="receiverId">int. Receiver's Id</param>
-        protected void deleteFriendship(int senderId, int receiverId)
-        {
-            using (var context = new SocialNetworkDBContext())
-            {
-                var friendship = context.friendRequest.Where(fr => ((fr.senderId == senderId) && (fr.receiverId == receiverId))).First();
-                context.friendRequest.Remove(friendship);
-            }
-        }
-
-        /// <summary>
-        /// @getAllUsers Used to find all friends of a user
-        /// </summary>
-        /// <param name="userId"> int. User's Id</param>
-        /// <returns>
-        /// Returns List<User></returns>
-        protected List<User> getAllFriends(int userId)
-        {
-            List<int> friendsId = helpers.getAllFriendsId(userId);
-            using (var context = new SocialNetworkDBContext())
-            {
-                List<User> userFriends = new List<User>();
-
-                foreach (var i in friendsId)
-                {
-                    userFriends.Add((User)context.users.Where(u => u.userId == i));
-                }
-
-                return userFriends;
-
-            }
-        }
 
     }
 

@@ -12,7 +12,7 @@
         <PasswordBox x:Name="passwordBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,145,-25,0" Height="25" Width="145" MaxLength="20"/>
         <Button x:Name="loginButton" Content="Log In" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="70,195,0,0" Click="login"/>
         <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="0,195,0,0" Click="loadLogin"/>
-        <TextBlock x:Name="statusLabel" HorizontalAlignment="Left" Height="291" Margin="-77,231,-76,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="298"/>
+        <TextBox x:Name="statusLabel" HorizontalAlignment="Left" Height="288" Margin="-57,247,-47,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="249"/>
 
 
     </Grid>

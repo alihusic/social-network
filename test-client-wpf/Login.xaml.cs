@@ -50,6 +50,8 @@ namespace SocialNetwork
 
             string urlPath = "http://localhost:51980/user/authenticate";
             var request = (HttpWebRequest)WebRequest.Create(urlPath);
+                request.Accept = "application/json";
+                request.ContentType = "application/json";
             string requestBody = JsonConvert.SerializeObject(authenticateQuery);
 
             var data = Encoding.ASCII.GetBytes(requestBody);

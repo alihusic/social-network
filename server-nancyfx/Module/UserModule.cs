@@ -2,6 +2,7 @@ using Nancy;
 using Nancy.ModelBinding;
 using SocialNetwork;
 using SocialNetwork.Model;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SocialNetworkServerNV1
@@ -27,20 +28,20 @@ namespace SocialNetworkServerNV1
 
             //map request to object
             var authenticateQuery = this.Bind<AuthenticateQuery>();
-
-            //query user by username
-            var user = getUser(authenticateQuery.username);
             
+            //query user by username
+            var user = helpers.getUser(authenticateQuery.username);
+
             //check if user exists
-            if (user == null) return false;
+            if (user == null) return Negotiate.WithStatusCode(404);
 
             //if (!helpers.userExists(authenticateQuery.username)) return false;
 
             //check password
-            if (authenticateQuery.password != user.password) return false;
+            if (authenticateQuery.password != user.password) throw new System.Exception("Invalid password");
 
             //if token with userid already found return error
-            if (helpers.checkTokenByUserId(user.userId)) return false;
+            if (helpers.checkTokenByUserId(user.userId)) throw new System.Exception("Already logged in");
 
             //delete all tokens of this user from the database(if any - this is to ensure)
             //TODO
@@ -51,18 +52,6 @@ namespace SocialNetworkServerNV1
             return Negotiate.WithModel(userToken);
         }
 
-        /// <summary>
-        /// Method used to return user object by username
-        /// </summary>
-        /// <param name="username">Username</param>
-        /// <returns>Corresponding user object</returns>
-        public User getUser(string username)
-        {
-            using (var context = new SocialNetworkDBContext())
-            {
-                return (User)context.users.Where(p => p.username == username);
-            }
-        }
 
         /// <summary>
         /// Method used to handle user registration/signup
