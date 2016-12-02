@@ -29,6 +29,7 @@ namespace SocialNetworkServerNV1
             'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'
           };
+
         /// <summary>
         /// Static int denoting the length of the resulting token
         /// </summary>
@@ -138,8 +139,6 @@ namespace SocialNetworkServerNV1
             }
         }
 
-
-
         /// <summary>
         /// Inserts a new token into database
         /// </summary>
@@ -181,7 +180,6 @@ namespace SocialNetworkServerNV1
             }
         }
 
-
         /// <summary>
         /// Method used to return user object by username
         /// </summary>
@@ -199,7 +197,6 @@ namespace SocialNetworkServerNV1
             return user;
         }
 
-
         /// <summary>
         /// Method used to return user object by user id
         /// </summary>
@@ -215,7 +212,6 @@ namespace SocialNetworkServerNV1
                 return context.users.Find(userId);
             }
         }
-
 
         /// <summary>
         /// Helper method used to check if there is a user with a certain Id
@@ -276,7 +272,6 @@ namespace SocialNetworkServerNV1
             }
         }
 
-
         /// <summary>
         /// @getAllFriendsId is used to find id's of all friends user has
         /// </summary>
@@ -308,8 +303,6 @@ namespace SocialNetworkServerNV1
             }
 
         }
-
-
 
         /// <summary>
         /// @confirmFriendRequest confirms friend request between two users
@@ -391,7 +384,6 @@ namespace SocialNetworkServerNV1
 
             }
         }
-
 
         /// <summary>
         /// @getChatId used to retrieve in which chat conversation is happening
@@ -646,7 +638,6 @@ namespace SocialNetworkServerNV1
                 context.SaveChanges();
             }
         }
-
 
     }
 } 
