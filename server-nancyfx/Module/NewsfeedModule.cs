@@ -21,6 +21,7 @@ namespace SocialNetworkServerNV1
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns>List of posts</returns>
+        
         public dynamic Load(dynamic parameters)
         {
             //todo:
@@ -50,6 +51,7 @@ namespace SocialNetworkServerNV1
         {
             using (var context = new SocialNetworkDBContext())
             {
+                var friends = helpers.getAllFriends(userId);
                 /* Treba:
                  * note: ovo sam ja bezveze blebetao, zbog sebe samo. neka ga zasad ako mi zatreba ko podsjetnik (Ermin)
                  * ako je userId ili creatorId ili targetId;  
@@ -61,7 +63,7 @@ namespace SocialNetworkServerNV1
                  * svaki sljedeci put ce se vracati na client i updateovat.
                  * takodjer neka se sa klijenta salje i interval. neka je default 10 i neka se incrementa svaki put kada se salje zahtjev.
                 */
-                return context.posts.OrderByDescending(p => p.postCreationDate).Skip(interval).Take(interval - (interval - 10)).ToList();
+                return context.posts.Where(p => friends.Contains(p.targetId)).OrderByDescending(p => p.postCreationDate).Skip(interval).Take(interval - (interval - 10)).ToList();
             }
         }
     }
