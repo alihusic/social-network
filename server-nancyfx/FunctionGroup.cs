@@ -651,7 +651,7 @@ namespace SocialNetworkServerNV1
         {
             using (var context = new SocialNetworkDBContext())
             {
-                var friends = helpers.getAllFriendsId(userId);
+                var friends = getAllFriendsId(userId);
 
                 return context.posts.Where(p => friends.Contains(p.creatorId) && friends.Contains(p.targetId)).OrderByDescending(p => p.postCreationDate).Skip(interval).Take(10).ToList();
             }
