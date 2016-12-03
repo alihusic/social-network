@@ -661,5 +661,18 @@ namespace SocialNetworkServerNV1
                 return context.posts.Where(p => friends.Contains(p.creatorId) && friends.Contains(p.targetId)).OrderByDescending(p => p.postCreationDate).Skip(interval).Take(10).ToList();
             }
         }
+
+
+        /// <summary>
+        /// deleteAllTokens deletes all entries in table Token.
+        /// </summary>
+
+        public void deleteAllTokens()
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                context.Database.ExecuteSqlCommand("TRUNCATE TABLE [Token]");
+            }
+        } 
     }
 } 
