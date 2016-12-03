@@ -8,18 +8,30 @@ using System.Linq;
 
 namespace SocialNetworkServerNV1
 {
+    /// <summary>
+    /// Class inheriting NancyModule class.
+    /// Used to handle Chat-related requests.
+    /// </summary>
     public class ChatModule : NancyModule
     {
         private FunctionGroup helpers=new FunctionGroup();
 
+        /// <summary>
+        /// Constructor with route mapping
+        /// </summary>
         public ChatModule():base("/chat")
         {
             Get["/"] = _ => "Hello, this is chat";
             Post["/send_message"] = parameters => SendMessage(parameters);
-            Get["/new_messages"] = parameters => CheckNewMessages(parameters);
+            Post["/new_messages"] = parameters => CheckNewMessages(parameters);
         }
 
-        //method used for sending a message
+        
+        /// <summary>
+        /// Method used for sending a message
+        /// </summary>
+        /// <param name="parameters">Request parameters</param>
+        /// <returns>Successfulnes of operation</returns>
         public dynamic SendMessage(dynamic parameters)
         {
             
@@ -30,7 +42,8 @@ namespace SocialNetworkServerNV1
             //check user cookie
             if (!helpers.checkToken(sendQuery.userToken))
             {
-                return false;
+                throw new Exception("Your token is: " + sendQuery.userToken.tokenHash);
+                //throw new Exception("You must log in");
             }
 
 
@@ -39,9 +52,9 @@ namespace SocialNetworkServerNV1
             //check receiver ID
             try
             {
-                if (!helpers.userExists(sendQuery.senderId) || !helpers.userExists(sendQuery.receiverId))
+                if (!helpers.userExists(sendQuery.userToken.userId) || !helpers.userExists(sendQuery.receiverId))
                 {
-                    return false;
+                    throw new Exception("Invalid receiver ID"); ;
                 }
             }catch(Exception e)
             {
@@ -56,14 +69,14 @@ namespace SocialNetworkServerNV1
             //order of passing parameters does not matter
             try
             {
-                if (!helpers.chatExists(sendQuery.senderId, sendQuery.receiverId))
+                if (!helpers.chatExists(sendQuery.userToken.userId, sendQuery.receiverId))
                 {
                     //creating new chat if one doesn't exist
                     //order of parameters doesn't matter
-                    helpers.createNewChat(sendQuery.senderId, sendQuery.receiverId);
+                    helpers.createNewChat(sendQuery.userToken.userId, sendQuery.receiverId);
                 }
                 //saves message in UnreadMessages table
-                helpers.saveMessage(sendQuery.messageText, sendQuery.senderId, sendQuery.receiverId, helpers.getChatId(sendQuery.senderId, sendQuery.receiverId));
+                helpers.saveMessage(sendQuery.messageText, sendQuery.userToken.userId, sendQuery.receiverId, helpers.getChatId(sendQuery.userToken.userId, sendQuery.receiverId));
             }
             catch (Exception ex)
             {
@@ -75,33 +88,49 @@ namespace SocialNetworkServerNV1
 
         }
 
-        //method used for checking any new received messages
+        
+        /// <summary>
+        /// Method used for checking new received messages
+        /// </summary>
+        /// <param name="parameters">Request parameters</param>
+        /// <returns>Response with messages</returns>
         public dynamic CheckNewMessages(dynamic parameters)
         {
             //bind request to model
+            var checkNewMessagesQuery = this.Bind<CheckNewMessagesQuery>();
+
             //check user cookie
-            if (!helpers.checkToken(parameters.getToken())) return false;
+            if (!helpers.checkToken(checkNewMessagesQuery.userToken)) throw new Exception("You must log in");
 
             //extract from database
-            if (!helpers.checkUnreadMessages(parameters.userId)) return false;
-            List<UnreadMessages> unreadMessages = helpers.getAllUnreadMessages(parameters.userId);
+            if (!helpers.checkUnreadMessages(checkNewMessagesQuery.userToken.userId)) throw new Exception("No new messages");
+            List<UnreadMessages> unreadMessages = helpers.getAllUnreadMessages(checkNewMessagesQuery.userToken.userId);
 
             //return a structured model
             return unreadMessages;
             //checks if there is any new entry in unread messages.
             //note: this userId will be recipientId in table ureadMessages
 
-
-
         }
 
     }
 
+    /// <summary>
+    /// Class used to encapsulate required fields in a send message query
+    /// </summary>
     public class SendQuery
     {
         public Token userToken { get; set; }
-        public int senderId { get; set; }
         public int receiverId { get; set; }
         public string messageText { get; set; }
     }
+
+    /// <summary>
+    /// Class used to encapsulate required fields in a check new messages query
+    /// </summary>
+    public class CheckNewMessagesQuery
+    {
+        public Token userToken { get; set; }
+    }
+
 }

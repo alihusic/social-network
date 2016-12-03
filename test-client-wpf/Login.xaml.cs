@@ -22,6 +22,12 @@ namespace SocialNetwork
     class ControlGroup
     {
         public static Token userToken { get; set; }
+        public static HttpWebRequest formalizeRequest(HttpWebRequest request)
+        {
+            request.Accept = "application/json";
+            request.ContentType = "application/json";
+            return null;
+        }
     }
 
     /// <summary>
@@ -40,39 +46,43 @@ namespace SocialNetwork
             string password = this.passwordBox.Password;
             try
             {
+                var authenticateQuery = new AuthenticateQuery
+                {
+                    username = username,
+                    password = password
+                };
 
-            
-            var authenticateQuery = new AuthenticateQuery
-            {
-                username = username,
-                password = password
-            };
+                string urlPath = "http://localhost:51980/user/authenticate";
+                var request = (HttpWebRequest)WebRequest.Create(urlPath);
+                    request.Accept = "application/json";
+                    request.ContentType = "application/json";
+                string requestBody = JsonConvert.SerializeObject(authenticateQuery);
 
-            string urlPath = "http://localhost:51980/user/authenticate";
-            var request = (HttpWebRequest)WebRequest.Create(urlPath);
-                request.Accept = "application/json";
-                request.ContentType = "application/json";
-            string requestBody = JsonConvert.SerializeObject(authenticateQuery);
+                var data = Encoding.ASCII.GetBytes(requestBody);
 
-            var data = Encoding.ASCII.GetBytes(requestBody);
+                request.Method = "POST";
+                request.ContentLength = data.Length;
 
-            request.Method = "POST";
-            request.ContentLength = data.Length;
+                using (var stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, data.Length);
+                }
 
-            using (var stream = request.GetRequestStream())
-            {
-                stream.Write(data, 0, data.Length);
-            }
+                var response = (HttpWebResponse)request.GetResponse();
 
-            var response = (HttpWebResponse)request.GetResponse();
+                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                response.Close();
+                statusLabel.Text = responseString;
 
-            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-            response.Close();
-            statusLabel.Text = responseString;
-                return;
-
-            var userToken = JsonConvert.DeserializeObject<Token>(responseString);
-            statusLabel.Text = userToken.tokenHash + "\n" + userToken.userId;
+                var tempToken = JsonConvert.DeserializeObject<Token>(responseString);
+                if (tempToken.tokenHash!=null && tempToken.tokenHash.Length == 40)
+                {
+                    ControlGroup.userToken = tempToken;
+                    statusLabel.Text += "Token successfully added";
+                }
+                
+                
+                //statusLabel.Text = ControlGroup.userToken.tokenHash + "\n" + ControlGroup.userToken.userId;
             }catch(Exception ex)
             {
                 statusLabel.Text = ex.Message;

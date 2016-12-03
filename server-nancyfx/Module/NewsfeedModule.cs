@@ -22,8 +22,7 @@ namespace SocialNetworkServerNV1
         /// Method used to handle newsfeed load request
         /// </summary>
         /// <param name="parameters"></param>
-        /// <returns>List of posts</returns>
-        
+        /// <returns>List of posts</returns>    
         public dynamic Load(dynamic parameters)
         {
             //map request to objects

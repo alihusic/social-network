@@ -1,6 +1,7 @@
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
+using System;
 
 namespace SocialNetworkServerNV1
 {
@@ -13,7 +14,7 @@ namespace SocialNetworkServerNV1
         // dynamic function customErrorHandle used to handle custom exceptions and behavior
         private dynamic customErrorHandle(dynamic context, dynamic exception)
         {
-            return exception.ToString();
+            return ((Exception)exception).Message;
         }
         /**
          ApplicationStartup overriden to introduce custom-made error handling

@@ -114,7 +114,7 @@ namespace SocialNetworkServerNV1
         {
             try
             {
-                return tokenList.Exists(e => e.Equals(token)) || token.tokenHash.Equals("testtoken");
+                return tokenList.Exists(e => (e.tokenHash.Equals(token.tokenHash) && e.userId==token.userId)) || token.tokenHash.Equals("testtoken");
             }catch(Exception e)
             {
                 throw e;
@@ -501,7 +501,12 @@ namespace SocialNetworkServerNV1
 
                 foreach (var messageId in unreadMessagesIdList)
                 {
-                    unreadMessages.Add((UnreadMessages)context.unreadMessages.Where(u => u.unreadMessageId == messageId));
+                    //unreadMessages.Add((UnreadMessages)context.unreadMessages.Where(u => u.unreadMessageId == messageId));
+                    //extract object by ID
+                    unreadMessages.Add(context.unreadMessages.Find(messageId));
+                    //remove object from database by ID
+                    context.unreadMessages.Remove(context.unreadMessages.Find(messageId));
+                    context.SaveChanges();
                 }
 
                 return unreadMessages;
