@@ -115,22 +115,6 @@ namespace SocialNetworkServerNV1
 
     }
 
-    /// <summary>
-    /// Class used to encapsulate required fields in a send message query
-    /// </summary>
-    public class SendQuery
-    {
-        public Token userToken { get; set; }
-        public int receiverId { get; set; }
-        public string messageText { get; set; }
-    }
-
-    /// <summary>
-    /// Class used to encapsulate required fields in a check new messages query
-    /// </summary>
-    public class CheckNewMessagesQuery
-    {
-        public Token userToken { get; set; }
-    }
+    
 
 }

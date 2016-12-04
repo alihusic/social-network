@@ -75,6 +75,7 @@ namespace SocialNetworkServerNV1
                 }
                 else
                 {
+
                     //typeMissmatchException
                 }
             }
@@ -83,7 +84,8 @@ namespace SocialNetworkServerNV1
                 //usernameTakenException
             }
             // return a status code
-            
+           
+
             return null;
         }
 
@@ -140,22 +142,5 @@ namespace SocialNetworkServerNV1
 
     }
     
-    public class AuthenticateQuery
-    {
-        public string username { get; set; }
-        public string password { get; set; }
-    }
-
-    public class RegisterQuery
-    {
-        public string name { get; set; }
-        public string lastName { get; set; }
-        public string username { get; set; }
-        public string password { get; set; }
-        public string country { get; set; }
-        public string city { get; set; }
-        public string region { get; set; }
-        public string gender { get; set; }
-        public DateTime dateOfBirth { get; set; }
-    }
+    
 }

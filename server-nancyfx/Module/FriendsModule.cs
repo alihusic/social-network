@@ -143,30 +143,4 @@ namespace SocialNetworkServerNV1
 
     }
 
-    class GetAllQuery
-    {
-        public int userId { get; set; }
-        public Token userToken { get; set; }
-    }
-
-    class DeleteQuery
-    {
-        public int senderId { get; set; }
-        public int receiverId { get; set; }
-        public Token userToken { get; set; }
-    }
-
-    class ConfirmQuery
-    {
-        public int senderId { get; set; }
-        public int receiverId { get; set; }
-        public Token userToken { get; set; }
-    }
-
-    class AddQuery
-    {
-        public int senderId { get; set; }
-        public int receiverId { get; set; }
-        public Token userToken { get; set; }
-    }
 }

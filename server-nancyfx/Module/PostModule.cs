@@ -164,39 +164,4 @@ namespace SocialNetworkServerNV1
 
     //todo: improve Queries, put them in one file, make them inherit from an ancestor class
 
-    class CommentQuery
-    {
-        public int userId { get; set; }
-        public int postId { get; set; }
-        public int creatorId { get; set; }
-        public int targetId { get; set; }
-        public string commentText { get; set; }
-        public Token userToken { get; set; }
-    }
-
-    class CreateQuery
-    {
-        public int targetId { get; set; }
-        public int creatorId { get; set; }
-        public Token userToken { get; set; }
-        public string postContent { get; set; }
-    }
-
-    class LikeQuery
-    {
-        public int userId { get; set; }
-        public int creatorId { get; set; }
-        public int targetId { get; set; }
-        public int postId { get; set; }
-        public Token userToken { get; set; }
-    }
-
-    class LoadQuery
-    {
-        public Token userToken { get; set; }
-        public int postId { get; set; }
-        public int targetId { get; set; }
-        public int creatorId { get; set; }
-        public DateTime postCreationDate { get; set; }
-    }
 }

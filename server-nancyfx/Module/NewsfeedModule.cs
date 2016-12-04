@@ -43,9 +43,5 @@ namespace SocialNetworkServerNV1
 
     }
 
-    class LoadNewsfeedQuery
-    {
-        public Token userToken { get; set; }
-        public int interval { get; set; }
-    }
+    
 }
