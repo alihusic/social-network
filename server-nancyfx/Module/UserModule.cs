@@ -62,7 +62,7 @@ namespace SocialNetworkServerNV1
         {
             //map request to an object
 
-            var registerQuery = new RegisterQuery();
+            var registerQuery = this.Bind<RegisterQuery>();
             // TODO:
             //check if username already taken
             // check if data valid
