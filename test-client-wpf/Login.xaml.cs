@@ -95,9 +95,4 @@ namespace SocialNetwork
         }
     }
 
-    class AuthenticateQuery
-    {
-        public string password { get; set; }
-        public string username { get; set; }
-    }
 }

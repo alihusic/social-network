@@ -72,12 +72,6 @@ namespace SocialNetwork
             
         }
 
-        public class SendQuery
-        {
-            public Token userToken { get; set; }
-            public int receiverId { get; set; }
-            public string messageText { get; set; }
-        }
 
         private void loadChat(object sender, RoutedEventArgs e)
         {

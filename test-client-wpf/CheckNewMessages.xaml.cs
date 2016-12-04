@@ -79,9 +79,5 @@ namespace SocialNetwork
 
             }
         }
-        public class CheckNewMessagesQuery
-        {
-            public Token userToken { get; set; }
-        }
     }
 }
