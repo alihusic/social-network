@@ -5,6 +5,7 @@ using SocialNetwork.Model;
 using System.Security.Cryptography;
 using SocialNetwork;
 using System.Collections.Generic;
+using SocialNetworkServer.Model;
 
 namespace SocialNetworkServerNV1
 {
@@ -383,6 +384,15 @@ namespace SocialNetworkServerNV1
                 return userFriends;
 
             }
+        }
+
+        public List<Notifications> loadNotificationsUser(int userId)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                return context.notifications.Where(n => (n.entityTargetId == userId && n.notificationType != 4)).ToList();
+            }
+            
         }
 
         /// <summary>

@@ -21,6 +21,11 @@ namespace SocialNetworkServerNV1
         public string messageText { get; set; }
     }
 
+    public class NotificationQuery
+    {
+        public Token userToken { get; set; }
+    }
+
     /// <summary>
     /// Class used to encapsulate required fields in a check new messages query
     /// </summary>
