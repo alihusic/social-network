@@ -1,11 +1,9 @@
 namespace SocialNetwork
 {
-    using System;
     using System.Data.Entity;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
     using Model;
     using System.Data.Entity.ModelConfiguration.Conventions;
+    using SocialNetworkServer.Model;
 
     public partial class SocialNetworkDBContext : DbContext
     {
@@ -23,7 +21,7 @@ namespace SocialNetwork
         public virtual DbSet<Likes> likes { get; set; }
         public virtual DbSet<Token> tokens { get; set; }
         public virtual DbSet<Comments> comments { get; set; }
-
+        public virtual DbSet<Notifications> notifications { get; set; }
 
 
 
