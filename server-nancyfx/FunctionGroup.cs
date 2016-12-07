@@ -5,6 +5,7 @@ using SocialNetwork.Model;
 using System.Security.Cryptography;
 using SocialNetwork;
 using System.Collections.Generic;
+using SocialNetworkServer.Model;
 
 namespace SocialNetworkServerNV1
 {
@@ -87,6 +88,30 @@ namespace SocialNetworkServerNV1
         static List<Token> tokenList = new List<Token>();
 
         /// <summary>
+        /// Method used to remove token from server token list
+        /// </summary>
+        /// <param name="token">Token to be removed</param>
+        public static void removeToken(Token token)
+        {
+            tokenList.RemoveAll(t=>t.userId.Equals(token.userId));
+        }
+
+        /// <summary>
+        /// Method used to remove token from database
+        /// </summary>
+        /// <param name="token">Token to be removed</param>
+        public void removeTokenDB(Token token)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                var tokenDB = context.tokens.Where(t => t.userId.Equals(token.userId)).First();
+                context.tokens.Remove(tokenDB);
+                context.SaveChanges();
+            }
+
+        }
+
+        /// <summary>
         /// Static instance of a TokenFactory
         /// </summary>
         static TokenFactory cookieFactory = new TokenFactory();
@@ -104,6 +129,7 @@ namespace SocialNetworkServerNV1
             insertNewToken(token);
             return token;
         }
+
 
         /// <summary>
         /// Method used to check whether the token exists
@@ -359,6 +385,7 @@ namespace SocialNetworkServerNV1
             {
                 var friendship = context.friendRequest.Where(fr => ((fr.senderId == senderId) && (fr.receiverId == receiverId))).First();
                 context.friendRequest.Remove(friendship);
+                context.SaveChanges();
             }
         }
 
@@ -673,6 +700,159 @@ namespace SocialNetworkServerNV1
             {
                 context.Database.ExecuteSqlCommand("TRUNCATE TABLE [Token]");
             }
-        } 
+        }
+
+        /// <summary>
+        /// editUserInfo edits user's info.
+        /// </summary>
+        /// <param name="userId">int. User's id.</param>
+        /// <param name="name">string. User's name.</param>
+        /// <param name="lastName">string. User's last name.</param>
+        /// <param name="username">string. User's username.</param>
+        /// <param name="country">string. User's country.</param>
+        /// <param name="city">string. User's city.</param>
+        /// <param name="pictureURL">string. User's picture URL.</param>
+        /// <param name="gender">string. User's gender.</param>
+        /// <param name="dateOfBirth">string. User's date of birth.</param>
+
+        public void editUserInfo(int userId, string name, string lastName, string username, string country, string city, string pictureURL, string gender, DateTime dateOfBirth)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                var user = new User()
+                {
+                    userId = userId,
+                    name = name,
+                    lastName = lastName,
+                    username = username,
+                    country = country,
+                    city = city,
+                    pictureURL = pictureURL,
+                    gender = gender,
+                    dateOfBirth = dateOfBirth
+                };
+
+                context.users.Attach(user);
+                context.Entry(user).Property(u => u.name).IsModified = true;
+                context.Entry(user).Property(u => u.lastName).IsModified = true;
+                context.Entry(user).Property(u => u.username).IsModified = true;
+                context.Entry(user).Property(u => u.city).IsModified = true;
+                context.Entry(user).Property(u => u.pictureURL).IsModified = true;
+                context.Entry(user).Property(u => u.gender).IsModified = true;
+                context.Entry(user).Property(u => u.gender).IsModified = true;
+                context.Entry(user).Property(u => u.dateOfBirth).IsModified = true;
+                context.SaveChanges();
+
+            }
+        }
+
+        /// <summary>
+        /// checkURL cinfirms that URL exits
+        /// </summary>
+        /// <param name="URL">string. URL.</param>
+        /// <returns>
+        /// Returns true if URL is valid, else returns false.</returns>
+        public bool checkURL(string URL)
+        {
+            Uri uriResult;
+            return Uri.TryCreate(URL, UriKind.Absolute, out uriResult) && uriResult.Scheme == Uri.UriSchemeHttp;
+        }
+
+        /// <summary>
+        /// updateProfilePicture updates User's profile picture.
+        /// </summary>
+        /// <param name="userId">int. User's ID.</param>
+        /// <param name="pictureURL">string. Picture URL.</param>
+        
+        public void updateProfilePicture(int userId, string pictureURL)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                var user = new User()
+                {
+                    userId = userId,
+                    pictureURL = pictureURL
+                };
+
+                context.users.Attach(user);
+                context.Entry(user).Property(u => u.pictureURL).IsModified=true;
+                context.SaveChanges();
+            }
+        }
+
+
+        /// <summary>
+        /// checkPassword checks if password already exists in databse.
+        /// </summary>
+        /// <param name="password">string. User's password.</param>
+        /// <returns>
+        /// Returns true if password exists, else returns false.</returns>
+
+        public bool checkPassword(string password, int userId)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                return context.users.Find(userId).password.Equals(password);
+                //return context.users.Any(u => u.password == password);
+            }
+        }
+
+        /// <summary>
+        /// updatePassword sets new password.
+        /// </summary>
+        /// <param name="newPassword">string. New password.</param>
+        /// <param name="userId">int. User's ID.</param>
+        public void updatePassword(string newPassword, int userId)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                User user = new User()
+                {
+                    userId = userId,
+                    password = newPassword
+                };
+
+                context.users.Attach(user);
+                context.Entry(user).Property(u => u.password).IsModified = true;
+                context.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// updateCoverPicture updates cover picture.
+        /// </summary>
+        /// <param name="userId">int. User's id.</param>
+        /// <param name="coverPictureURL">string. Cover picture URL.</param>
+
+        public void updateCoverPicture(int userId, string coverPictureURL)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                var user = new User()
+                {
+                    userId = userId,
+                    coverPictureURL = coverPictureURL
+                };
+
+                context.users.Attach(user);
+                context.Entry(user).Property(u => u.coverPictureURL).IsModified = true;
+                context.SaveChanges();
+            }
+        }
+
+
+        /// <summary>
+        /// loadNotificationUser is used to retrieve all notifications for one user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public List<Notifications> loadNotificationsUser(int userId)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                return context.notifications.Where(n => (n.entityTargetId == userId && n.notificationType != 4)).ToList();
+            }
+
+        }
     }
 } 
