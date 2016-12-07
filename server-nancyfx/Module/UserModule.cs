@@ -2,6 +2,8 @@ using Nancy;
 using Nancy.ModelBinding;
 using SocialNetwork;
 using SocialNetwork.Model;
+using SocialNetworkServer;
+using SocialNetworkServer.Builder;
 using System;
 using System.Linq;
 
@@ -71,7 +73,17 @@ namespace SocialNetworkServerNV1
             {
                 if(registerQuery.dateOfBirth is DateTime)
                 {
-                    saveUser(registerQuery.name, registerQuery.lastName, registerQuery.username, registerQuery.password, registerQuery.country, registerQuery.city, registerQuery.region, registerQuery.gender, registerQuery.dateOfBirth);
+                    saveUser(new UserBuilder()
+                        .Name(registerQuery.name)
+                        .LastName(registerQuery.lastName)
+                        .Username(registerQuery.username)
+                        .Country(registerQuery.country)
+                        .City(registerQuery.city)
+                        .PictureURL(registerQuery.pictureURL)
+                        .CoverPictureURL(registerQuery.coverPictureURL)
+                        .Gender(registerQuery.gender)
+                        .DateOfBirth(registerQuery.dateOfBirth)
+                        .Build());
                 }
                 else
                 {
@@ -96,11 +108,11 @@ namespace SocialNetworkServerNV1
         /// <param name="password">string. User's password.</param>
         /// <param name="country">string. User's country</param>
         /// <param name="city">string. User's city.</param>
-        /// <param name="region">string. User's region.</param>
+        /// <param name="pictureURL">string. User's picture URL.</param>
         /// <param name="gender">string. User's gender.</param>
         /// <param name="dateOfBirth">DateTime. User's birth date.</param>
 
-        private void saveUser(string name, string lastName, string username, string password, string country, string city, string region, string gender, DateTime dateOfBirth)
+        /*private void saveUser(string name, string lastName, string username, string password, string country, string city, string pictureURL, string gender, DateTime dateOfBirth)
         {
             using (var context = new SocialNetworkDBContext())
             {
@@ -112,11 +124,21 @@ namespace SocialNetworkServerNV1
                     password = password,
                     country = country,
                     city = city,
-                    region = region,
+                    pictureURL = pictureURL,
                     gender = gender,
                     dateOfBirth = dateOfBirth
                 };
 
+                context.users.Add(user);
+                context.SaveChanges();
+            }
+        }*/
+
+
+        private void saveUser(User user)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
                 context.users.Add(user);
                 context.SaveChanges();
             }
@@ -137,25 +159,7 @@ namespace SocialNetworkServerNV1
             }
         }
 
-
     }
     
-    public class AuthenticateQuery
-    {
-        public string username { get; set; }
-        public string password { get; set; }
-    }
-
-    public class RegisterQuery
-    {
-        public string name { get; set; }
-        public string lastName { get; set; }
-        public string username { get; set; }
-        public string password { get; set; }
-        public string country { get; set; }
-        public string city { get; set; }
-        public string region { get; set; }
-        public string gender { get; set; }
-        public DateTime dateOfBirth { get; set; }
-    }
+   
 }
