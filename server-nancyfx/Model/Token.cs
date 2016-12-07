@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SocialNetwork.Model
 {
@@ -14,6 +9,8 @@ namespace SocialNetwork.Model
         public int userId { get; set; }
         public string tokenHash { get; set; }
 
+
+        //setting up 1:1 relationship with a User
         [Required]
         public virtual User user { get; set; }
 

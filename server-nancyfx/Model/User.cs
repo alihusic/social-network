@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SocialNetworkServer.Model;
 
 namespace SocialNetwork.Model
 {
@@ -23,7 +21,8 @@ namespace SocialNetwork.Model
         public string password { get; set; }
         public string country { get; set; }
         public string city { get; set; }
-        public string region { get; set; }
+        public string pictureURL { get; set; }
+        public string coverPictureURL { get; set; }
         public string gender { get; set; }
         public DateTime dateOfBirth { get; set; }
 
@@ -48,6 +47,9 @@ namespace SocialNetwork.Model
 
         //setting up 1:n connection with Comments
         public virtual ICollection<Comments> comments { get; set; }
+
+        //setting up 1:n realtion with Notifications
+        public virtual ICollection<Notifications> notifications { get; set; }
 
     }
 }
