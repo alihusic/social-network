@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using SocialNetwork;
 using System.Collections.Generic;
 using SocialNetworkServer.Model;
+using SocialNetworkServer.Builder;
 
 namespace SocialNetworkServerNV1
 {
@@ -88,6 +89,30 @@ namespace SocialNetworkServerNV1
         static List<Token> tokenList = new List<Token>();
 
         /// <summary>
+        /// Method used to remove token from server token list
+        /// </summary>
+        /// <param name="token">Token to be removed</param>
+        public static void removeToken(Token token)
+        {
+            tokenList.RemoveAll(t=>t.userId.Equals(token.userId));
+        }
+
+        /// <summary>
+        /// Method used to remove token from database
+        /// </summary>
+        /// <param name="token">Token to be removed</param>
+        public void removeTokenDB(Token token)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                var tokenDB = context.tokens.Where(t => t.userId.Equals(token.userId)).First();
+                context.tokens.Remove(tokenDB);
+                context.SaveChanges();
+            }
+
+        }
+
+        /// <summary>
         /// Static instance of a TokenFactory
         /// </summary>
         static TokenFactory cookieFactory = new TokenFactory();
@@ -105,6 +130,7 @@ namespace SocialNetworkServerNV1
             insertNewToken(token);
             return token;
         }
+
 
         /// <summary>
         /// Method used to check whether the token exists
@@ -310,19 +336,12 @@ namespace SocialNetworkServerNV1
         /// </summary>
         /// <param name="senderId">int. id of first user</param>
         /// <param name="receiverId">int. ide of second user</param>
-        public void confirmFriendshipRequest(int senderId, int receiverId)
+        public void confirmFriendshipRequest(PendingFriendRequests request)
         {
             using (var context = new SocialNetworkDBContext())
             {
-                var friendRequest = new PendingFriendRequests()
-                {
-                    senderId = senderId,
-                    receiverId = receiverId,
-                    friendRequestConfirmed = true
-                };
-
-                context.friendRequest.Attach(friendRequest);
-                context.Entry(friendRequest).Property(fr => fr.friendRequestConfirmed).IsModified = true;
+                context.friendRequest.Attach(request);
+                context.Entry(request).Property(fr => fr.friendRequestConfirmed).IsModified = true;
                 context.SaveChanges();
             }
         }
@@ -332,25 +351,18 @@ namespace SocialNetworkServerNV1
         /// </summary>
         /// <param name="senderId"> int. Sender's Id</param>
         /// <param name="receiverId">int. Receiver's Id</param>
-        public void addNewPendingFriendshipRequest(int senderId, int receiverId)
+        public void addNewPendingFriendshipRequest(PendingFriendRequests request)
         {
             using (var context = new SocialNetworkDBContext())
             {
-                var newFriendship = new PendingFriendRequests()
-                {
-                    senderId = senderId,
-                    receiverId = receiverId,
-                    friendRequestSent = DateTime.Now,
-                    friendRequestConfirmed = false
-                };
 
-                context.friendRequest.Add(newFriendship);
+                context.friendRequest.Add(request);
                 context.SaveChanges();
             }
         }
 
         /// <summary>
-        /// @deleteFriendship removes friendship of two users :(
+        /// Method used to remove friendship of two users :( tugy plaky
         /// </summary>
         /// <param name="senderId">int. Sender's Id</param>
         /// <param name="receiverId">int. Receiver's Id</param>
@@ -360,6 +372,7 @@ namespace SocialNetworkServerNV1
             {
                 var friendship = context.friendRequest.Where(fr => ((fr.senderId == senderId) && (fr.receiverId == receiverId))).First();
                 context.friendRequest.Remove(friendship);
+                context.SaveChanges();
             }
         }
 
@@ -386,15 +399,6 @@ namespace SocialNetworkServerNV1
             }
         }
 
-        public List<Notifications> loadNotificationsUser(int userId)
-        {
-            using (var context = new SocialNetworkDBContext())
-            {
-                return context.notifications.Where(n => (n.entityTargetId == userId && n.notificationType != 4)).ToList();
-            }
-            
-        }
-
         /// <summary>
         /// @getChatId used to retrieve in which chat conversation is happening
         /// </summary>
@@ -416,17 +420,10 @@ namespace SocialNetworkServerNV1
         /// </summary>
         /// <param name="user1Id">int. Id of a first User</param>
         /// <param name="user2Id">int. Id of a second User</param>
-        public void createNewChat(int user1Id, int user2Id)
+        public void createNewChat(PrivateChat chat)
         {
             using (var context = new SocialNetworkDBContext())
             {
-                var chat = new PrivateChat()
-                {
-                    user1 = user1Id,
-                    user2 = user2Id,
-                    chatCreationDate = DateTime.Now
-                };
-
                 context.privateChat.Add(chat);
                 context.SaveChanges();
             }
@@ -439,30 +436,12 @@ namespace SocialNetworkServerNV1
         /// <param name="senderId">int. Sender's Id</param>
         /// <param name="recipientId">int. Recipient's Id</param>
         /// <param name="chatId">int. Chat's Id</param>
-        public void saveMessage(string messageText, int senderId, int recipientId, int chatId)
+        public void saveMessage(PrivateMessages message, UnreadMessages unread)
         {
             using (var context = new SocialNetworkDBContext())
             {
-                var message1 = new UnreadMessages()
-                {
-                    messageText = messageText,
-                    senderId = senderId,
-                    recipientId = recipientId,
-                    chatID = chatId,
-                    messageTimeStamp = DateTime.Now
-                };
-
-                var message2 = new PrivateMessages()
-                {
-                    messageText = messageText,
-                    senderId = senderId,
-                    recipientId = recipientId,
-                    chatID = chatId,
-                    messageTimeStamp = DateTime.Now
-                };
-
-                context.unreadMessages.Add(message1);
-                context.privateMessages.Add(message2);
+                context.unreadMessages.Add(unread);
+                context.privateMessages.Add(message);
                 context.SaveChanges();
             }
         }
@@ -586,22 +565,13 @@ namespace SocialNetworkServerNV1
         /// </summary>
         /// <param name="userId">int. User's Id</param>
         /// <param name="postId">int. Post Id</param>
-        public void addLike(int userId, int postId)
+        public void addLike(Likes like)
         {
             using (var context = new SocialNetworkDBContext())
             {
-                var like = new Likes()
-                {
-                    postId = postId,
-                    userId = userId
-                };
-
-                var post = new Posts()
-                {
-                    postsId = postId,
-                    numOfLikes = +1
-                };
-
+                var post = context.posts.Find(like.postId);
+                post.numOfLikes++;
+                context.likes.Add(like);
                 context.posts.Attach(post);
                 context.Entry(post).Property(p => p.numOfLikes).IsModified = true;
                 context.SaveChanges();
@@ -614,17 +584,11 @@ namespace SocialNetworkServerNV1
         /// <param name="userId">User ID</param>
         /// <param name="postId">Post ID</param>
         /// <param name="commentText">Textual content of the comment</param>
-        public void addComment(int userId, int postId, string commentText)
+        public void addComment(Comments comment)
         {
             using (var context = new SocialNetworkDBContext())
             {
-                Comments comment = new Comments()
-                {
-                    commentText = commentText,
-                    postId = postId,
-                    userId = userId
-                };
-
+               
                 context.comments.Add(comment);
                 context.SaveChanges();
             }
@@ -636,19 +600,10 @@ namespace SocialNetworkServerNV1
         /// <param name="creatorId">int. Creator's id</param>
         /// <param name="targetId">int. Where is post being posted.</param>
         /// <param name="postContent">string. Contents of a post</param>
-        public void createPost(int creatorId, int targetId, string postContent)
+        public void createPost(Posts post)
         {
             using (var context = new SocialNetworkDBContext())
             {
-                var post = new Posts()
-                {
-                    creatorId = creatorId,
-                    targetId = targetId,
-                    postContent = postContent,
-                    numOfLikes = 0,
-                    postCreationDate = DateTime.Now
-                };
-
                 context.posts.Add(post);
                 context.SaveChanges();
             }
@@ -674,6 +629,22 @@ namespace SocialNetworkServerNV1
 
 
         /// <summary>
+        /// loadNotificationUser is used to retrieve all notifications for one user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public List<Notifications> loadNotificationsUser(int userId)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                return context.notifications.Where(n => (n.entityTargetId == userId && n.notificationType != 4)).ToList();
+            }
+
+        }
+
+
+
+        /// <summary>
         /// deleteAllTokens deletes all entries in table Token.
         /// </summary>
 
@@ -683,6 +654,166 @@ namespace SocialNetworkServerNV1
             {
                 context.Database.ExecuteSqlCommand("TRUNCATE TABLE [Token]");
             }
-        } 
+        }
+
+        /// <summary>
+        /// editUserInfo edits user's info.
+        /// </summary>
+        /// <param name="userId">int. User's id.</param>
+        /// <param name="name">string. User's name.</param>
+        /// <param name="lastName">string. User's last name.</param>
+        /// <param name="username">string. User's username.</param>
+        /// <param name="country">string. User's country.</param>
+        /// <param name="city">string. User's city.</param>
+        /// <param name="pictureURL">string. User's picture URL.</param>
+        /// <param name="gender">string. User's gender.</param>
+        /// <param name="dateOfBirth">string. User's date of birth.</param>
+
+        public void editUserInfo(User user)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                context.users.Attach(user);
+                context.Entry(user).Property(u => u.name).IsModified = true;
+                context.Entry(user).Property(u => u.lastName).IsModified = true;
+                context.Entry(user).Property(u => u.username).IsModified = true;
+                context.Entry(user).Property(u => u.city).IsModified = true;
+                context.Entry(user).Property(u => u.pictureURL).IsModified = true;
+                context.Entry(user).Property(u => u.gender).IsModified = true;
+                context.Entry(user).Property(u => u.dateOfBirth).IsModified = true;
+                context.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// checkURL cinfirms that URL exits
+        /// </summary>
+        /// <param name="URL">string. URL.</param>
+        /// <returns>
+        /// Returns true if URL is valid, else returns false.</returns>
+        public bool checkURL(string URL)
+        {
+            Uri uriResult;
+            return Uri.TryCreate(URL, UriKind.Absolute, out uriResult) && uriResult.Scheme == Uri.UriSchemeHttp;
+        }
+
+        /// <summary>
+        /// updateProfilePicture updates User's profile picture.
+        /// </summary>
+        /// <param name="userId">int. User's ID.</param>
+        /// <param name="pictureURL">string. Picture URL.</param>
+        
+        public void updateProfilePicture(int userId, string pictureURL)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                var user = context.users.Find(userId);
+                user.pictureURL = pictureURL;
+
+
+                context.users.Attach(user);
+                context.Entry(user).Property(u => u.pictureURL).IsModified=true;
+                context.SaveChanges();
+            }
+        }
+
+
+        /// <summary>
+        /// checkPassword checks if password already exists in databse.
+        /// </summary>
+        /// <param name="password">string. User's password.</param>
+        /// <returns>
+        /// Returns true if password exists, else returns false.</returns>
+
+        public bool checkPassword(string password, int userId)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                return context.users.Find(userId).password.Equals(password);
+                //return context.users.Any(u => u.password == password);
+            }
+        }
+
+        /// <summary>
+        /// updatePassword sets new password.
+        /// </summary>
+        /// <param name="newPassword">string. New password.</param>
+        /// <param name="userId">int. User's ID.</param>
+        public void updatePassword(string newPassword, int userId)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                var user = context.users.Find(userId);
+                user.password = newPassword;
+
+                context.users.Attach(user);
+                context.Entry(user).Property(u => u.password).IsModified = true;
+                context.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// updateCoverPicture updates cover picture.
+        /// </summary>
+        /// <param name="userId">int. User's id.</param>
+        /// <param name="coverPictureURL">string. Cover picture URL.</param>
+
+        public void updateCoverPicture(int userId, string coverPictureURL)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                var user = context.users.Find(userId);
+                user.coverPictureURL = coverPictureURL;
+
+                context.users.Attach(user);
+                context.Entry(user).Property(u => u.coverPictureURL).IsModified = true;
+                context.SaveChanges();
+            }
+        }
+
+
+        /// <summary>
+        /// Method saves user info
+        /// </summary>
+        /// <param name="user">USer. User object.</param>
+
+        public void saveUser(User user)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                context.users.Add(user);
+                context.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// checkUsername checks if username is unique.
+        /// </summary>
+        /// <param name="username">string. Users's username.</param>
+        /// <returns>
+        /// Retruns true if username already exists, else returns false.</returns>
+
+        public bool checkUsername(string username)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                return context.users.Any(u => u.username == username);
+            }
+        }
+
+        /// <summary>
+        /// Method used to return post notifications.
+        /// </summary>
+        /// <param name="userId">int. User's Id.</param>
+        /// <returns>
+        /// List of type Notifications.</returns>
+
+        public List<Notifications> loadPostNotifications(int userId)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                return context.notifications.Where(n => (context.posts.Find(n.entityTargetId).creatorId == userId && n.notificationType == 4 )).ToList();
+            }
+        }
     }
 } 

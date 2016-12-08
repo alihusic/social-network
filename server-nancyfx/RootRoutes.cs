@@ -42,7 +42,7 @@ namespace SocialNetworkServerNV1
                         country = "bosna",
                         dateOfBirth = DateTime.Now,
                         gender = "Male",
-                        region = "balkan"
+                        pictureURL = "balkan"
                     };
 
                     context.users.Add(user);
@@ -58,7 +58,7 @@ namespace SocialNetworkServerNV1
                         country = "bosna",
                         dateOfBirth = DateTime.Now,
                         gender = "Male",
-                        region = "balkan"
+                        pictureURL = "balkan"
                     };
 
                     context.users.Add(user1);
@@ -74,7 +74,7 @@ namespace SocialNetworkServerNV1
                         country = "bosna",
                         dateOfBirth = DateTime.Now,
                         gender = "Male",
-                        region = "balkan"
+                        pictureURL = "balkan"
                     };
                     context.users.Add(user2);
                     context.SaveChanges();
@@ -89,7 +89,7 @@ namespace SocialNetworkServerNV1
                         country = "bosna",
                         dateOfBirth = DateTime.Now,
                         gender = "Male",
-                        region = "balkan"
+                        pictureURL = "balkan"
                     };
 
                     context.users.Add(user3);

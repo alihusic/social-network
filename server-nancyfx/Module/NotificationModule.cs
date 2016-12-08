@@ -1,5 +1,6 @@
-using Nancy;
+﻿using Nancy;
 using Nancy.ModelBinding;
+using SocialNetworkServer;
 using SocialNetworkServer.Model;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace SocialNetworkServerNV1.Module
         private FunctionGroup helpers = new FunctionGroup();
         private Dictionary<int, Action> methodDictionary;
 
-        public NotificationModule():base("/notification")
+        public NotificationModule() : base("/notification")
         {
 
             Get["/"] = _ => "Hello!";
@@ -33,6 +34,7 @@ namespace SocialNetworkServerNV1.Module
 
             // load notifications from database
             List<Notifications> notifications = helpers.loadNotificationsUser(query.userToken.userId);
+            notifications.AddRange(helpers.loadPostNotifications(query.userToken.userId));
 
             return Negotiate.WithModel(notifications);
 

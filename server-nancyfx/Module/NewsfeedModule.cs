@@ -2,6 +2,7 @@ using Nancy;
 using Nancy.ModelBinding;
 using SocialNetwork;
 using SocialNetwork.Model;
+using SocialNetworkServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,10 +41,6 @@ namespace SocialNetworkServerNV1
             //return model
             return Negotiate.WithModel(recentPosts);
         }
-
-        
-
-
 
     }
 

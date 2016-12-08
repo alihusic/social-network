@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SocialNetwork.Model
 {
 
-    
-     //Creation of private messages model.
-     //Will be used for saving messages that are read
-   
+
+    //Creation of private messages model.
+    //Will be used for saving messages that are read
+
     public class PrivateMessages
     {
         [Key]

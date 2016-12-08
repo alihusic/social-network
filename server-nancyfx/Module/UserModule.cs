@@ -2,6 +2,8 @@ using Nancy;
 using Nancy.ModelBinding;
 using SocialNetwork;
 using SocialNetwork.Model;
+using SocialNetworkServer;
+using SocialNetworkServer.Builder;
 using System;
 using System.Linq;
 
@@ -62,20 +64,30 @@ namespace SocialNetworkServerNV1
         {
             //map request to an object
 
-            var registerQuery = this.Bind<RegisterQuery>();
+            var registerQuery = new RegisterQuery();
             // TODO:
             //check if username already taken
             // check if data valid
             // save changes to the database
-            if (!checkUsername(registerQuery.username))
+            if (!helpers.checkUsername(registerQuery.username))
             {
                 if(registerQuery.dateOfBirth is DateTime)
                 {
-                    saveUser(registerQuery.name, registerQuery.lastName, registerQuery.username, registerQuery.password, registerQuery.country, registerQuery.city, registerQuery.region, registerQuery.gender, registerQuery.dateOfBirth);
+                    helpers.saveUser(new UserBuilder()
+                        .Name(registerQuery.name)
+                        .LastName(registerQuery.lastName)
+                        .Username(registerQuery.username)
+                        .Password(registerQuery.password)
+                        .Country(registerQuery.country)
+                        .City(registerQuery.city)
+                        .PictureURL(registerQuery.pictureURL)
+                        .CoverPictureURL(registerQuery.coverPictureURL)
+                        .Gender(registerQuery.gender)
+                        .DateOfBirth(registerQuery.dateOfBirth)
+                        .Build());
                 }
                 else
                 {
-
                     //typeMissmatchException
                 }
             }
@@ -84,63 +96,13 @@ namespace SocialNetworkServerNV1
                 //usernameTakenException
             }
             // return a status code
-           
-
+            
             return null;
         }
 
-        /// <summary>
-        /// saveUSer saves User information to database
-        /// </summary>
-        /// <param name="name">string. User's name.</param>
-        /// <param name="lastName">string. User's last name.</param>
-        /// <param name="username">string. User's unique username.</param>
-        /// <param name="password">string. User's password.</param>
-        /// <param name="country">string. User's country</param>
-        /// <param name="city">string. User's city.</param>
-        /// <param name="region">string. User's region.</param>
-        /// <param name="gender">string. User's gender.</param>
-        /// <param name="dateOfBirth">DateTime. User's birth date.</param>
-
-        private void saveUser(string name, string lastName, string username, string password, string country, string city, string region, string gender, DateTime dateOfBirth)
-        {
-            using (var context = new SocialNetworkDBContext())
-            {
-                var user = new User()
-                {
-                    name = name,
-                    lastName = lastName,
-                    username = username,
-                    password = password,
-                    country = country,
-                    city = city,
-                    region = region,
-                    gender = gender,
-                    dateOfBirth = dateOfBirth
-                };
-
-                context.users.Add(user);
-                context.SaveChanges();
-            }
-        }
-
-        /// <summary>
-        /// checkUsername checks if username is unique.
-        /// </summary>
-        /// <param name="username">string. Users's username.</param>
-        /// <returns>
-        /// Retruns true if username already exists, else returns false.</returns>
-
-        private bool checkUsername(string username)
-        {
-            using (var context = new SocialNetworkDBContext())
-            {
-                return context.users.Any(u => u.username == username);
-            }
-        }
-
+        
 
     }
     
-    
+   
 }
