@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SocialNetwork.Model;
+using SocialNetworkServer;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -52,7 +53,7 @@ namespace SocialNetwork
                     password = password
                 };
 
-                string urlPath = "http://localhost:51980/user/authenticate";
+                string urlPath = "http://localhost:60749/user/authenticate";
                 var request = (HttpWebRequest)WebRequest.Create(urlPath);
                     request.Accept = "application/json";
                     request.ContentType = "application/json";
@@ -73,7 +74,6 @@ namespace SocialNetwork
                 var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
                 response.Close();
                 statusLabel.Text = responseString;
-
                 var tempToken = JsonConvert.DeserializeObject<Token>(responseString);
                 if (tempToken.tokenHash!=null && tempToken.tokenHash.Length == 40)
                 {
@@ -85,7 +85,7 @@ namespace SocialNetwork
                 //statusLabel.Text = ControlGroup.userToken.tokenHash + "\n" + ControlGroup.userToken.userId;
             }catch(Exception ex)
             {
-                statusLabel.Text = ex.Message;
+                //statusLabel.Text = ex.StackTrace;
             }
         }
 

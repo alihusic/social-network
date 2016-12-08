@@ -17,7 +17,7 @@ namespace SocialNetworkServerNV1
         {
             Get["/"] = _ => "Hello!";
             Post["/authenticate"] = parameters => Authenticate(parameters);
-            Get["/register"] = parameters => Register(parameters);
+            Post["/register"] = parameters => Register(parameters);
         }
    
         /// <summary>
@@ -64,7 +64,7 @@ namespace SocialNetworkServerNV1
         {
             //map request to an object
 
-            var registerQuery = new RegisterQuery();
+            var registerQuery = this.Bind<RegisterQuery>();
             // TODO:
             //check if username already taken
             // check if data valid
@@ -89,15 +89,16 @@ namespace SocialNetworkServerNV1
                 else
                 {
                     //typeMissmatchException
+                    throw new Exception("Fail");
                 }
             }
             else
             {
-                //usernameTakenException
+                throw new Exception("Username already taken.");
             }
             // return a status code
             
-            return null;
+            return Negotiate.WithStatusCode(200);
         }
 
         

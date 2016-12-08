@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace SocialNetwork
+namespace SocialNetworkServer
 {
     public class BLOBINA
     {
@@ -89,7 +89,8 @@ namespace SocialNetwork
         public string password { get; set; }
         public string country { get; set; }
         public string city { get; set; }
-        public string region { get; set; }
+        public string pictureURL { get; set; }
+        public string coverPictureURL { get; set; }
         public string gender { get; set; }
         public DateTime dateOfBirth { get; set; }
     }
@@ -151,4 +152,60 @@ namespace SocialNetwork
         public int interval { get; set; }
     }
 
+    /// <summary>
+    /// Class used to encapsulate required fields in a settings edit info query
+    /// </summary>
+
+    class EditInfoQuery
+    {
+        public string name { get; set; }
+        public string lastName { get; set; }
+        public string username { get; set; }
+        public string password { get; set; }
+        public string country { get; set; }
+        public string city { get; set; }
+        public string pictureURL { get; set; }
+        public string coverPictureURL { get; set; }
+        public string gender { get; set; }
+        public DateTime dateOfBirth { get; set; }
+        public Token userToken { get; set; }
+    }
+
+    /// <summary>
+    /// Class used to encapsulate required fields in a settings change profile picture query
+    /// </summary>
+    class ChangeProfilePictureQuery
+    {
+        public string username { get; set; }
+        public string pictureURL { get; set; }
+        public Token userToken { get; set; }
+    }
+
+    /// <summary>
+    /// Class used to encapsulate required fields in a settings change password query
+    /// </summary>
+    class ChangePasswordQuery
+    {
+        public string oldPassword { get; set; }
+        public string newPassword { get; set; }
+        public Token userToken { get; set; }
+    }
+
+
+    /// <summary>
+    /// Class used to encapsulate required fields in a settings change cover picture query
+    /// </summary>
+    class ChangeCoverPictureQuery
+    {
+        public string coverPictureURL { get; set; }
+        public Token userToken { get; set; }
+    }
+
+    /// <summary>
+    /// Class used to encapsulate required fields in a notifications
+    /// </summary>
+    public class NotificationQuery
+    {
+        public Token userToken { get; set; }
+    }
 }

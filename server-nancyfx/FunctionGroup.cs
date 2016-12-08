@@ -770,7 +770,7 @@ namespace SocialNetworkServerNV1
                 context.SaveChanges();
             }
         }
-
+        
 
         /// <summary>
         /// Method saves user info

@@ -37,12 +37,13 @@ namespace SocialNetworkServerNV1
                         name = "ermin",
                         lastName = "sabotic",
                         username = "ermin1",
-                        password = "dsada",
+                        password = "p",
                         city = "Sarajevo",
                         country = "bosna",
                         dateOfBirth = DateTime.Now,
                         gender = "Male",
-                        pictureURL = "balkan"
+                        pictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png",
+                        coverPictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png"
                     };
 
                     context.users.Add(user);
@@ -53,12 +54,14 @@ namespace SocialNetworkServerNV1
                         name = "Nedim",
                         lastName = "Sladic",
                         username = "nedim1",
-                        password = "dsada",
+                        password = "p",
                         city = "Sarajevo",
                         country = "bosna",
                         dateOfBirth = DateTime.Now,
                         gender = "Male",
-                        pictureURL = "balkan"
+                        pictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png",
+                        coverPictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png"
+
                     };
 
                     context.users.Add(user1);
@@ -69,12 +72,14 @@ namespace SocialNetworkServerNV1
                         name = "Ali",
                         lastName = "Husic",
                         username = "ali1",
-                        password = "dsada",
+                        password = "p",
                         city = "Sarajevo",
                         country = "bosna",
                         dateOfBirth = DateTime.Now,
                         gender = "Male",
-                        pictureURL = "balkan"
+                        pictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png",
+                        coverPictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png"
+
                     };
                     context.users.Add(user2);
                     context.SaveChanges();
@@ -84,12 +89,14 @@ namespace SocialNetworkServerNV1
                         name = "Tarik",
                         lastName = "Pasic",
                         username = "tarik1",
-                        password = "dsada",
+                        password = "p",
                         city = "Sarajevo",
                         country = "bosna",
                         dateOfBirth = DateTime.Now,
                         gender = "Male",
-                        pictureURL = "balkan"
+                        pictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png",
+                        coverPictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png"
+
                     };
 
                     context.users.Add(user3);
