@@ -77,6 +77,7 @@ namespace SocialNetworkServerNV1
                         .Name(registerQuery.name)
                         .LastName(registerQuery.lastName)
                         .Username(registerQuery.username)
+                        .Password(registerQuery.password)
                         .Country(registerQuery.country)
                         .City(registerQuery.city)
                         .PictureURL(registerQuery.pictureURL)
