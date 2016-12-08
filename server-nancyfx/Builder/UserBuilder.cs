@@ -12,6 +12,7 @@ namespace SocialNetworkServer.Builder
         private string name;
         private string lastName;
         private string username;
+        private string password;
         private string country;
         private string city;
         private string pictureURL;
@@ -38,7 +39,11 @@ namespace SocialNetworkServer.Builder
             return this;
         }
 
-
+        public UserBuilder Password(string password)
+        {
+            this.password = password;
+            return this;
+        }
 
         public UserBuilder Country(string country)
         {
@@ -92,6 +97,7 @@ namespace SocialNetworkServer.Builder
                 name = name,
                 lastName = lastName,
                 username = username,
+                password = password,
                 country = country,
                 city = city,
                 pictureURL = pictureURL,
