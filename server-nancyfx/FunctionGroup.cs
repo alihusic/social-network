@@ -300,7 +300,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @getAllFriendsId is used to find id's of all friends user has
+        /// @getAllFriendsId is used to find id's of all friends user has. 
         /// </summary>
         /// <param name="userId">int. User's Id</param>
         /// <returns>
@@ -313,7 +313,7 @@ namespace SocialNetworkServerNV1
                 List<int> friendsList = new List<int>();
 
                 var friends = context.friendRequest;
-
+              
                 foreach (var f in friends)
                 {
                     if (f.receiverId == userId && f.friendRequestConfirmed == true)
@@ -504,7 +504,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @getPost used to retrieve post for a certain creation time
+        /// Method used to retrieve post for a certain creation time
         /// </summary>
         /// <param name="postCreationDate">DateTime. time when post was created</param>
         /// <returns>
@@ -518,7 +518,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @postExists checks if post exists
+        /// Method used to check if post exists
         /// </summary>
         /// <param name="postId">int. User's Id </param>
         /// <returns>
@@ -532,7 +532,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @isPostVisible checks if user can see post 
+        /// Method is used to check if user can see post 
         /// </summary>
         /// <param name="userID">int. User's Id</param>
         /// <returns>
@@ -542,11 +542,11 @@ namespace SocialNetworkServerNV1
             //ovdje bi mu trebao baciti inheritance. treba ubaciti u Function group metodu iz FriendsFunctionGroup-a getAllFriendsId. Ona treba vratiti listu prijatelja jednog usera.
             List<int> friends = getAllFriendsId(targetId);
 
-            return friends.Contains(creatorId);
+            return creatorId == targetId || friends.Contains(creatorId);
         }
 
         /// <summary>
-        /// @isLiked checks if user liked certain post
+        /// Method used to check if user liked certain post
         /// </summary>
         /// <param name="userId">int. User's Id</param>
         /// <param name="postId">int. Post Id</param>
@@ -611,28 +611,68 @@ namespace SocialNetworkServerNV1
 
 
         /// <summary>
-        /// getRecentPosts is used to retrieve recent posts that user will see on newsfeed
+        /// Method is used to retrieve recent posts that user will see on newsfeed
         /// </summary>
         /// <param name="interval">int. Interval of posts</param>
         /// <param name="userId">int. User's Id</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Returns List<Posts></returns>
 
-        public List<Posts> getRecentPosts(int interval, int userId)
+        public IEnumerable<Posts> getRecentPosts(int interval, int userId)
+        {
+            List<int> postsId = getRecentPostsId(userId);
+
+            using (var context = new SocialNetworkDBContext())
+            {
+                List<Posts> posts = new List<Posts>();
+
+                foreach (var postId in postsId)
+                {
+                    //extract object by ID
+                    posts.Add(context.posts.Find(postId));                    
+                }
+
+                IEnumerable<Posts> postsToReturn = posts.OrderByDescending(p => p.postCreationDate).Skip(interval);
+                
+                return postsToReturn;
+
+            }
+        }
+
+        /// <summary>
+        /// Method used to retrieve Id's of recent posts
+        /// </summary>
+        /// <param name="userId">int. User's Id.</param>
+        /// <returns>
+        /// Returns List<int></returns>
+        public List<int> getRecentPostsId(int userId)
         {
             using (var context = new SocialNetworkDBContext())
             {
-                var friends = getAllFriendsId(userId);
 
-                return context.posts.Where(p => friends.Contains(p.creatorId) && friends.Contains(p.targetId)).OrderByDescending(p => p.postCreationDate).Skip(interval).Take(10).ToList();
+                List<int> postId = new List<int>();
+
+                var posts = context.posts;
+
+                foreach (var p in posts)
+                {
+                    if (p.creatorId == userId)
+                    {
+                        postId.Add(p.postsId);
+                    }
+                }
+
+                return postId;
             }
         }
 
 
         /// <summary>
-        /// loadNotificationUser is used to retrieve all notifications for one user
+        /// Method is used to retrieve all notifications for one user
         /// </summary>
         /// <param name="userId"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// Returns List<Notifications></returns>
         public List<Notifications> loadNotificationsUser(int userId)
         {
             using (var context = new SocialNetworkDBContext())
