@@ -1,6 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using SocialNetwork.Model;
+using SocialNetworkServer;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,6 +25,9 @@ namespace SocialNetwork
     /// </summary>
     public partial class Newsfeed : Page
     {
+        private int interval = 0;
+
+
         public Newsfeed()
         {
             InitializeComponent();
@@ -27,7 +35,61 @@ namespace SocialNetwork
 
         private void loadNewsfeed(object sender, RoutedEventArgs e)
         {
+            if (ControlGroup.userToken == null) return;
 
+            try
+            {
+                LoadNewsfeedQuery query = new LoadNewsfeedQuery
+                {
+                    userToken = ControlGroup.userToken,
+                    interval = interval
+                };
+
+                string urlPath = "http://localhost:60749/newsfeed/load";
+                var request = (HttpWebRequest)WebRequest.Create(urlPath);
+                request.Accept = "application/json";
+                request.ContentType = "application/json";
+                
+                string requestBody = JsonConvert.SerializeObject(query);
+
+                var data = Encoding.ASCII.GetBytes(requestBody);
+                request.Method = "POST";
+                request.ContentLength = data.Length;
+
+                using (var stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, data.Length);
+                }
+                var response = (HttpWebResponse)request.GetResponse();
+                
+
+                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                response.Close();
+                
+
+                IEnumerable<Posts> listPosts = JsonConvert.DeserializeObject<IEnumerable<Posts>>(responseString);
+                newsfeedContent.Text += listPosts.First();
+
+                if (listPosts != null && listPosts.Any() && listPosts.ElementAt(0).postContent.Length > 0)
+                {
+                    foreach (var post in listPosts)
+                    {
+                        newsfeedContent.Text += "\n";
+                        newsfeedContent.Text += "creatorId: "+post.creatorId;
+                        newsfeedContent.Text += "\n";
+                        newsfeedContent.Text += "TargetId: " + post.targetId;
+                        newsfeedContent.Text += "\n";
+                        newsfeedContent.Text += post.postContent;
+                    }
+                    return;
+                }
+                
+                newsfeedContent.Text += responseString;
+            }
+            catch (Exception ex)
+            {
+                newsfeedContent.Text = ex.Message;
+            }
         }
     }
 }
