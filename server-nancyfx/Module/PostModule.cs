@@ -17,10 +17,10 @@ namespace SocialNetworkServerNV1
         public PostModule():base("/post")
         {
             //change some of these to post requests
-            Get["/create"] = parameters => Create(parameters);
-            Get["/like"] = parameters => Like(parameters);
-            Get["/comment"] = parameters => Comment(parameters);
-            Get["/"] = parameters => Load(parameters);
+            Post["/create"] = parameters => Create(parameters);
+            Post["/like"] = parameters => Like(parameters);
+            Post["/comment"] = parameters => Comment(parameters);
+            Get["/"] = _ => "Hello, this is doge";
         }
 
         /// <summary>

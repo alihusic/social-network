@@ -16,7 +16,7 @@ namespace SocialNetworkServerNV1
         public NewsfeedModule():base("/newsfeed")
         {
             Get["/"] = _ => "Hello!";
-            Get["/load"] = parameters => Load(parameters);
+            Post["/load"] = parameters => Load(parameters);
         }
 
         /// <summary>
@@ -33,13 +33,13 @@ namespace SocialNetworkServerNV1
             if (!helpers.checkToken(loadQuery.userToken)) throw new Exception("Not logged in");
 
             //extract from database
-            List<Posts> recentPosts = helpers.getRecentPosts(loadQuery.interval, loadQuery.userToken.userId);
+            IEnumerable<Posts> recentPosts = helpers.getRecentPosts(loadQuery.interval, loadQuery.userToken.userId);
 
             //check if list empty
             if (!recentPosts.Any()) throw new Exception("No more posts");
             
             //return model
-            return Negotiate.WithModel(recentPosts);
+            return recentPosts;
         }
 
     }
