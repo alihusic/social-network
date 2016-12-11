@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -22,9 +23,11 @@ namespace SocialNetwork.Model
         public virtual User user { get; set; }
 
         //creating 1:n connection with likes
+        [JsonIgnore]
         public virtual ICollection<Likes> likes { get; set; }
 
         //setting up 1:n relation with comments
+        [JsonIgnore]
         public virtual ICollection<Comments> comments { get; set; }
     }
 }

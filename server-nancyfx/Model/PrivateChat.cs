@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -19,6 +20,7 @@ namespace SocialNetwork.Model
 
 
         //setting up 1:n relation with PrivateMessages
+        [JsonIgnore]
         public virtual ICollection<PrivateMessages> privateMessages { get; set; }
 
         //setting up 1:n relation with User
