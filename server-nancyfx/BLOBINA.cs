@@ -165,6 +165,7 @@ namespace SocialNetworkServer
         public string country { get; set; }
         public string city { get; set; }
         public string pictureURL { get; set; }
+        public string coverPictureURL { get; set; }
         public string gender { get; set; }
         public DateTime dateOfBirth { get; set; }
         public Token userToken { get; set; }
@@ -175,6 +176,7 @@ namespace SocialNetworkServer
     /// </summary>
     class ChangeProfilePictureQuery
     {
+        public string username { get; set; }
         public string pictureURL { get; set; }
         public Token userToken { get; set; }
     }
@@ -200,9 +202,18 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a notifications
+    /// Class used to encapsulate required fields in a notifications query
     /// </summary>
     public class NotificationQuery
+    {
+        public Token userToken { get; set; }
+    }
+
+    /// <summary>
+    /// Class used to encapsulate required fields in a log out query
+    /// </summary>
+
+    public class LogOutQuery
     {
         public Token userToken { get; set; }
     }
