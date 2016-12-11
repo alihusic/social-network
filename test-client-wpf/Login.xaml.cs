@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SocialNetwork.Model;
+using SocialNetworkServer;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -52,10 +53,10 @@ namespace SocialNetwork
                     password = password
                 };
 
-                string urlPath = "http://localhost:51980/user/authenticate";
+                string urlPath = "http://localhost:60749/user/authenticate";
                 var request = (HttpWebRequest)WebRequest.Create(urlPath);
-                    request.Accept = "application/json";
-                    request.ContentType = "application/json";
+                request.Accept = "application/json";
+                request.ContentType = "application/json";
                 string requestBody = JsonConvert.SerializeObject(authenticateQuery);
 
                 var data = Encoding.ASCII.GetBytes(requestBody);
@@ -73,19 +74,19 @@ namespace SocialNetwork
                 var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
                 response.Close();
                 statusLabel.Text = responseString;
-
                 var tempToken = JsonConvert.DeserializeObject<Token>(responseString);
-                if (tempToken.tokenHash!=null && tempToken.tokenHash.Length == 40)
+                if (tempToken.tokenHash != null && tempToken.tokenHash.Length == 40)
                 {
                     ControlGroup.userToken = tempToken;
                     statusLabel.Text += "Token successfully added";
                 }
-                
-                
+
+
                 //statusLabel.Text = ControlGroup.userToken.tokenHash + "\n" + ControlGroup.userToken.userId;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
-                statusLabel.Text = ex.Message;
+                //statusLabel.Text = ex.StackTrace;
             }
         }
 
@@ -93,11 +94,46 @@ namespace SocialNetwork
         {
             //probably unnecessary
         }
+
+        private void logOutButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ControlGroup.userToken == null) return;
+
+            try
+            {
+                LogOutQuery query = new LogOutQuery
+                {
+                    userToken = ControlGroup.userToken,
+                };
+
+                string urlPath = "http://localhost:60749/user/logOut";
+                var request = (HttpWebRequest)WebRequest.Create(urlPath);
+                request.Accept = "application/json";
+                request.ContentType = "application/json";
+
+                string requestBody = JsonConvert.SerializeObject(query);
+
+                var data = Encoding.ASCII.GetBytes(requestBody);
+                request.Method = "POST";
+                request.ContentLength = data.Length;
+
+                using (var stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, data.Length);
+                }
+                var response = (HttpWebResponse)request.GetResponse();
+
+                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                response.Close();
+
+                ControlGroup.userToken = null;
+                statusLabel.Text = ""+ responseString;
+            }
+            catch (Exception ex)
+            {
+                statusLabel.Text = ex.Message;
+            }
+        }
     }
 
-    class AuthenticateQuery
-    {
-        public string password { get; set; }
-        public string username { get; set; }
-    }
 }

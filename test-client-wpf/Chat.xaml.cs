@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SocialNetwork.Model;
+using SocialNetworkServer;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,7 +43,7 @@ namespace SocialNetwork
                     messageText = messageContent.Text
                 };
 
-                string urlPath = "http://localhost:51980/chat/send_message";
+                string urlPath = "http://localhost:60749/chat/send_message";
                 var request = (HttpWebRequest)WebRequest.Create(urlPath);
                 request.Accept = "application/json";
                 request.ContentType = "application/json";
@@ -62,7 +63,8 @@ namespace SocialNetwork
 
                 var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
                 response.Close();
-                messageContent.Text += responseString;
+                messageContent.Text = "SENT";
+                //messageContent.Text += responseString;
                 //statusLabel.Text = responseString;
 
                
@@ -72,12 +74,6 @@ namespace SocialNetwork
             
         }
 
-        public class SendQuery
-        {
-            public Token userToken { get; set; }
-            public int receiverId { get; set; }
-            public string messageText { get; set; }
-        }
 
         private void loadChat(object sender, RoutedEventArgs e)
         {

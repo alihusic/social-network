@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using SocialNetworkServer;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,7 +31,44 @@ namespace SocialNetwork
 
         private void post(object sender, RoutedEventArgs e)
         {
+            if (ControlGroup.userToken == null) return;
 
+            try
+            {
+                CreateQuery query = new CreateQuery
+                {
+                    userToken = ControlGroup.userToken,
+                    targetId = Int32.Parse(targetTextBox.Text),
+                    creatorId = ControlGroup.userToken.userId,
+                    postContent = postContent.Text
+                };
+
+                string urlPath = "http://localhost:60749/post/create";
+                var request = (HttpWebRequest)WebRequest.Create(urlPath);
+                request.Accept = "application/json";
+                request.ContentType = "application/json";
+
+                string requestBody = JsonConvert.SerializeObject(query);
+
+                var data = Encoding.ASCII.GetBytes(requestBody);
+                request.Method = "POST";
+                request.ContentLength = data.Length;
+
+                using (var stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, data.Length);
+                }
+                var response = (HttpWebResponse)request.GetResponse();
+
+                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                response.Close();
+                postContent.Text = "SENT";
+
+            }
+            catch (Exception ex)
+            {
+                postContent.Text = ex.Message;
+            }
         }
     }
 }

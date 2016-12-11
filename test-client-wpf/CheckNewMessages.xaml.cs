@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SocialNetwork.Model;
+using SocialNetworkServer;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,7 +40,7 @@ namespace SocialNetwork
                     userToken = ControlGroup.userToken
                 };
 
-                string urlPath = "http://localhost:51980/chat/new_messages";
+                string urlPath = "http://localhost:60749/chat/new_messages";
                 var request = (HttpWebRequest)WebRequest.Create(urlPath);
                 request.Accept = "application/json";
                 request.ContentType = "application/json";
@@ -78,10 +79,6 @@ namespace SocialNetwork
             {
 
             }
-        }
-        public class CheckNewMessagesQuery
-        {
-            public Token userToken { get; set; }
         }
     }
 }
