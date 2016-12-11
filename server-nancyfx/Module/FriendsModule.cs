@@ -2,6 +2,8 @@ using Nancy;
 using Nancy.ModelBinding;
 using SocialNetwork;
 using SocialNetwork.Model;
+using SocialNetworkServer;
+using SocialNetworkServer.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,23 +32,27 @@ namespace SocialNetworkServerNV1
             // check token
             if (!helpers.checkToken(addQuery.userToken))
             {
-                return false;
+                throw new Exception("Not logged in.");
             }
 
 
             if (!helpers.userExists(addQuery.senderId) || !helpers.userExists(addQuery.receiverId))
             {
-                return false;
+                throw new Exception("User not found.");
             }
 
             //check if friendship exists - order of paramaters doesn't matter
             if (!helpers.friendshipExists(addQuery.senderId, addQuery.receiverId))
             {
-                helpers.addNewPendingFriendshipRequest(addQuery.senderId, addQuery.receiverId);
+                helpers.addNewPendingFriendshipRequest(new PendingFriendRequestsBuilder()
+                    .FriendRequestConfirmed(false)
+                    .SenderId(addQuery.userToken.userId)
+                    .ReceiverId(addQuery.receiverId)
+                    .FriendRequestSent(DateTime.Now).Build());
             }
             else
             {
-                return false;
+                throw new Exception("User already added.");
             }
 
             /* return status code
@@ -63,17 +69,22 @@ namespace SocialNetworkServerNV1
             // check token
             if (!helpers.checkToken(confirmQuery.userToken))
             {
-                return false;
+                throw new Exception("Not logged in.");
             }
+
             //check if pending friendship exists- order of parameters doesn't matter
             if (helpers.pendingFriendshipRequestExists(confirmQuery.senderId, confirmQuery.receiverId))
             {
                 // update database - ova ce ako Bog da raditi. Nemam vremena sad za testiranje detaljno, uglavnom treba sto prije testirati.
-                helpers.confirmFriendshipRequest(confirmQuery.senderId, confirmQuery.receiverId);
+                helpers.confirmFriendshipRequest(new PendingFriendRequestsBuilder()
+                    .SenderId(confirmQuery.senderId)
+                    .ReceiverId(confirmQuery.receiverId)
+                    .FriendRequestConfirmed(true)
+                    .Build());
             }
             else
             {
-                return false;
+                throw new Exception("Friendship request does not exist.");
                 //neka baci neki exception da ne postoji taj friendship request
             }
 
@@ -91,8 +102,9 @@ namespace SocialNetworkServerNV1
             // check token
             if (!helpers.checkToken(deleteQuery.userToken))
             {
-                return false;
+                throw new Exception("Not logged in.");
             }
+
             // check if friendship exists
             if (helpers.friendshipExists(deleteQuery.senderId, deleteQuery.receiverId))
             {
@@ -101,7 +113,7 @@ namespace SocialNetworkServerNV1
             }
             else
             {
-                return false;
+                throw new Exception("Friendship does not exist.");
                 //nek mozda baci neki exception da nije pronadjen taj friendship
             }
             /* update database
@@ -119,7 +131,7 @@ namespace SocialNetworkServerNV1
             // check token
             if (!helpers.checkToken(getAllQuery.userToken))
             {
-                return false;
+                throw new Exception("Not logged in.");
             }
 
             //e jebes ga, ovo bi trebalo radit
@@ -132,41 +144,10 @@ namespace SocialNetworkServerNV1
         }
 
         /*todo: 
-         * maybe add a check new friendship requests method
-         * add a check user cookie method
-         * add a check if friendship exists method - done (Ermin)
-         * add a check if pending friendship exists method
          * add a status report class
          */
 
-
-
     }
 
-    class GetAllQuery
-    {
-        public int userId { get; set; }
-        public Token userToken { get; set; }
-    }
-
-    class DeleteQuery
-    {
-        public int senderId { get; set; }
-        public int receiverId { get; set; }
-        public Token userToken { get; set; }
-    }
-
-    class ConfirmQuery
-    {
-        public int senderId { get; set; }
-        public int receiverId { get; set; }
-        public Token userToken { get; set; }
-    }
-
-    class AddQuery
-    {
-        public int senderId { get; set; }
-        public int receiverId { get; set; }
-        public Token userToken { get; set; }
-    }
+    
 }

@@ -2,6 +2,8 @@ using Nancy;
 using Nancy.ModelBinding;
 using SocialNetwork;
 using SocialNetwork.Model;
+using SocialNetworkServer;
+using SocialNetworkServer.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,10 +75,24 @@ namespace SocialNetworkServerNV1
                 {
                     //creating new chat if one doesn't exist
                     //order of parameters doesn't matter
-                    helpers.createNewChat(sendQuery.userToken.userId, sendQuery.receiverId);
+                    helpers.createNewChat(new PrivateChatBuilder().User1(sendQuery.userToken.userId)
+                        .User2(sendQuery.receiverId)
+                        .ChatCreationDate(DateTime.Now).Build());
                 }
-                //saves message in UnreadMessages table
-                helpers.saveMessage(sendQuery.messageText, sendQuery.userToken.userId, sendQuery.receiverId, helpers.getChatId(sendQuery.userToken.userId, sendQuery.receiverId));
+                
+                //saves message in UnreadMessages and PrivateMessages tables
+                helpers.saveMessage(new PrivateMessagesBuilder()
+                    .SenderId(sendQuery.userToken.userId)
+                    .RecipientId(sendQuery.receiverId)
+                    .MessageTimeStamp(DateTime.Now)
+                    .MessageText(sendQuery.messageText)
+                    .ChatId(helpers.getChatId(sendQuery.userToken.userId,sendQuery.receiverId)).Build(), 
+                    new UnreadMessagesBuilder()
+                    .SenderId(sendQuery.userToken.userId)
+                    .RecipientId(sendQuery.receiverId)
+                    .MessageTimeStamp(DateTime.Now)
+                    .MessageText(sendQuery.messageText)
+                    .ChatId(helpers.getChatId(sendQuery.userToken.userId, sendQuery.receiverId)).Build());
             }
             catch (Exception ex)
             {
@@ -115,22 +131,6 @@ namespace SocialNetworkServerNV1
 
     }
 
-    /// <summary>
-    /// Class used to encapsulate required fields in a send message query
-    /// </summary>
-    public class SendQuery
-    {
-        public Token userToken { get; set; }
-        public int receiverId { get; set; }
-        public string messageText { get; set; }
-    }
-
-    /// <summary>
-    /// Class used to encapsulate required fields in a check new messages query
-    /// </summary>
-    public class CheckNewMessagesQuery
-    {
-        public Token userToken { get; set; }
-    }
+    
 
 }

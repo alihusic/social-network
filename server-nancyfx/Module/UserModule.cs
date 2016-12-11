@@ -17,7 +17,8 @@ namespace SocialNetworkServerNV1
         {
             Get["/"] = _ => "Hello!";
             Post["/authenticate"] = parameters => Authenticate(parameters);
-            Get["/register"] = parameters => Register(parameters);
+            Post["/register"] = parameters => Register(parameters);
+            Post["/logOut"] = parameters => LogOut(parameters);
         }
    
         /// <summary>
@@ -64,16 +65,16 @@ namespace SocialNetworkServerNV1
         {
             //map request to an object
 
-            var registerQuery = new RegisterQuery();
+            var registerQuery = this.Bind<RegisterQuery>();
             // TODO:
             //check if username already taken
             // check if data valid
             // save changes to the database
-            if (!checkUsername(registerQuery.username))
+            if (!helpers.checkUsername(registerQuery.username))
             {
                 if(registerQuery.dateOfBirth is DateTime)
                 {
-                    saveUser(new UserBuilder()
+                    helpers.saveUser(new UserBuilder()
                         .Name(registerQuery.name)
                         .LastName(registerQuery.lastName)
                         .Username(registerQuery.username)
@@ -89,76 +90,38 @@ namespace SocialNetworkServerNV1
                 else
                 {
                     //typeMissmatchException
+                    throw new Exception("Fail");
                 }
             }
             else
             {
-                //usernameTakenException
+                throw new Exception("Username already taken.");
             }
             // return a status code
             
-            return null;
+            return Negotiate.WithStatusCode(200);
         }
 
-        /// <summary>
-        /// saveUSer saves User information to database
-        /// </summary>
-        /// <param name="name">string. User's name.</param>
-        /// <param name="lastName">string. User's last name.</param>
-        /// <param name="username">string. User's unique username.</param>
-        /// <param name="password">string. User's password.</param>
-        /// <param name="country">string. User's country</param>
-        /// <param name="city">string. User's city.</param>
-        /// <param name="pictureURL">string. User's picture URL.</param>
-        /// <param name="gender">string. User's gender.</param>
-        /// <param name="dateOfBirth">DateTime. User's birth date.</param>
-
-        /*private void saveUser(string name, string lastName, string username, string password, string country, string city, string pictureURL, string gender, DateTime dateOfBirth)
+        public dynamic LogOut(dynamic parameters)
         {
-            using (var context = new SocialNetworkDBContext())
-            {
-                var user = new User()
-                {
-                    name = name,
-                    lastName = lastName,
-                    username = username,
-                    password = password,
-                    country = country,
-                    city = city,
-                    pictureURL = pictureURL,
-                    gender = gender,
-                    dateOfBirth = dateOfBirth
-                };
+            //binding data
+            var logOutQuery = this.Bind<LogOutQuery>();
 
-                context.users.Add(user);
-                context.SaveChanges();
-            }
-        }*/
+            //checking token
+            if (!helpers.checkToken(logOutQuery.userToken))
+                throw new Exception("Not logged in.");
 
 
-        private void saveUser(User user)
-        {
-            using (var context = new SocialNetworkDBContext())
-            {
-                context.users.Add(user);
-                context.SaveChanges();
-            }
+            //deleting token (logging out user) - on client side user should be redirected to log in page
+            helpers.removeTokenDB(logOutQuery.userToken);
+            FunctionGroup.removeToken(logOutQuery.userToken);
+
+
+            return "User logged out!";
+
         }
 
-        /// <summary>
-        /// checkUsername checks if username is unique.
-        /// </summary>
-        /// <param name="username">string. Users's username.</param>
-        /// <returns>
-        /// Retruns true if username already exists, else returns false.</returns>
-
-        private bool checkUsername(string username)
-        {
-            using (var context = new SocialNetworkDBContext())
-            {
-                return context.users.Any(u => u.username == username);
-            }
-        }
+        
 
     }
     

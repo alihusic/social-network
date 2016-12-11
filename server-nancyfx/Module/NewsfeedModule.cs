@@ -1,7 +1,9 @@
 using Nancy;
 using Nancy.ModelBinding;
+using Newtonsoft.Json;
 using SocialNetwork;
 using SocialNetwork.Model;
+using SocialNetworkServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,7 @@ namespace SocialNetworkServerNV1
         public NewsfeedModule():base("/newsfeed")
         {
             Get["/"] = _ => "Hello!";
-            Get["/load"] = parameters => Load(parameters);
+            Post["/load"] = parameters => Load(parameters);
         }
 
         /// <summary>
@@ -27,25 +29,26 @@ namespace SocialNetworkServerNV1
         {
             //map request to objects
             var loadQuery = this.Bind<LoadNewsfeedQuery>();
-
+            
             // check user token
             if (!helpers.checkToken(loadQuery.userToken)) throw new Exception("Not logged in");
 
             //extract from database
             List<Posts> recentPosts = helpers.getRecentPosts(loadQuery.interval, loadQuery.userToken.userId);
 
-            //check if list empty
             if (!recentPosts.Any()) throw new Exception("No more posts");
             
             //return model
-            return Negotiate.WithModel(recentPosts);
+            return JsonConvert.SerializeObject(recentPosts,
+                             Newtonsoft.Json.Formatting.None,
+                             new JsonSerializerSettings
+                             {
+                                 NullValueHandling = NullValueHandling.Ignore
+                             });
         }
 
+        
     }
 
-    class LoadNewsfeedQuery
-    {
-        public Token userToken { get; set; }
-        public int interval { get; set; }
-    }
+    
 }

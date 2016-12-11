@@ -2,6 +2,8 @@ using Nancy;
 using Nancy.ModelBinding;
 using SocialNetwork;
 using SocialNetwork.Model;
+using SocialNetworkServer;
+using SocialNetworkServer.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +17,10 @@ namespace SocialNetworkServerNV1
         public PostModule():base("/post")
         {
             //change some of these to post requests
-            Get["/create"] = parameters => Create(parameters);
-            Get["/like"] = parameters => Like(parameters);
-            Get["/comment"] = parameters => Comment(parameters);
-            Get["/"] = parameters => Load(parameters);
+            Post["/create"] = parameters => Create(parameters);
+            Post["/like"] = parameters => Like(parameters);
+            Post["/comment"] = parameters => Comment(parameters);
+            Get["/"] = _ => "Hello, this is doge";
         }
 
         /// <summary>
@@ -31,25 +33,30 @@ namespace SocialNetworkServerNV1
             //bind request to object
             var likeQuery = this.Bind<LikeQuery>();
 
-            //check user cookie
-            if (!helpers.checkToken(likeQuery.userToken)) return false;
+            //check user token
+            if (!helpers.checkToken(likeQuery.userToken))
+                throw new Exception("Not logged in.");
 
             //check if post exists
-            if (!helpers.postExists(likeQuery.postId)) return false;
+            if (!helpers.postExists(likeQuery.postId))
+                throw new Exception("Post does not exist.");
 
             // check if post visible to user
-            // maybe refactor this later
-            if (!helpers.isPostVisible(likeQuery.creatorId, likeQuery.targetId)) return false;
+            if (!helpers.isPostVisible(likeQuery.creatorId, likeQuery.targetId))
+                throw new Exception("Post not visible");
 
             /* check if user already liked -> remove like
             *                       else -> add like(suggestion: we can disable like button on post load if user has already liked smth (Ermin))*/
             if (!helpers.isLiked(likeQuery.userId, likeQuery.postId))
             {
-                helpers.addLike(likeQuery.userId, likeQuery.postId);
+                helpers.addLike(new LikesBuilder()
+                    .PostId(likeQuery.postId)
+                    .UserId(likeQuery.userToken.userId)
+                    .Build());
             }
             else
             {
-                return false;
+                throw new Exception("Post already liked.");
                 //mozda disable button na loadu posta, ili staviti na buttonu kada se klikne nek se disable-a
             }
 
@@ -68,31 +75,30 @@ namespace SocialNetworkServerNV1
             //map request to object
             var commentQuery = this.Bind<CommentQuery>();
 
-            //check user cookie
+            //check user token
             if (!helpers.checkToken(commentQuery.userToken))
-            {
-                return false;
-            }
+                throw new Exception("Not logged in.");
 
             //checking the existance of the post by ID
             if (helpers.postExists(commentQuery.postId))
             {
                 //here I am nesting if statements because it is probably easier to handle exceptions. this can be done ofc in one if.
-                if (helpers.isPostVisible(commentQuery.creatorId, commentQuery.targetId))
+                if (helpers.isPostVisible(commentQuery.userToken.userId, commentQuery.targetId))
                 {
-                    helpers.addComment(commentQuery.userId, commentQuery.postId, commentQuery.commentText);
+                    helpers.addComment(new CommentsBuilder()
+                        .CommentText(commentQuery.commentText)
+                        .PostId(commentQuery.postId)
+                        .UserId(commentQuery.userToken.userId)
+                        .Build());
                 }
                 else
                 {
-                    return false;
-                    //thorws postNotVisibleException
+                    throw new Exception("Post not visible.");
                 }
-
             }
             else
             {
-                return false;
-                //thorws postDoenstExist exception
+                throw new Exception("Post does not exist.");
             }
 
             //return status code
@@ -109,19 +115,26 @@ namespace SocialNetworkServerNV1
             //bind request to object
             var createQuery = this.Bind<CreateQuery>();
 
-            //check user cookie
-            if (!helpers.checkToken(createQuery.userToken)) return false;
+            //check user token
+            if (!helpers.checkToken(createQuery.userToken))
+                throw new Exception("Not logged in.");
 
             //check where is post(on users profile or on another wall)
             try
             {
-                if (helpers.isPostVisible(createQuery.creatorId, createQuery.targetId))
+                if (helpers.isPostVisible(createQuery.userToken.userId, createQuery.targetId))
                 {
-                    helpers.createPost(createQuery.creatorId, createQuery.targetId, createQuery.postContent);
+                    helpers.createPost(new PostsBuilder()
+                        .CreatorId(createQuery.userToken.userId)
+                        .PostContent(createQuery.postContent)
+                        .PostCreationDate(DateTime.Now)
+                        .TargetId(createQuery.targetId)
+                        .NumOfLikes(0)
+                        .Build());
                 }
                 else
                 {
-                    return false;
+                    throw new Exception("Target user not in friend list.");
                     //neka baci exception da nisu prijatelji
                 }
             }
@@ -145,7 +158,8 @@ namespace SocialNetworkServerNV1
             var loadQuery = this.Bind<LoadQuery>();
 
             // checking user token
-            if (!helpers.checkToken(loadQuery.userToken)) return false;
+            if (!helpers.checkToken(loadQuery.userToken))
+                throw new Exception("Not logged in.");
 
             // check if the user has the privileges to see the post
             if (helpers.isPostVisible(loadQuery.creatorId, loadQuery.targetId))
@@ -155,7 +169,7 @@ namespace SocialNetworkServerNV1
             }
             else
             {
-                return false;
+                throw new Exception("Post not visible.");
             }
             
         }
@@ -164,39 +178,5 @@ namespace SocialNetworkServerNV1
 
     //todo: improve Queries, put them in one file, make them inherit from an ancestor class
 
-    class CommentQuery
-    {
-        public int userId { get; set; }
-        public int postId { get; set; }
-        public int creatorId { get; set; }
-        public int targetId { get; set; }
-        public string commentText { get; set; }
-        public Token userToken { get; set; }
-    }
-
-    class CreateQuery
-    {
-        public int targetId { get; set; }
-        public int creatorId { get; set; }
-        public Token userToken { get; set; }
-        public string postContent { get; set; }
-    }
-
-    class LikeQuery
-    {
-        public int userId { get; set; }
-        public int creatorId { get; set; }
-        public int targetId { get; set; }
-        public int postId { get; set; }
-        public Token userToken { get; set; }
-    }
-
-    class LoadQuery
-    {
-        public Token userToken { get; set; }
-        public int postId { get; set; }
-        public int targetId { get; set; }
-        public int creatorId { get; set; }
-        public DateTime postCreationDate { get; set; }
-    }
+    
 }
