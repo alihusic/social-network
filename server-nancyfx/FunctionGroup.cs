@@ -244,7 +244,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// Helper method used to check if there is a user with a certain Id
+        /// Method used to check if there is a user with a certain Id
         /// </summary>
         /// <param name="userId"> Type int. Users id that is sent to the method. </param>
         /// <returns>
@@ -259,11 +259,12 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @chatExists checks if chat exists
+        /// Method used to check if chat exists
         /// </summary>
         /// <param name="user1Id">int. Id of user 1</param>
         /// <param name="user2Id">int. Id of user 2</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Returns true if chat exists, else returns false</returns>
         public bool chatExists(int user1Id, int user2Id)
         {
             //insert context class name
@@ -274,7 +275,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @friendshipExists checks if two users are already friends
+        /// Method used to check if two users are already friends
         /// </summary>
         /// <param name="user1Id"> int. represents id of first user</param>
         /// <param name="user2Id">int. represents id of second user</param>
@@ -303,7 +304,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @getAllFriendsId is used to find id's of all friends user has. 
+        /// Method used to retrieve id's of all friends user has. 
         /// </summary>
         /// <param name="userId">int. User's Id</param>
         /// <returns>
@@ -335,7 +336,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @confirmFriendRequest confirms friend request between two users
+        /// Method used to confirm friend request between two users
         /// </summary>
         /// <param name="senderId">int. id of first user</param>
         /// <param name="receiverId">int. ide of second user</param>
@@ -350,7 +351,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @addNewFriendship creates new pending friendship request
+        /// Method used to create new pending friendship request
         /// </summary>
         /// <param name="senderId"> int. Sender's Id</param>
         /// <param name="receiverId">int. Receiver's Id</param>
@@ -380,7 +381,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @getAllUsers Used to find all friends of a user
+        /// Metdod used to find all friends of a user
         /// </summary>
         /// <param name="userId"> int. User's Id</param>
         /// <returns>
@@ -403,7 +404,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @getChatId used to retrieve in which chat conversation is happening
+        /// Method used to retrieve in which chat conversation is happening
         /// </summary>
         /// <param name="user1Id">int. Id of user 1</param>
         /// <param name="user2Id">int. Id of user 2</param>
@@ -419,7 +420,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @createNewChat creates new chat.
+        /// Method used to create new chat.
         /// </summary>
         /// <param name="user1Id">int. Id of a first User</param>
         /// <param name="user2Id">int. Id of a second User</param>
@@ -433,7 +434,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @saveMessage saves message into table UnreadMessages and PrivateMessages
+        /// Method used to save message into tables UnreadMessages and PrivateMessages
         /// </summary>
         /// <param name="messageText">string. Text of a message</param>
         /// <param name="senderId">int. Sender's Id</param>
@@ -450,7 +451,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @checkUnreadMessages checks if there are any new entries in table UnreadMessages
+        /// Method used to check if there are any new entries in table UnreadMessages
         /// </summary>
         /// <param name="userId"> int. User's id</param>
         /// <returns>
@@ -490,6 +491,13 @@ namespace SocialNetworkServerNV1
                 return unreadMessagesIdList;
             }
         }
+
+        /// <summary>
+        /// Method used to retrieve and delete all messages from unread messages table
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>
+        /// List<UnreadMessages></returns>
 
         public List<UnreadMessages> getAllUnreadMessages(int userId)
         {
@@ -571,7 +579,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @addLike adds new like to the table Likes and increments field numOfLikes in table Posts
+        /// Method used to add new like to the table Likes and increments field numOfLikes in table Posts
         /// </summary>
         /// <param name="userId">int. User's Id</param>
         /// <param name="postId">int. Post Id</param>
@@ -605,7 +613,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @createPost creates new post
+        /// Method used to create new post
         /// </summary>
         /// <param name="creatorId">int. Creator's id</param>
         /// <param name="targetId">int. Where is post being posted.</param>
@@ -700,7 +708,7 @@ namespace SocialNetworkServerNV1
 
 
         /// <summary>
-        /// deleteAllTokens deletes all entries in table Token.
+        /// Method used to delete all entries in table Token.
         /// </summary>
 
         public void deleteAllTokens()
@@ -712,7 +720,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// editUserInfo edits user's info.
+        /// Method used to edit user's info.
         /// </summary>
         /// <param name="userId">int. User's id.</param>
         /// <param name="name">string. User's name.</param>
@@ -741,7 +749,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// checkURL cinfirms that URL exits
+        /// Method used to confirm existence URL exits
         /// </summary>
         /// <param name="URL">string. URL.</param>
         /// <returns>
@@ -753,7 +761,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// updateProfilePicture updates User's profile picture.
+        /// MEthod used to update User's profile picture.
         /// </summary>
         /// <param name="userId">int. User's ID.</param>
         /// <param name="pictureURL">string. Picture URL.</param>
@@ -774,7 +782,7 @@ namespace SocialNetworkServerNV1
 
 
         /// <summary>
-        /// checkPassword checks if password already exists in databse.
+        /// MEthod used to check if password already exists in databse.
         /// </summary>
         /// <param name="password">string. User's password.</param>
         /// <returns>
@@ -790,7 +798,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// updatePassword sets new password.
+        /// Method used to set new password.
         /// </summary>
         /// <param name="newPassword">string. New password.</param>
         /// <param name="userId">int. User's ID.</param>
@@ -808,7 +816,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// updateCoverPicture updates cover picture.
+        /// MEthod used to update cover picture.
         /// </summary>
         /// <param name="userId">int. User's id.</param>
         /// <param name="coverPictureURL">string. Cover picture URL.</param>
@@ -828,7 +836,7 @@ namespace SocialNetworkServerNV1
         
 
         /// <summary>
-        /// Method saves user info
+        /// Method used to save user's info
         /// </summary>
         /// <param name="user">USer. User object.</param>
 
@@ -842,7 +850,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// checkUsername checks if username is unique.
+        /// Method used to check if username is unique.
         /// </summary>
         /// <param name="username">string. Users's username.</param>
         /// <returns>
