@@ -18,10 +18,5 @@ namespace SocialNetwork.Model
         public int receiverId { get; set; }
         public DateTime friendRequestSent { get; set; }
         public bool friendRequestConfirmed { get; set; }
-
-        
-        
-        public virtual User user { get; set; }
-
     }
 }

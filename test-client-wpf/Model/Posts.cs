@@ -18,6 +18,5 @@ namespace SocialNetwork.Model
         public int creatorId { get; set; }
         public int targetId { get; set; }
         public int numOfLikes { get; set; }
-
     }
 }

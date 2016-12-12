@@ -18,7 +18,5 @@ namespace SocialNetwork.Model
         public int recipientId { get; set; }
         public DateTime messageTimeStamp { get; set; }
         public int chatID { get; set; }
-
-
     }
 }

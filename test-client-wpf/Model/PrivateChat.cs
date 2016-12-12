@@ -16,6 +16,5 @@ namespace SocialNetwork.Model
         public int user1 { get; set; }
         public int user2 { get; set; }
         public DateTime chatCreationDate { get; set; }
-
     }
 }
