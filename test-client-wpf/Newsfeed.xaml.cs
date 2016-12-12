@@ -44,7 +44,7 @@ namespace SocialNetwork
                 LoadNewsfeedQuery query = new LoadNewsfeedQuery()
                 {
                     userToken = ControlGroup.userToken,
-                    interval = interval
+                    interval = this.interval
                 };
 
                 string urlPath = "http://localhost:60749/newsfeed/load";
@@ -63,31 +63,31 @@ namespace SocialNetwork
                     stream.Write(data, 0, data.Length);
                 }
                 var response = (HttpWebResponse)request.GetResponse();
-
                 var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
                 response.Close();
-                
 
+                //newsfeedContent.Text += responseString;
+                if (responseString == null) throw new Exception("No more posts!");
                 List<Posts> listPosts = JsonConvert.DeserializeObject<List<Posts>>(responseString);
 
-                if (listPosts != null  && listPosts.Any() && listPosts.ElementAt(0).postContent.Length > 0)
-                {
-                    foreach (var post in listPosts)
-                    {
-                        newsfeedContent.Text += "creatorId: " + post.creatorId;
-                        newsfeedContent.Text += "\n";
-                        newsfeedContent.Text += "TargetId: " + post.targetId;
-                        newsfeedContent.Text += "\n";
-                        newsfeedContent.Text += "" + post.postContent;
-                    }
+                 if (listPosts != null  && listPosts.Any() && listPosts.ElementAt(0).postContent.Length > 0)
+                 {
+                     foreach (var post in listPosts)
+                     {
+                         newsfeedContent.Text += "\ncreatorId: " + post.creatorId;
+                         newsfeedContent.Text += "\n";
+                         newsfeedContent.Text += "TargetId: " + post.targetId;
+                         newsfeedContent.Text += "\n";
+                         newsfeedContent.Text += "" + post.postContent;
+                     }
 
-                    interval += 10;
-                    return;
-                }
-                else
-                {
-                    throw new Exception("No more posts");
-                }
+                     interval += 10;
+                     return;
+                 }
+                 else
+                 {
+                     throw new Exception("No more posts");
+                 }
 
             }
             catch (Exception ex)
