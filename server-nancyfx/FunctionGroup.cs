@@ -175,14 +175,15 @@ namespace SocialNetworkServerNV1
         /// <param name="cookie">a Token generated from the factory</param>
         public static void insertNewToken(Token token)
         {
-            var userFound = getUserById(token.userId);
+            
             using (var context = new SocialNetworkDBContext())
             {
+                
                 var tokenToInsert = new Token()
                 {
-                    userId=token.userId,
-                    tokenHash=token.tokenHash,
-                    user=userFound
+                    userId = token.userId,
+                    tokenHash = token.tokenHash,
+                    user = context.users.Find(token.userId)
                 };
 
                 context.tokens.Add(tokenToInsert);

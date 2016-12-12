@@ -8,7 +8,7 @@ namespace SocialNetworkServer
 {
     public class BLOBINA
     {
-        public static string s = "vuci s rodjom";
+        public static string s = "This class should be renamed...";
     }
 
     /// <summary>
