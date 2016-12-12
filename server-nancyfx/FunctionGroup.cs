@@ -94,11 +94,7 @@ namespace SocialNetworkServerNV1
         /// <param name="token">Token to be removed</param>
         public static void removeToken(Token token)
         {
-<<<<<<< HEAD
-            tokenList.RemoveAll(t=>t.userId.Equals(token.userId));
-=======
             tokenList.RemoveAll(t => t.userId.Equals(token.userId));
->>>>>>> refs/remotes/origin/Maulwurf
         }
 
         /// <summary>
@@ -309,11 +305,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-<<<<<<< HEAD
-        /// @getAllFriendsId is used to find id's of all friends user has. 
-=======
         /// Method used to retrieve id's of all friends user has. 
->>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="userId">int. User's Id</param>
         /// <returns>
@@ -644,38 +636,8 @@ namespace SocialNetworkServerNV1
         /// <param name="userId">int. User's Id</param>
         /// <returns>
         /// Returns List<Posts></returns>
-<<<<<<< HEAD
 
-        public IEnumerable<Posts> getRecentPosts(int interval, int userId)
-        {
-            List<int> postsId = getRecentPostsId(userId);
-
-            using (var context = new SocialNetworkDBContext())
-            {
-                List<Posts> posts = new List<Posts>();
-
-                foreach (var postId in postsId)
-                {
-                    //extract object by ID
-                    posts.Add(context.posts.Find(postId));                    
-                }
-=======
->>>>>>> refs/remotes/origin/Maulwurf
-
-                IEnumerable<Posts> postsToReturn = posts.OrderByDescending(p => p.postCreationDate).Skip(interval);
-                
-                return postsToReturn;
-
-            }
-        }
-
-        /// <summary>
-        /// Method used to retrieve Id's of recent posts
-        /// </summary>
-        /// <param name="userId">int. User's Id.</param>
-        /// <returns>
-        /// Returns List<int></returns>
-        public List<int> getRecentPostsId(int userId)
+        public List<Posts> getRecentPosts(int interval, int userId)
         {
             List<int> postsId = getRecentPostsId(userId);
             List<Posts> posts = new List<Posts>();
@@ -712,39 +674,6 @@ namespace SocialNetworkServerNV1
 
             using (var context = new SocialNetworkDBContext())
             {
-<<<<<<< HEAD
-
-                List<int> postId = new List<int>();
-
-                var posts = context.posts;
-
-                foreach (var p in posts)
-                {
-                    if (p.creatorId == userId)
-                    {
-                        postId.Add(p.postsId);
-                    }
-                }
-
-                return postId;
-            }
-        }
-
-
-        /// <summary>
-        /// Method is used to retrieve all notifications for one user
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns>
-        /// Returns List<Notifications></returns>
-        public List<Notifications> loadNotificationsUser(int userId)
-        {
-            using (var context = new SocialNetworkDBContext())
-            {
-                return context.notifications.Where(n => (n.entityTargetId == userId && n.notificationType != 4)).ToList();
-            }
-
-=======
                 
                 var posts = context.posts;
 
@@ -759,9 +688,7 @@ namespace SocialNetworkServerNV1
                 
             }
             return postId;
->>>>>>> refs/remotes/origin/Maulwurf
         }
-
 
 
         /// <summary>
@@ -794,11 +721,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-<<<<<<< HEAD
-        /// editUserInfo edits user's info.
-=======
         /// Method used to edit user's info.
->>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="userId">int. User's id.</param>
         /// <param name="name">string. User's name.</param>
@@ -827,11 +750,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-<<<<<<< HEAD
-        /// checkURL cinfirms that URL exits
-=======
         /// Method used to confirm existence URL exits
->>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="URL">string. URL.</param>
         /// <returns>
@@ -843,11 +762,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-<<<<<<< HEAD
-        /// updateProfilePicture updates User's profile picture.
-=======
         /// MEthod used to update User's profile picture.
->>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="userId">int. User's ID.</param>
         /// <param name="pictureURL">string. Picture URL.</param>
@@ -868,11 +783,7 @@ namespace SocialNetworkServerNV1
 
 
         /// <summary>
-<<<<<<< HEAD
-        /// checkPassword checks if password already exists in databse.
-=======
         /// MEthod used to check if password already exists in databse.
->>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="password">string. User's password.</param>
         /// <returns>
@@ -888,11 +799,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-<<<<<<< HEAD
-        /// updatePassword sets new password.
-=======
         /// Method used to set new password.
->>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="newPassword">string. New password.</param>
         /// <param name="userId">int. User's ID.</param>
@@ -910,11 +817,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-<<<<<<< HEAD
-        /// updateCoverPicture updates cover picture.
-=======
         /// MEthod used to update cover picture.
->>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="userId">int. User's id.</param>
         /// <param name="coverPictureURL">string. Cover picture URL.</param>
@@ -934,11 +837,7 @@ namespace SocialNetworkServerNV1
         
 
         /// <summary>
-<<<<<<< HEAD
-        /// Method saves user info
-=======
         /// Method used to save user's info
->>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="user">USer. User object.</param>
 
@@ -952,11 +851,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-<<<<<<< HEAD
-        /// checkUsername checks if username is unique.
-=======
         /// Method used to check if username is unique.
->>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="username">string. Users's username.</param>
         /// <returns>
