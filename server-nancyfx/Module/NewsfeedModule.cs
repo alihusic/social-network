@@ -35,9 +35,14 @@ namespace SocialNetworkServerNV1
 
             //extract from database
             List<Posts> recentPosts = helpers.getRecentPosts(loadQuery.interval, loadQuery.userToken.userId);
-
-            if (!recentPosts.Any()) throw new Exception("No more posts");
             
+            
+            //return ""+recentPosts.Count();
+            if (recentPosts.Count() == 0)
+            {
+                return null;
+            }
+
             //return model
             return JsonConvert.SerializeObject(recentPosts,
                              Newtonsoft.Json.Formatting.None,

@@ -18,7 +18,7 @@ namespace SocialNetworkServerNV1
             Get["/"] = _ => "Hello!";
             Post["/authenticate"] = parameters => Authenticate(parameters);
             Post["/register"] = parameters => Register(parameters);
-            Post["/logOut"] = parameters => LogOut(parameters);
+            Post["/log_out"] = parameters => LogOut(parameters);
         }
    
         /// <summary>
