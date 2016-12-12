@@ -64,7 +64,45 @@ namespace SocialNetwork
             Main.Content = new CreatePost();
         }
 
-        
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (ControlGroup.userToken == null) return;
+
+            try
+            {
+                LogOutQuery query = new LogOutQuery
+                {
+                    userToken = ControlGroup.userToken,
+                };
+
+                string urlPath = "http://localhost:60749/user/log_out";
+                var request = (HttpWebRequest)WebRequest.Create(urlPath);
+                request.Accept = "application/json";
+                request.ContentType = "application/json";
+
+                string requestBody = JsonConvert.SerializeObject(query);
+
+                var data = Encoding.ASCII.GetBytes(requestBody);
+                request.Method = "POST";
+                request.ContentLength = data.Length;
+
+                using (var stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, data.Length);
+                }
+                var response = (HttpWebResponse)request.GetResponse();
+
+                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                response.Close();
+
+                ControlGroup.userToken = null;
+                //statusLabel.Text = "" + responseString;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }
 
