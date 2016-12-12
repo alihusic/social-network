@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using testClientWPF;
 
 namespace SocialNetwork
 {
@@ -47,32 +48,24 @@ namespace SocialNetwork
             string password = this.passwordBox.Password;
             try
             {
-                var authenticateQuery = new AuthenticateQuery
+                var query = new AuthenticateQuery
                 {
                     username = username,
                     password = password
                 };
 
-                string urlPath = "http://localhost:60749/user/authenticate";
-                var request = (HttpWebRequest)WebRequest.Create(urlPath);
-                request.Accept = "application/json";
-                request.ContentType = "application/json";
-                string requestBody = JsonConvert.SerializeObject(authenticateQuery);
+                string requestBody = JsonConvert.SerializeObject(query);
 
-                var data = Encoding.ASCII.GetBytes(requestBody);
+                var request = new SNRequestBuilder()
+                    .Accept("application/json")
+                    .ContentType("application/json")
+                    .RequestBody(requestBody)
+                    .RequestMethod("POST")
+                    .UrlSubPath("/user/authenticate")
+                    .Build();
 
-                request.Method = "POST";
-                request.ContentLength = data.Length;
+                var responseString = request.requestFromServer();
 
-                using (var stream = request.GetRequestStream())
-                {
-                    stream.Write(data, 0, data.Length);
-                }
-
-                var response = (HttpWebResponse)request.GetResponse();
-
-                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                response.Close();
                 statusLabel.Text = responseString;
                 var tempToken = JsonConvert.DeserializeObject<Token>(responseString);
                 if (tempToken.tokenHash != null && tempToken.tokenHash.Length == 40)
@@ -106,25 +99,17 @@ namespace SocialNetwork
                     userToken = ControlGroup.userToken,
                 };
 
-                string urlPath = "http://localhost:60749/user/logOut";
-                var request = (HttpWebRequest)WebRequest.Create(urlPath);
-                request.Accept = "application/json";
-                request.ContentType = "application/json";
-
                 string requestBody = JsonConvert.SerializeObject(query);
 
-                var data = Encoding.ASCII.GetBytes(requestBody);
-                request.Method = "POST";
-                request.ContentLength = data.Length;
+                var request = new SNRequestBuilder()
+                    .Accept("application/json")
+                    .ContentType("application/json")
+                    .RequestBody(requestBody)
+                    .RequestMethod("POST")
+                    .UrlSubPath("/user/log_out")
+                    .Build();
 
-                using (var stream = request.GetRequestStream())
-                {
-                    stream.Write(data, 0, data.Length);
-                }
-                var response = (HttpWebResponse)request.GetResponse();
-
-                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                response.Close();
+                var responseString = request.requestFromServer();
 
                 ControlGroup.userToken = null;
                 statusLabel.Text = ""+ responseString;

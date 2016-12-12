@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using testClientWPF;
 
 namespace SocialNetwork
 {
@@ -27,6 +28,9 @@ namespace SocialNetwork
     {
         public MainWindow()
         {
+            ServerData.host = "http://localhost";
+            ServerData.port = "51980";
+            
             InitializeComponent();
         }
 
@@ -75,25 +79,17 @@ namespace SocialNetwork
                     userToken = ControlGroup.userToken,
                 };
 
-                string urlPath = "http://localhost:60749/user/log_out";
-                var request = (HttpWebRequest)WebRequest.Create(urlPath);
-                request.Accept = "application/json";
-                request.ContentType = "application/json";
-
                 string requestBody = JsonConvert.SerializeObject(query);
 
-                var data = Encoding.ASCII.GetBytes(requestBody);
-                request.Method = "POST";
-                request.ContentLength = data.Length;
+                var request = new SNRequestBuilder()
+                    .Accept("application/json")
+                    .ContentType("application/json")
+                    .RequestBody(requestBody)
+                    .RequestMethod("POST")
+                    .UrlSubPath("/user/log_out")
+                    .Build();
 
-                using (var stream = request.GetRequestStream())
-                {
-                    stream.Write(data, 0, data.Length);
-                }
-                var response = (HttpWebResponse)request.GetResponse();
-
-                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                response.Close();
+                var responseString = request.requestFromServer();
 
                 ControlGroup.userToken = null;
                 //statusLabel.Text = "" + responseString;

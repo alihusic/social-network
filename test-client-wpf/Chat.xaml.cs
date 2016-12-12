@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using testClientWPF;
 
 namespace SocialNetwork
 {
@@ -43,26 +44,17 @@ namespace SocialNetwork
                     messageText = messageContent.Text
                 };
 
-                string urlPath = "http://localhost:60749/chat/send_message";
-                var request = (HttpWebRequest)WebRequest.Create(urlPath);
-                request.Accept = "application/json";
-                request.ContentType = "application/json";
                 string requestBody = JsonConvert.SerializeObject(query);
 
-                var data = Encoding.ASCII.GetBytes(requestBody);
+                var request = new SNRequestBuilder()
+                    .Accept("application/json")
+                    .ContentType("application/json")
+                    .RequestBody(requestBody)
+                    .RequestMethod("POST")
+                    .UrlSubPath("/chat/send_message")
+                    .Build();
 
-                request.Method = "POST";
-                request.ContentLength = data.Length;
-
-                using (var stream = request.GetRequestStream())
-                {
-                    stream.Write(data, 0, data.Length);
-                }
-
-                var response = (HttpWebResponse)request.GetResponse();
-
-                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                response.Close();
+                var responseString = request.requestFromServer();
                 messageContent.Text = "SENT";
                 //messageContent.Text += responseString;
                 //statusLabel.Text = responseString;
