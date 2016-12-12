@@ -8,7 +8,7 @@ namespace SocialNetworkServer
 {
     public class BLOBINA
     {
-        public static string s = "vuci s rodjom";
+        public static string s = "This class should be renamed...";
     }
 
     /// <summary>
@@ -202,9 +202,18 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a notifications
+    /// Class used to encapsulate required fields in a notifications query
     /// </summary>
     public class NotificationQuery
+    {
+        public Token userToken { get; set; }
+    }
+
+    /// <summary>
+    /// Class used to encapsulate required fields in a log out query
+    /// </summary>
+
+    public class LogOutQuery
     {
         public Token userToken { get; set; }
     }
