@@ -34,7 +34,6 @@ namespace SocialNetworkServer
     /// </summary>
     class GetAllQuery
     {
-        public int userId { get; set; }
         public Token userToken { get; set; }
     }
 

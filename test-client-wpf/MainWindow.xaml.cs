@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TestClientSN;
 using testClientWPF;
 
 namespace SocialNetwork
@@ -29,7 +30,7 @@ namespace SocialNetwork
         public MainWindow()
         {
             ServerData.host = "http://localhost";
-            ServerData.port = "51980";
+            ServerData.port = "60749";
             
             InitializeComponent();
         }
@@ -68,6 +69,12 @@ namespace SocialNetwork
             Main.Content = new CreatePost();
         }
 
+
+        private void openFriendsFunctions(object sender, RoutedEventArgs e)
+        {
+            Main.Content = new FriendsFunctions();
+        }
+
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (ControlGroup.userToken == null) return;
@@ -99,6 +106,8 @@ namespace SocialNetwork
                 MessageBox.Show(ex.Message);
             }
         }
+
+        
     }
 }
 

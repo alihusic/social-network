@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using testClientWPF;
 
 namespace SocialNetwork
 {
@@ -38,8 +39,8 @@ namespace SocialNetwork
             string lastName = this.surname.Text;
             string country = this.country.Text;
             string city = this.city.Text;
-            string pictureURL = "http://arhiva.alo.rs/resources/img/03-09-2012/home_category/9804-23.jpg";
-            string coverPictureURL = "http://arhiva.alo.rs/resources/img/03-09-2012/home_category/9804-23.jpg";
+            string pictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png";
+            string coverPictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png";
             string gender = "male";
             DateTime dateOfBirth = DateTime.Now;
 

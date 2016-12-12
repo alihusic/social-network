@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SocialNetwork"
         Closing="Window_Closing"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="500">
+        Title="MainWindow" Height="500" Width="548.667">
     <Grid>
         <StackPanel Orientation="Horizontal" Height="35" VerticalAlignment="Top">
             <Button Content="Login" MinWidth="50" Margin="10,0,0,0" Click="openLogin"></Button>
@@ -16,6 +16,7 @@
             <Button Content="Newsfeed" MinWidth="50" Margin="5,0,0,0" Click="openNewsfeed"></Button>
             <Button Content="ViewPost" MinWidth="50" Margin="5,0,0,0" Click="openViewPost"></Button>
             <Button Content="CreatePost" MinWidth="50" Margin="5,0,0,0" Click="openCreatePost"></Button>
+            <Button Content="Friends F." MinWidth="50" Margin="5,0,0,0" Click="openFriendsFunctions"/>
         </StackPanel>
         <Frame x:Name="Main" Margin="0,35,0,0" NavigationUIVisibility="Hidden"/>
     </Grid>
