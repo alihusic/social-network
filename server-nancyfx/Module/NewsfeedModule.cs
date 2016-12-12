@@ -1,9 +1,6 @@
 using Nancy;
 using Nancy.ModelBinding;
-<<<<<<< HEAD
-=======
 using Newtonsoft.Json;
->>>>>>> refs/remotes/origin/Maulwurf
 using SocialNetwork;
 using SocialNetwork.Model;
 using SocialNetworkServer;
@@ -32,26 +29,11 @@ namespace SocialNetworkServerNV1
         {
             //map request to objects
             var loadQuery = this.Bind<LoadNewsfeedQuery>();
-<<<<<<< HEAD
-
-=======
             
->>>>>>> refs/remotes/origin/Maulwurf
             // check user token
             if (!helpers.checkToken(loadQuery.userToken)) throw new Exception("Not logged in");
 
             //extract from database
-<<<<<<< HEAD
-            IEnumerable<Posts> recentPosts = helpers.getRecentPosts(loadQuery.interval, loadQuery.userToken.userId);
-
-            //check if list empty
-            if (!recentPosts.Any()) throw new Exception("No more posts");
-            
-            //return model
-            return recentPosts;
-        }
-
-=======
             List<Posts> recentPosts = helpers.getRecentPosts(loadQuery.interval, loadQuery.userToken.userId);
             
             
@@ -71,7 +53,6 @@ namespace SocialNetworkServerNV1
         }
 
         
->>>>>>> refs/remotes/origin/Maulwurf
     }
 
     

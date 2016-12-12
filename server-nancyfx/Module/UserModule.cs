@@ -18,10 +18,7 @@ namespace SocialNetworkServerNV1
             Get["/"] = _ => "Hello!";
             Post["/authenticate"] = parameters => Authenticate(parameters);
             Post["/register"] = parameters => Register(parameters);
-<<<<<<< HEAD
-=======
             Post["/log_out"] = parameters => LogOut(parameters);
->>>>>>> refs/remotes/origin/Maulwurf
         }
    
         /// <summary>
@@ -105,8 +102,6 @@ namespace SocialNetworkServerNV1
             return Negotiate.WithStatusCode(200);
         }
 
-<<<<<<< HEAD
-=======
         public dynamic LogOut(dynamic parameters)
         {
             //binding data
@@ -126,7 +121,6 @@ namespace SocialNetworkServerNV1
 
         }
 
->>>>>>> refs/remotes/origin/Maulwurf
         
 
     }

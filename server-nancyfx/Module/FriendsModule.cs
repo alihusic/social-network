@@ -134,11 +134,7 @@ namespace SocialNetworkServerNV1
                 throw new Exception("Not logged in.");
             }
 
-<<<<<<< HEAD
-            //e jebes ga, ovo bi trebalo radit
-=======
             
->>>>>>> refs/remotes/origin/Maulwurf
             List<User> friends = helpers.getAllFriends(getAllQuery.userId);
 
             /* bind the result to a model
