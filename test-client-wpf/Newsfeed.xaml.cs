@@ -25,7 +25,11 @@ namespace SocialNetwork
     /// </summary>
     public partial class Newsfeed : Page
     {
+<<<<<<< HEAD
         private int interval = 0;
+=======
+        int interval = 0;
+>>>>>>> refs/remotes/origin/Maulwurf
 
 
         public Newsfeed()
@@ -33,6 +37,7 @@ namespace SocialNetwork
             InitializeComponent();
         }
 
+<<<<<<< HEAD
         private void loadNewsfeed(object sender, RoutedEventArgs e)
         {
             if (ControlGroup.userToken == null) return;
@@ -43,13 +48,31 @@ namespace SocialNetwork
                 {
                     userToken = ControlGroup.userToken,
                     interval = interval
+=======
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            if (ControlGroup.userToken == null) return;
+
+
+            try
+            {
+                LoadNewsfeedQuery query = new LoadNewsfeedQuery()
+                {
+                    userToken = ControlGroup.userToken,
+                    interval = this.interval
+>>>>>>> refs/remotes/origin/Maulwurf
                 };
 
                 string urlPath = "http://localhost:60749/newsfeed/load";
                 var request = (HttpWebRequest)WebRequest.Create(urlPath);
                 request.Accept = "application/json";
                 request.ContentType = "application/json";
+<<<<<<< HEAD
                 
+=======
+
+>>>>>>> refs/remotes/origin/Maulwurf
                 string requestBody = JsonConvert.SerializeObject(query);
 
                 var data = Encoding.ASCII.GetBytes(requestBody);
@@ -61,6 +84,7 @@ namespace SocialNetwork
                     stream.Write(data, 0, data.Length);
                 }
                 var response = (HttpWebResponse)request.GetResponse();
+<<<<<<< HEAD
                 
 
                 var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
@@ -90,6 +114,41 @@ namespace SocialNetwork
             {
                 newsfeedContent.Text = ex.Message;
             }
+=======
+                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                response.Close();
+
+                //newsfeedContent.Text += responseString;
+                if (responseString == null) throw new Exception("No more posts!");
+                List<Posts> listPosts = JsonConvert.DeserializeObject<List<Posts>>(responseString);
+
+                 if (listPosts != null  && listPosts.Any() && listPosts.ElementAt(0).postContent.Length > 0)
+                 {
+                     foreach (var post in listPosts)
+                     {
+                         newsfeedContent.Text += "\ncreatorId: " + post.creatorId;
+                         newsfeedContent.Text += "\n";
+                         newsfeedContent.Text += "TargetId: " + post.targetId;
+                         newsfeedContent.Text += "\n";
+                         newsfeedContent.Text += "" + post.postContent;
+                     }
+
+                     interval += 10;
+                     return;
+                 }
+                 else
+                 {
+                     throw new Exception("No more posts");
+                 }
+
+            }
+            catch (Exception ex)
+            {
+                newsfeedContent.Text += ex.Message;
+                return;
+            }
+            
+>>>>>>> refs/remotes/origin/Maulwurf
         }
     }
 }

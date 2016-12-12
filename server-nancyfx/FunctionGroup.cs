@@ -94,7 +94,11 @@ namespace SocialNetworkServerNV1
         /// <param name="token">Token to be removed</param>
         public static void removeToken(Token token)
         {
+<<<<<<< HEAD
             tokenList.RemoveAll(t=>t.userId.Equals(token.userId));
+=======
+            tokenList.RemoveAll(t => t.userId.Equals(token.userId));
+>>>>>>> refs/remotes/origin/Maulwurf
         }
 
         /// <summary>
@@ -116,6 +120,9 @@ namespace SocialNetworkServerNV1
         /// Static instance of a TokenFactory
         /// </summary>
         static TokenFactory cookieFactory = new TokenFactory();
+
+
+        
 
         /// <summary>
         /// Static method returning a newly generated token on a proper authentication request
@@ -172,14 +179,15 @@ namespace SocialNetworkServerNV1
         /// <param name="cookie">a Token generated from the factory</param>
         public static void insertNewToken(Token token)
         {
-            var userFound = getUserById(token.userId);
+            
             using (var context = new SocialNetworkDBContext())
             {
+                
                 var tokenToInsert = new Token()
                 {
-                    userId=token.userId,
-                    tokenHash=token.tokenHash,
-                    user=userFound
+                    userId = token.userId,
+                    tokenHash = token.tokenHash,
+                    user = context.users.Find(token.userId)
                 };
 
                 context.tokens.Add(tokenToInsert);
@@ -241,7 +249,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// Helper method used to check if there is a user with a certain Id
+        /// Method used to check if there is a user with a certain Id
         /// </summary>
         /// <param name="userId"> Type int. Users id that is sent to the method. </param>
         /// <returns>
@@ -256,11 +264,12 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @chatExists checks if chat exists
+        /// Method used to check if chat exists
         /// </summary>
         /// <param name="user1Id">int. Id of user 1</param>
         /// <param name="user2Id">int. Id of user 2</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Returns true if chat exists, else returns false</returns>
         public bool chatExists(int user1Id, int user2Id)
         {
             //insert context class name
@@ -271,7 +280,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @friendshipExists checks if two users are already friends
+        /// Method used to check if two users are already friends
         /// </summary>
         /// <param name="user1Id"> int. represents id of first user</param>
         /// <param name="user2Id">int. represents id of second user</param>
@@ -300,7 +309,11 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
+<<<<<<< HEAD
         /// @getAllFriendsId is used to find id's of all friends user has. 
+=======
+        /// Method used to retrieve id's of all friends user has. 
+>>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="userId">int. User's Id</param>
         /// <returns>
@@ -332,7 +345,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @confirmFriendRequest confirms friend request between two users
+        /// Method used to confirm friend request between two users
         /// </summary>
         /// <param name="senderId">int. id of first user</param>
         /// <param name="receiverId">int. ide of second user</param>
@@ -347,7 +360,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @addNewFriendship creates new pending friendship request
+        /// Method used to create new pending friendship request
         /// </summary>
         /// <param name="senderId"> int. Sender's Id</param>
         /// <param name="receiverId">int. Receiver's Id</param>
@@ -377,7 +390,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @getAllUsers Used to find all friends of a user
+        /// Metdod used to find all friends of a user
         /// </summary>
         /// <param name="userId"> int. User's Id</param>
         /// <returns>
@@ -400,7 +413,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @getChatId used to retrieve in which chat conversation is happening
+        /// Method used to retrieve in which chat conversation is happening
         /// </summary>
         /// <param name="user1Id">int. Id of user 1</param>
         /// <param name="user2Id">int. Id of user 2</param>
@@ -416,7 +429,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @createNewChat creates new chat.
+        /// Method used to create new chat.
         /// </summary>
         /// <param name="user1Id">int. Id of a first User</param>
         /// <param name="user2Id">int. Id of a second User</param>
@@ -430,7 +443,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @saveMessage saves message into table UnreadMessages and PrivateMessages
+        /// Method used to save message into tables UnreadMessages and PrivateMessages
         /// </summary>
         /// <param name="messageText">string. Text of a message</param>
         /// <param name="senderId">int. Sender's Id</param>
@@ -447,7 +460,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @checkUnreadMessages checks if there are any new entries in table UnreadMessages
+        /// Method used to check if there are any new entries in table UnreadMessages
         /// </summary>
         /// <param name="userId"> int. User's id</param>
         /// <returns>
@@ -459,6 +472,13 @@ namespace SocialNetworkServerNV1
                 return context.unreadMessages.Any(um => (um.recipientId == userId));
             }
         }
+
+        /// <summary>
+        /// Method used to retrieve id's of all unread messages.
+        /// </summary>
+        /// <param name="userId">int. User's id.</param>
+        /// <returns>
+        /// List<int></returns>
 
         public List<int> getAllUnreadMessagesId(int userId)
         {
@@ -480,6 +500,13 @@ namespace SocialNetworkServerNV1
                 return unreadMessagesIdList;
             }
         }
+
+        /// <summary>
+        /// Method used to retrieve and delete all messages from unread messages table
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>
+        /// List<UnreadMessages></returns>
 
         public List<UnreadMessages> getAllUnreadMessages(int userId)
         {
@@ -561,7 +588,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @addLike adds new like to the table Likes and increments field numOfLikes in table Posts
+        /// Method used to add new like to the table Likes and increments field numOfLikes in table Posts
         /// </summary>
         /// <param name="userId">int. User's Id</param>
         /// <param name="postId">int. Post Id</param>
@@ -595,7 +622,7 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
-        /// @createPost creates new post
+        /// Method used to create new post
         /// </summary>
         /// <param name="creatorId">int. Creator's id</param>
         /// <param name="targetId">int. Where is post being posted.</param>
@@ -617,6 +644,7 @@ namespace SocialNetworkServerNV1
         /// <param name="userId">int. User's Id</param>
         /// <returns>
         /// Returns List<Posts></returns>
+<<<<<<< HEAD
 
         public IEnumerable<Posts> getRecentPosts(int interval, int userId)
         {
@@ -631,6 +659,8 @@ namespace SocialNetworkServerNV1
                     //extract object by ID
                     posts.Add(context.posts.Find(postId));                    
                 }
+=======
+>>>>>>> refs/remotes/origin/Maulwurf
 
                 IEnumerable<Posts> postsToReturn = posts.OrderByDescending(p => p.postCreationDate).Skip(interval);
                 
@@ -647,8 +677,42 @@ namespace SocialNetworkServerNV1
         /// Returns List<int></returns>
         public List<int> getRecentPostsId(int userId)
         {
+            List<int> postsId = getRecentPostsId(userId);
+            List<Posts> posts = new List<Posts>();
+
             using (var context = new SocialNetworkDBContext())
             {
+                foreach (var id in postsId)
+                {
+                    //extract object by ID
+                    posts.Add(context.posts.Find(id));                    
+                }
+                
+            }
+
+            IEnumerable<Posts> postsToReturn = posts.Skip(interval).Take(10);
+
+            
+            return postsToReturn.ToList();
+
+        }
+
+        /// <summary>
+        /// Method used to retrieve Id's of recent posts
+        /// </summary>
+        /// <param name="userId">int. User's Id.</param>
+        /// <returns>
+        /// Returns List<int></returns>
+        public List<int> getRecentPostsId(int userId)
+        {
+            List<int> postId = new List<int>();
+
+            List<int> friends = getAllFriendsId(userId);
+            friends.Add(userId);
+
+            using (var context = new SocialNetworkDBContext())
+            {
+<<<<<<< HEAD
 
                 List<int> postId = new List<int>();
 
@@ -680,12 +744,45 @@ namespace SocialNetworkServerNV1
                 return context.notifications.Where(n => (n.entityTargetId == userId && n.notificationType != 4)).ToList();
             }
 
+=======
+                
+                var posts = context.posts;
+
+                foreach (var p in posts)
+                {
+                    if (friends.Contains(p.creatorId) || friends.Contains(p.creatorId))
+                    {
+                        postId.Add(p.postsId);
+                    }
+                }
+
+                
+            }
+            return postId;
+>>>>>>> refs/remotes/origin/Maulwurf
         }
 
 
 
         /// <summary>
-        /// deleteAllTokens deletes all entries in table Token.
+        /// Method is used to retrieve all notifications for one user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>
+        /// Returns List<Notifications></returns>
+        public List<Notifications> loadNotificationsUser(int userId)
+        {
+            using (var context = new SocialNetworkDBContext())
+            {
+                return context.notifications.Where(n => (n.entityTargetId == userId && n.notificationType != 4)).ToList();
+            }
+
+        }
+
+
+
+        /// <summary>
+        /// Method used to delete all entries in table Token.
         /// </summary>
 
         public void deleteAllTokens()
@@ -697,7 +794,11 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
+<<<<<<< HEAD
         /// editUserInfo edits user's info.
+=======
+        /// Method used to edit user's info.
+>>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="userId">int. User's id.</param>
         /// <param name="name">string. User's name.</param>
@@ -726,7 +827,11 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
+<<<<<<< HEAD
         /// checkURL cinfirms that URL exits
+=======
+        /// Method used to confirm existence URL exits
+>>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="URL">string. URL.</param>
         /// <returns>
@@ -738,7 +843,11 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
+<<<<<<< HEAD
         /// updateProfilePicture updates User's profile picture.
+=======
+        /// MEthod used to update User's profile picture.
+>>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="userId">int. User's ID.</param>
         /// <param name="pictureURL">string. Picture URL.</param>
@@ -759,7 +868,11 @@ namespace SocialNetworkServerNV1
 
 
         /// <summary>
+<<<<<<< HEAD
         /// checkPassword checks if password already exists in databse.
+=======
+        /// MEthod used to check if password already exists in databse.
+>>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="password">string. User's password.</param>
         /// <returns>
@@ -775,7 +888,11 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
+<<<<<<< HEAD
         /// updatePassword sets new password.
+=======
+        /// Method used to set new password.
+>>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="newPassword">string. New password.</param>
         /// <param name="userId">int. User's ID.</param>
@@ -793,7 +910,11 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
+<<<<<<< HEAD
         /// updateCoverPicture updates cover picture.
+=======
+        /// MEthod used to update cover picture.
+>>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="userId">int. User's id.</param>
         /// <param name="coverPictureURL">string. Cover picture URL.</param>
@@ -813,7 +934,11 @@ namespace SocialNetworkServerNV1
         
 
         /// <summary>
+<<<<<<< HEAD
         /// Method saves user info
+=======
+        /// Method used to save user's info
+>>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="user">USer. User object.</param>
 
@@ -827,7 +952,11 @@ namespace SocialNetworkServerNV1
         }
 
         /// <summary>
+<<<<<<< HEAD
         /// checkUsername checks if username is unique.
+=======
+        /// Method used to check if username is unique.
+>>>>>>> refs/remotes/origin/Maulwurf
         /// </summary>
         /// <param name="username">string. Users's username.</param>
         /// <returns>

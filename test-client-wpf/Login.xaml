@@ -13,6 +13,7 @@
         <Button x:Name="loginButton" Content="Log In" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="70,195,0,0" Click="login"/>
         <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="0,195,0,0" Click="loadLogin"/>
         <TextBox x:Name="statusLabel" HorizontalAlignment="Left" Height="288" Margin="-57,247,-47,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="249"/>
+        <Button x:Name="logOutButton" Content="Log out" HorizontalAlignment="Left" Margin="34,220,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.356,0.567" Click="logOutButton_Click"/>
 
 
     </Grid>

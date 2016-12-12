@@ -1,5 +1,9 @@
 using Nancy;
 using Nancy.ModelBinding;
+<<<<<<< HEAD
+=======
+using Newtonsoft.Json;
+>>>>>>> refs/remotes/origin/Maulwurf
 using SocialNetwork;
 using SocialNetwork.Model;
 using SocialNetworkServer;
@@ -28,11 +32,16 @@ namespace SocialNetworkServerNV1
         {
             //map request to objects
             var loadQuery = this.Bind<LoadNewsfeedQuery>();
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> refs/remotes/origin/Maulwurf
             // check user token
             if (!helpers.checkToken(loadQuery.userToken)) throw new Exception("Not logged in");
 
             //extract from database
+<<<<<<< HEAD
             IEnumerable<Posts> recentPosts = helpers.getRecentPosts(loadQuery.interval, loadQuery.userToken.userId);
 
             //check if list empty
@@ -42,6 +51,27 @@ namespace SocialNetworkServerNV1
             return recentPosts;
         }
 
+=======
+            List<Posts> recentPosts = helpers.getRecentPosts(loadQuery.interval, loadQuery.userToken.userId);
+            
+            
+            //return ""+recentPosts.Count();
+            if (recentPosts.Count() == 0)
+            {
+                return null;
+            }
+
+            //return model
+            return JsonConvert.SerializeObject(recentPosts,
+                             Newtonsoft.Json.Formatting.None,
+                             new JsonSerializerSettings
+                             {
+                                 NullValueHandling = NullValueHandling.Ignore
+                             });
+        }
+
+        
+>>>>>>> refs/remotes/origin/Maulwurf
     }
 
     

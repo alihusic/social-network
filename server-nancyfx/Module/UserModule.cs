@@ -18,6 +18,10 @@ namespace SocialNetworkServerNV1
             Get["/"] = _ => "Hello!";
             Post["/authenticate"] = parameters => Authenticate(parameters);
             Post["/register"] = parameters => Register(parameters);
+<<<<<<< HEAD
+=======
+            Post["/log_out"] = parameters => LogOut(parameters);
+>>>>>>> refs/remotes/origin/Maulwurf
         }
    
         /// <summary>
@@ -101,6 +105,28 @@ namespace SocialNetworkServerNV1
             return Negotiate.WithStatusCode(200);
         }
 
+<<<<<<< HEAD
+=======
+        public dynamic LogOut(dynamic parameters)
+        {
+            //binding data
+            var logOutQuery = this.Bind<LogOutQuery>();
+
+            //checking token
+            if (!helpers.checkToken(logOutQuery.userToken))
+                throw new Exception("Not logged in.");
+
+
+            //deleting token (logging out user) - on client side user should be redirected to log in page
+            helpers.removeTokenDB(logOutQuery.userToken);
+            FunctionGroup.removeToken(logOutQuery.userToken);
+
+
+            return "User logged out!";
+
+        }
+
+>>>>>>> refs/remotes/origin/Maulwurf
         
 
     }

@@ -8,7 +8,11 @@ namespace SocialNetworkServer
 {
     public class BLOBINA
     {
+<<<<<<< HEAD
         public static string s = "vuci s rodjom";
+=======
+        public static string s = "This class should be renamed...";
+>>>>>>> refs/remotes/origin/Maulwurf
     }
 
     /// <summary>
@@ -202,10 +206,26 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
+<<<<<<< HEAD
     /// Class used to encapsulate required fields in a notifications
+=======
+    /// Class used to encapsulate required fields in a notifications query
+>>>>>>> refs/remotes/origin/Maulwurf
     /// </summary>
     public class NotificationQuery
     {
         public Token userToken { get; set; }
     }
+<<<<<<< HEAD
+=======
+
+    /// <summary>
+    /// Class used to encapsulate required fields in a log out query
+    /// </summary>
+
+    public class LogOutQuery
+    {
+        public Token userToken { get; set; }
+    }
+>>>>>>> refs/remotes/origin/Maulwurf
 }
