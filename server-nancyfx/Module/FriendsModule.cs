@@ -7,6 +7,7 @@ using SocialNetworkServer.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TestClientSN.Model;
 
 namespace SocialNetworkServerNV1
 {
@@ -17,11 +18,11 @@ namespace SocialNetworkServerNV1
         public FriendsModule():base("/user/friends")
         {
             Get["/"] = _ => "Hello!";
-            Get["/add"] = parameters => Add(parameters);
-            Get["/confirm"] = parameters => Confirm(parameters);
-            Get["/remove"] = parameters => Remove(parameters);
-            Get["/get_all"] = parameters => GetAll(parameters);
-
+            Post["/add"] = parameters => Add(parameters);
+            Post["/confirm"] = parameters => Confirm(parameters);
+            Post["/remove"] = parameters => Remove(parameters);
+            Post["/get_all"] = parameters => GetAll(parameters);
+            Post["/get_list_users"] = parameters => GetListUsers(parameters);
         }
 
         //method used to add a friend, not very obvious
@@ -80,6 +81,7 @@ namespace SocialNetworkServerNV1
                     .SenderId(confirmQuery.senderId)
                     .ReceiverId(confirmQuery.receiverId)
                     .FriendRequestConfirmed(true)
+                    .FriendRequestSent(DateTime.Now)
                     .Build());
             }
             else
@@ -134,13 +136,50 @@ namespace SocialNetworkServerNV1
                 throw new Exception("Not logged in.");
             }
 
-            
-            List<User> friends = helpers.getAllFriends(getAllQuery.userId);
 
+            //List<User> friends = helpers.getAllFriends(getAllQuery.userId);
+            List<int> friends = helpers.getAllFriendsId(getAllQuery.userToken.userId);
+            return friends.Count();
             /* bind the result to a model
             * return model&status code
             */
             return Negotiate.WithStatusCode(200).WithModel(friends);
+        }
+
+        public dynamic GetListUsers(dynamic parameters)
+        {
+            //bind query to object
+            var getListUsersQuery = this.Bind<GetListUsersQuery>();
+
+            List <UserFriendsInfo> users= helpers.getUserFriendsList(getListUsersQuery.listUserId);
+
+            return users;
+        }
+
+        public dynamic GetProfileInfo(dynamic parameters)
+        {
+            //bind query to object
+            var getProfileInfoQuery = this.Bind<GetProfileInfoQuery>();
+
+            // check token
+            if (!helpers.checkToken(getProfileInfoQuery.userToken))
+            {
+                throw new Exception("Not logged in.");
+            }
+
+            if (!helpers.userExists(getProfileInfoQuery.targetId))
+            {
+                throw new Exception("User not found.");
+            }
+
+            if (!helpers.getAllFriendsId(getProfileInfoQuery.userToken.userId).Contains(getProfileInfoQuery.targetId))
+            {
+                throw new Exception("User profile not visible.");
+            }
+
+            ProfileInfo profileInfo = helpers.getProfileInfo(getProfileInfoQuery.targetId);
+
+            return null;
         }
 
         /*todo: 
