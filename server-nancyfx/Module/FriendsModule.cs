@@ -77,12 +77,12 @@ namespace SocialNetworkServerNV1
             if (helpers.pendingFriendshipRequestExists(confirmQuery.senderId, confirmQuery.receiverId))
             {
                 // update database - ova ce ako Bog da raditi. Nemam vremena sad za testiranje detaljno, uglavnom treba sto prije testirati.
-                helpers.confirmFriendshipRequest(new PendingFriendRequestsBuilder()
-                    .SenderId(confirmQuery.senderId)
-                    .ReceiverId(confirmQuery.receiverId)
-                    .FriendRequestConfirmed(true)
-                    .FriendRequestSent(DateTime.Now)
-                    .Build());
+                 helpers.confirmFriendshipRequest(new PendingFriendRequestsBuilder()
+                     .SenderId(confirmQuery.senderId)
+                     .ReceiverId(confirmQuery.receiverId)
+                     .FriendRequestConfirmed(false)
+                     .FriendRequestSent(DateTime.Now)
+                     .Build());
             }
             else
             {
@@ -92,7 +92,7 @@ namespace SocialNetworkServerNV1
 
             /* return status code
             */
-            return Negotiate.WithStatusCode(200);
+            return "You are now friends!!!";
         }
 
         //method used to delete a person from the friend list
