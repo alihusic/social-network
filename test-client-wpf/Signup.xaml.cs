@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TestClientSN.Model;
 using testClientWPF;
 
 namespace SocialNetwork
@@ -50,15 +51,15 @@ namespace SocialNetwork
                 {
                     username = username,
                     password = password,
-                    name=name,
-                    lastName=lastName,
-                    country=country,
-                    city=city,
-                    pictureURL=pictureURL,
-                    coverPictureURL=coverPictureURL,
-                    gender=gender,
-                    dateOfBirth=dateOfBirth,
-                    
+                    name = name,
+                    lastName = lastName,
+                    country = country,
+                    city = city,
+                    pictureURL = pictureURL,
+                    coverPictureURL = coverPictureURL,
+                    gender = gender,
+                    dateOfBirth = dateOfBirth,
+
                 };
 
                 string requestBody = JsonConvert.SerializeObject(query);
@@ -73,7 +74,7 @@ namespace SocialNetwork
 
                 var responseString = request.requestFromServer();
                 this.username.Text = responseString;
-                
+
 
 
                 //statusLabel.Text = ControlGroup.userToken.tokenHash + "\n" + ControlGroup.userToken.userId;
@@ -83,5 +84,99 @@ namespace SocialNetwork
                 //statusLabel.Text = ex.StackTrace;
             }
         }
+
+        private void loadUserInfo(object sender, RoutedEventArgs e)
+        {
+            if (ControlGroup.userToken == null) return;
+
+
+            try
+            {
+                LoadUserInfoQuery query = new LoadUserInfoQuery()
+                {
+                    userToken = ControlGroup.userToken,
+                    
+                };
+
+                string requestBody = JsonConvert.SerializeObject(query);
+
+                var request = new SNRequestBuilder()
+                    .Accept("application/json")
+                    .ContentType("application/json")
+                    .RequestBody(requestBody)
+                    .RequestMethod("POST")
+                    .UrlSubPath("/user/user_info")
+                    .Build();
+
+                var responseString = request.requestFromServer();
+
+                //newsfeedContent.Text += responseString;
+                if (responseString == null) throw new Exception("No more posts!");
+                var profileInfo = JsonConvert.DeserializeObject<ProfileInfo>(responseString);
+
+                if (profileInfo != null)
+                {
+                    name.Text = profileInfo.name;
+                    surname.Text = profileInfo.lastName;
+                    username.Text = profileInfo.username;
+                    return;
+                }
+                else
+                {
+                    throw new Exception("Profile not exisisting");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                name.Text = ex.Message;
+                return;
+            }
+        }
+
+        private void editUserInfo(object sender, RoutedEventArgs e)
+        {
+            if (ControlGroup.userToken == null) return;
+
+            try
+            {
+                EditInfoQuery query = new EditInfoQuery()
+                {
+                    username = this.username.Text,
+                    name = this.name.Text,
+                    lastName = this.surname.Text,
+                    country = this.country.Text,
+                    city = this.city.Text,
+                    pictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png",
+                    coverPictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png",
+                    gender = "male",
+                    dateOfBirth = DateTime.Now,
+                    userToken = ControlGroup.userToken
+                };
+
+                string requestBody = JsonConvert.SerializeObject(query);
+
+                var request = new SNRequestBuilder()
+                    .Accept("application/json")
+                    .ContentType("application/json")
+                    .RequestBody(requestBody)
+                    .RequestMethod("POST")
+                    .UrlSubPath("/settings/edit_info")
+                    .Build();
+
+                var responseString = request.requestFromServer();
+
+                //newsfeedContent.Text += responseString;
+                if (responseString == null) throw new Exception("Edit went wrong!");
+
+                name.Text = (responseString);
+            }
+            catch (Exception ex)
+            {
+                name.Text = ex.Message;
+            }
+
+        }
     }
 }
+   

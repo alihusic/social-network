@@ -160,7 +160,6 @@ namespace SocialNetworkServer
         public string name { get; set; }
         public string lastName { get; set; }
         public string username { get; set; }
-        public string password { get; set; }
         public string country { get; set; }
         public string city { get; set; }
         public string pictureURL { get; set; }
@@ -213,6 +212,14 @@ namespace SocialNetworkServer
     /// </summary>
 
     public class LogOutQuery
+    {
+        public Token userToken { get; set; }
+    }
+
+    /// <summary>
+    /// Class used to encapsulate required fields in a get user's info query
+    /// </summary>
+    public class LoadUserInfoQuery
     {
         public Token userToken { get; set; }
     }

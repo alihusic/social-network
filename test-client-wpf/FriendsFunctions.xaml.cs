@@ -143,7 +143,7 @@ namespace TestClientSN
                     .Build();
 
                 var responseString = request.requestFromServer();
-
+                
                 friendsTextBox.Text = responseString;
             }
             catch (Exception ex)
