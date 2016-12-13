@@ -217,4 +217,19 @@ namespace SocialNetworkServer
     {
         public Token userToken { get; set; }
     }
+
+    /// <summary>
+    /// Class used to encapsulate required fields in a get list of users query
+    /// Note: user token not required
+    /// </summary>
+    public class GetListUsersQuery
+    {
+        public List<int> listUserId { get; set; }
+    }
+
+    public class GetProfileInfoQuery
+    {
+        public Token userToken { get; set; }
+        public int targetId { get; set; }
+    }
 }

@@ -11,6 +11,8 @@ namespace SocialNetworkServerNV1
         // by overriding the various methods and properties.
         // For more information https://github.com/NancyFx/Nancy/wiki/Bootstrapper
 
+        FunctionGroup helpers = new FunctionGroup();
+
         // dynamic function customErrorHandle used to handle custom exceptions and behavior
         private dynamic customErrorHandle(dynamic context, dynamic exception)
         {
@@ -21,6 +23,7 @@ namespace SocialNetworkServerNV1
              */
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
+            helpers.deleteAllTokens();
             pipelines.OnError += (context, exception) => customErrorHandle(context, exception);
             base.ApplicationStartup(container, pipelines);
         }

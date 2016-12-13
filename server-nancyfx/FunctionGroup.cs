@@ -7,6 +7,8 @@ using SocialNetwork;
 using System.Collections.Generic;
 using SocialNetworkServer.Model;
 using SocialNetworkServer.Builder;
+using TestClientSN.Model;
+using SocialNetworkServerNV1.Builder;
 
 namespace SocialNetworkServerNV1
 {
@@ -346,7 +348,8 @@ namespace SocialNetworkServerNV1
             using (var context = new SocialNetworkDBContext())
             {
                 context.friendRequest.Attach(request);
-                context.Entry(request).Property(fr => fr.friendRequestConfirmed).IsModified = true;
+                //context.Entry(request).Property(fr => fr.friendRequestConfirmed).IsModified = true;
+                context.friendRequest.Find(request.pendingFriendRequestId).friendRequestConfirmed = true;
                 context.SaveChanges();
             }
         }
@@ -879,5 +882,48 @@ namespace SocialNetworkServerNV1
                 return context.notifications.Where(n => (context.posts.Find(n.entityTargetId).creatorId == userId && n.notificationType == 4 )).ToList();
             }
         }
+
+        public List<UserFriendsInfo> getUserFriendsList(List<int> userIdList)
+        {
+            using(var context=new SocialNetworkDBContext())
+            {
+                List<UserFriendsInfo> userList = new List<UserFriendsInfo>();
+                foreach(var userId in userIdList)
+                {
+                    var tempUserObject = context.users.Find(userId);
+                    userList.Add(new UserFriendsInfoBuilder()
+                        .UserId(tempUserObject.userId)
+                        .Name(tempUserObject.name)
+                        .LastName(tempUserObject.lastName)
+                        .PictureURL(tempUserObject.pictureURL)
+                        .Build()
+                        );
+                    
+                }
+
+                return userList;
+            }
+        }
+
+        public ProfileInfo getProfileInfo(int userId)
+        {
+            using(var context=new SocialNetworkDBContext())
+            {
+                var tempUser = context.users.Find(userId);
+                ProfileInfo profileInfo = new ProfileInfoBuilder()
+                    .Username(tempUser.username)
+                    .PictureURL(tempUser.pictureURL)
+                    .CoverPictureURL(tempUser.pictureURL)
+                    .Name(tempUser.name)
+                    .LastName(tempUser.lastName)
+                    .Gender(tempUser.gender)
+                    .DateOfBirth(tempUser.dateOfBirth)
+                    .Country(tempUser.country)
+                    .City(tempUser.city)
+                    .Build();
+                return profileInfo;
+            }
+        }
+
     }
 } 
