@@ -7,11 +7,18 @@ using System.Collections.Generic;
 
 namespace SocialNetworkServerNV1.Module
 {
+    /// <summary>
+    /// Class inheriting NancyModule class.
+    /// Used to handle Notification-related requests.
+    /// </summary>
     public class NotificationModule : NancyModule
     {
         private FunctionGroup helpers = new FunctionGroup();
         private Dictionary<int, Action> methodDictionary;
 
+        /// <summary>
+        /// Constructor with route mapping
+        /// </summary>
         public NotificationModule() : base("/notification")
         {
 

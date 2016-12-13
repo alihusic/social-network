@@ -17,8 +17,8 @@ namespace SocialNetwork.Model
         public DateTime friendRequestSent { get; set; }
         public bool friendRequestConfirmed { get; set; }
 
-        
-        
+
+        //setting up 1:n relation with User
         public virtual User user { get; set; }
 
     }

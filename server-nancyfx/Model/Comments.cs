@@ -13,9 +13,9 @@ namespace SocialNetwork.Model
         public string commentText { get; set; }
 
 
-        //1:n with posts
+        //setting up 1:n relation with Posts
         public virtual Posts post { get; set; }
-        //1:n with user
+        //setting up 1:n relation with User
         public virtual User user { get; set; }
 
     }

@@ -10,10 +10,17 @@ using System.Linq;
 
 namespace SocialNetworkServerNV1
 {
+    /// <summary>
+    /// Class inheriting NancyModule class.
+    /// Used to handle Newsfeed-related requests.
+    /// </summary>
     public class NewsfeedModule : NancyModule
     {
         private FunctionGroup helpers = new FunctionGroup();
 
+        /// <summary>
+        /// Constructor with route mapping
+        /// </summary>
         public NewsfeedModule():base("/newsfeed")
         {
             Get["/"] = _ => "Hello!";

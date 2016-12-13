@@ -10,13 +10,20 @@ using System.Linq;
 
 namespace SocialNetworkServerNV1
 {
+    /// <summary>
+    /// Class inheriting NancyModule class.
+    /// Used to handle Post-related requests.
+    /// </summary>
     public class PostModule : NancyModule
     {
         private FunctionGroup helpers = new FunctionGroup();
 
+        /// <summary>
+        /// Constructor with route mapping
+        /// </summary>
+
         public PostModule():base("/post")
         {
-            //change some of these to post requests
             Post["/create"] = parameters => Create(parameters);
             Post["/like"] = parameters => Like(parameters);
             Post["/comment"] = parameters => Comment(parameters);

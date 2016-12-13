@@ -8,20 +8,27 @@ namespace SocialNetworkServerNV1
 {
     public class SettingsModule : NancyModule
     {
+        /// <summary>
+        /// Class inheriting NancyModule class.
+        /// Used to handle Chat-related requests.
+        /// </summary>
         private FunctionGroup helpers = new FunctionGroup();
 
+        /// <summary>
+        /// Constructor with route mapping
+        /// </summary>
         public SettingsModule():base("/settings")
         {
             Get["/"] = _ => "Hello!";
-            Get["settings/edit_info"] = parameters => EditInfo(parameters);
-            Get["settings/change_password"] = parameters => ChangePassword(parameters);
-            Get["settings/change_profile_picture"] = parameters => ChangeProfilePicture(parameters);
+            Post["/edit_info"] = parameters => EditInfo(parameters);
+            Post["/change_password"] = parameters => ChangePassword(parameters);
+            Post["/change_profile_picture"] = parameters => ChangeProfilePicture(parameters);
         }
 
         /// <summary>
         /// Method used to handle the action of editing user information
         /// </summary>
-        /// <param name="parameters"></param>
+        /// <param name="parameters">dynamic</param>
         /// <returns>Status code</returns>
         public dynamic EditInfo(dynamic parameters)
         {
@@ -37,7 +44,7 @@ namespace SocialNetworkServerNV1
             if (helpers.checkURL(editInfoQuery.pictureURL) && helpers.checkURL(editInfoQuery.coverPictureURL))
             { 
       
-                helpers.editUserInfo(new UserBuilder()
+                helpers.editUserInfo(new ProfileInfoBuilder()
                         .Name(editInfoQuery.name)
                         .LastName(editInfoQuery.lastName)
                         .Username(editInfoQuery.username)
@@ -47,7 +54,7 @@ namespace SocialNetworkServerNV1
                         .CoverPictureURL(editInfoQuery.coverPictureURL)
                         .Gender(editInfoQuery.gender)
                         .DateOfBirth(editInfoQuery.dateOfBirth)
-                        .Build());
+                        .Build(), editInfoQuery.userToken.userId);
             }
             else
             {
@@ -55,13 +62,13 @@ namespace SocialNetworkServerNV1
             }
 
             // return status code
-            return Negotiate.WithStatusCode(200);
+            return "User info updated!";
         }
 
         /// <summary>
         /// Method used to handle the action of changing the profile picture
         /// </summary>
-        /// <param name="parameters"></param>
+        /// <param name="parameters">dynamic</param>
         /// <returns>Status code</returns>
         public dynamic ChangeProfilePicture(dynamic parameters)
         {
@@ -89,7 +96,7 @@ namespace SocialNetworkServerNV1
         /// <summary>
         /// Method used to handle the action of changing the password
         /// </summary>
-        /// <param name="parameters"></param>
+        /// <param name="parameters">dynamic</param>
         /// <returns>Status code</returns>
         public dynamic ChangePassword(dynamic parameters)
         {
@@ -124,7 +131,7 @@ namespace SocialNetworkServerNV1
         /// <summary>
         /// Method used to handle the action of changing the cover picture
         /// </summary>
-        /// <param name="parameters"></param>
+        /// <param name="parameters">dynamic</param>
         /// <returns>Status code</returns>
         public dynamic ChangeCoverPicture(dynamic parameters)
         {

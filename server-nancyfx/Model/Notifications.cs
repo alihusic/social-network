@@ -12,7 +12,7 @@ namespace SocialNetworkServer.Model
         public int entityTargetId { get; set; }
 
 
-        //setting up 1:n relation with user
+        //setting up 1:n relation with User
         public virtual User user { get; set; }
 
 

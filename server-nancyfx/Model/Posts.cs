@@ -19,10 +19,10 @@ namespace SocialNetwork.Model
         public int targetId { get; set; }
         public int numOfLikes { get; set; }
 
-        //creating 1:n connection with user
+        //setting up 1:n relation with User
         public virtual User user { get; set; }
 
-        //creating 1:n connection with likes
+        //setting up 1:n relation with Likes
         [JsonIgnore]
         public virtual ICollection<Likes> likes { get; set; }
 

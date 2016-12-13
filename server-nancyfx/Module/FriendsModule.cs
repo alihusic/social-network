@@ -11,9 +11,18 @@ using TestClientSN.Model;
 
 namespace SocialNetworkServerNV1
 {
+    /// <summary>
+    /// Class inheriting NancyModule class.
+    /// Used to handle Friedns-related requests.
+    /// </summary>
+
     public class FriendsModule : NancyModule
     {
         private FunctionGroup helpers = new FunctionGroup();
+
+        /// <summary>
+        /// Constructor with route mapping
+        /// </summary>
 
         public FriendsModule():base("/user/friends")
         {
@@ -25,7 +34,11 @@ namespace SocialNetworkServerNV1
             Post["/get_list_users"] = parameters => GetListUsers(parameters);
         }
 
-        //method used to add a friend, not very obvious
+        /// <summary>
+        /// Method used to add friends.
+        /// </summary>
+        /// <param name="parameters">dynamic.</param>
+        /// <returns>Status</returns>
         public dynamic Add(dynamic parameters)
         {
             var addQuery = this.Bind<AddQuery>();
@@ -61,7 +74,12 @@ namespace SocialNetworkServerNV1
             return Negotiate.WithStatusCode(200);
         }
 
-        //method used to confirm a friend request
+        /// <summary>
+        /// Method used to confirm friend request.
+        /// </summary>
+        /// <param name="parameters">dynamic</param>
+        /// <returns>Status</returns>
+
         public dynamic Confirm(dynamic parameters)
         {
             //bind query
@@ -95,7 +113,11 @@ namespace SocialNetworkServerNV1
             return "You are now friends!!!";
         }
 
-        //method used to delete a person from the friend list
+        /// <summary>
+        /// Method used to remove friendship :(
+        /// </summary>
+        /// <param name="parameters">dynamic</param>
+        /// <returns>Status</returns>
         public dynamic Remove(dynamic parameters)
         {
             //bind query
@@ -124,7 +146,12 @@ namespace SocialNetworkServerNV1
             return Negotiate.WithStatusCode(200);
         }
 
-        //method used to get a list of all people on the friend list
+        /// <summary>
+        /// Method used to retrieve list of all friends id's.
+        /// </summary>
+        /// <param name="parameters">dynamic</param>
+        /// <returns>
+        /// List<int></returns>
         public dynamic GetAll(dynamic parameters)
         {
             //bind query
@@ -146,6 +173,12 @@ namespace SocialNetworkServerNV1
             return Negotiate.WithStatusCode(200).WithModel(friends);
         }
 
+        /// <summary>
+        /// Method used to retrieve list of all friends
+        /// </summary>
+        /// <param name="parameters">dynamic</param>
+        /// <returns>
+        /// List<UserFriendsInfo></returns>
         public dynamic GetListUsers(dynamic parameters)
         {
             //bind query to object
@@ -156,6 +189,12 @@ namespace SocialNetworkServerNV1
             return users;
         }
 
+        /// <summary>
+        /// Method used to retrieve information on User
+        /// </summary>
+        /// <param name="parameters">dynamic.</param>
+        /// <returns>
+        /// Object of type ProfileInfo</returns>
         public dynamic GetProfileInfo(dynamic parameters)
         {
             //bind query to object
@@ -178,7 +217,9 @@ namespace SocialNetworkServerNV1
             }
 
             ProfileInfo profileInfo = helpers.getProfileInfo(getProfileInfoQuery.targetId);
+            
 
+            //return profileInfo;
             return null;
         }
 

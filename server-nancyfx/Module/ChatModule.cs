@@ -65,7 +65,6 @@ namespace SocialNetworkServerNV1
             
 
             //push messages into database
-
             //checking if chat exists. 
             //user id and sender id must be passed in order to check
             //order of passing parameters does not matter
@@ -101,7 +100,6 @@ namespace SocialNetworkServerNV1
 
             //return response code
             return Negotiate.WithStatusCode(200);
-
         }
 
         

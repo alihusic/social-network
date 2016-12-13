@@ -9,9 +9,17 @@ using System.Linq;
 
 namespace SocialNetworkServerNV1
 {
+    /// <summary>
+    /// Class inheriting NancyModule class.
+    /// Used to handle Chat-related requests.
+    /// </summary>
     public class UserModule : NancyModule
     {
         private FunctionGroup helpers = new FunctionGroup();
+
+        /// <summary>
+        /// Constructor with route mapping
+        /// </summary>
 
         public UserModule():base("/user")
         {
@@ -19,13 +27,14 @@ namespace SocialNetworkServerNV1
             Post["/authenticate"] = parameters => Authenticate(parameters);
             Post["/register"] = parameters => Register(parameters);
             Post["/log_out"] = parameters => LogOut(parameters);
+            Post["/user_info"] = parameters => LoadUserInfo(parameters);
         }
    
         /// <summary>
         /// Method used to handle user authentication/login
         /// </summary>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <param name="parameters">dynamic</param>
+        /// <returns>Status</returns>
         public dynamic Authenticate(dynamic parameters)
         {
 
@@ -59,14 +68,14 @@ namespace SocialNetworkServerNV1
         /// <summary>
         /// Method used to handle user registration/signup
         /// </summary>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <param name="parameters">dynamic</param>
+        /// <returns>Status</returns>
         public dynamic Register(dynamic parameters)
         {
             //map request to an object
 
             var registerQuery = this.Bind<RegisterQuery>();
-            // TODO:
+            
             //check if username already taken
             // check if data valid
             // save changes to the database
@@ -102,6 +111,11 @@ namespace SocialNetworkServerNV1
             return Negotiate.WithStatusCode(200);
         }
 
+        /// <summary>
+        /// MEthod used to log out a User
+        /// </summary>
+        /// <param name="parameters">dynamic.</param>
+        /// <returns>Status.</returns>
         public dynamic LogOut(dynamic parameters)
         {
             //binding data
@@ -121,7 +135,23 @@ namespace SocialNetworkServerNV1
 
         }
 
-        
+        /// <summary>
+        /// MEthod used to log out a User
+        /// </summary>
+        /// <param name="parameters">dynamic.</param>
+        /// <returns>Status.</returns>
+        public dynamic LoadUserInfo(dynamic parameters)
+        {
+            var loadUserInfoQuery = this.Bind<LoadUserInfoQuery>();
+
+
+            if (!helpers.checkToken(loadUserInfoQuery.userToken))
+                throw new Exception("Not logged in.");
+
+            var userInfo = helpers.getUserProfileInfo(loadUserInfoQuery.userToken.userId);
+
+            return userInfo;
+        }
 
     }
     

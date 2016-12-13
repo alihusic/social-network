@@ -35,7 +35,7 @@ namespace SocialNetwork.Model
         [JsonIgnore]
         public virtual ICollection<PrivateMessages> privateMessages { get; set; }
 
-        //setting up 1:n connection with posts
+        //setting up 1:n relation with Posts
         [JsonIgnore]
         public virtual ICollection<Posts> posts { get; set; }
 

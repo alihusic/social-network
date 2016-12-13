@@ -13,7 +13,6 @@ namespace SocialNetworkServer.Builder
         private string name;
         private string lastName;
         private string username;
-        private string password;
         private string country;
         private string city;
         private string pictureURL;
