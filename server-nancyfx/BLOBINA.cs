@@ -161,7 +161,6 @@ namespace SocialNetworkServer
         public string name { get; set; }
         public string lastName { get; set; }
         public string username { get; set; }
-        public string password { get; set; }
         public string country { get; set; }
         public string city { get; set; }
         public string pictureURL { get; set; }
@@ -227,9 +226,21 @@ namespace SocialNetworkServer
         public List<int> listUserId { get; set; }
     }
 
+    /// <summary>
+    /// Class used to encapsulate required fields in a get profile query
+    /// </summary>
     public class GetProfileInfoQuery
     {
         public Token userToken { get; set; }
         public int targetId { get; set; }
+    }
+
+
+    /// <summary>
+    /// Class used to encapsulate required fields in a get user's info query
+    /// </summary>
+    public class LoadUserInfoQuery
+    {
+        public Token userToken { get; set; }
     }
 }

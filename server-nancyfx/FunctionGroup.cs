@@ -751,19 +751,36 @@ namespace SocialNetworkServerNV1
         /// <param name="gender">string. User's gender.</param>
         /// <param name="dateOfBirth">string. User's date of birth.</param>
 
-        public void editUserInfo(User user)
+        public void editUserInfo(ProfileInfo request, int userId)
         {
             using (var context = new SocialNetworkDBContext())
             {
-                context.users.Attach(user);
-                context.Entry(user).Property(u => u.name).IsModified = true;
-                context.Entry(user).Property(u => u.lastName).IsModified = true;
-                context.Entry(user).Property(u => u.username).IsModified = true;
-                context.Entry(user).Property(u => u.city).IsModified = true;
-                context.Entry(user).Property(u => u.pictureURL).IsModified = true;
-                context.Entry(user).Property(u => u.gender).IsModified = true;
-                context.Entry(user).Property(u => u.dateOfBirth).IsModified = true;
-                context.SaveChanges();
+                var user = context.users.Where(u => u.userId == userId).FirstOrDefault();
+                user.name = request.name;
+                user.lastName = request.lastName;
+                user.username = request.username;
+                user.country = request.country;
+                user.city = request.city;
+                user.pictureURL = request.pictureURL;
+                user.coverPictureURL = request.coverPictureURL;
+                user.gender = request.gender;
+                user.dateOfBirth = request.dateOfBirth;
+
+                bool saveFailed;
+                do
+                {
+                    saveFailed = false;
+                    try
+                    {
+                        context.SaveChanges();
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        saveFailed = true;
+                        var entry = ex.Entries.Single();
+                        entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                    }
+                } while (saveFailed);
             }
         }
 
@@ -776,7 +793,8 @@ namespace SocialNetworkServerNV1
         public bool checkURL(string URL)
         {
             Uri uriResult;
-            return Uri.TryCreate(URL, UriKind.Absolute, out uriResult) && uriResult.Scheme == Uri.UriSchemeHttp;
+            return (Uri.TryCreate(URL, UriKind.Absolute, out uriResult)
+                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps));
         }
 
         /// <summary>
@@ -938,6 +956,30 @@ namespace SocialNetworkServerNV1
                     .Build();
                 return profileInfo;
             }
+        }
+
+
+        /// <summary>
+        /// Method used to retrieve user's profile info
+        /// </summary>
+        /// <param name="userId">int. User's id</param>
+        /// <returns>
+        /// Object of type ProfileInfo</returns>
+        public ProfileInfo getUserProfileInfo(int userId)
+        {
+            var user = getUserById(userId);
+
+            return new ProfileInfoBuilder()
+                .Name(user.name)
+                .LastName(user.lastName)
+                .Username(user.username)
+                .Country(user.country)
+                .City(user.city)
+                .PictureURL(user.pictureURL)
+                .CoverPictureURL(user.coverPictureURL)
+                .Gender(user.gender)
+                .DateOfBirth(user.dateOfBirth)
+                .Build();
         }
 
     }
