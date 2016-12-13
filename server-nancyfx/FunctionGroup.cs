@@ -9,6 +9,7 @@ using SocialNetworkServer.Model;
 using SocialNetworkServer.Builder;
 using TestClientSN.Model;
 using SocialNetworkServerNV1.Builder;
+using System.Data.Entity.Infrastructure;
 
 namespace SocialNetworkServerNV1
 {
@@ -347,10 +348,24 @@ namespace SocialNetworkServerNV1
         {
             using (var context = new SocialNetworkDBContext())
             {
-                context.friendRequest.Attach(request);
-                //context.Entry(request).Property(fr => fr.friendRequestConfirmed).IsModified = true;
-                context.friendRequest.Find(request.pendingFriendRequestId).friendRequestConfirmed = true;
-                context.SaveChanges();
+                var friendship = context.friendRequest.Where(fr => fr.receiverId == request.receiverId && fr.senderId == request.senderId).FirstOrDefault();
+                friendship.friendRequestConfirmed = true;
+                
+                bool saveFailed;
+                do
+                {
+                    saveFailed = false;
+                    try
+                    {
+                        context.SaveChanges();
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        saveFailed = true;
+                        var entry = ex.Entries.Single();
+                        entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                    }
+                } while (saveFailed);
             }
         }
 
