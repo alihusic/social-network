@@ -16,7 +16,7 @@ namespace SocialNetworkServerNV1
     /// </summary>
     public class PostModule : NancyModule
     {
-        private FunctionGroup helpers = new FunctionGroup();
+        
 
         /// <summary>
         /// Constructor with route mapping
@@ -38,25 +38,25 @@ namespace SocialNetworkServerNV1
         public dynamic Like(dynamic parameters)
         {
             //bind request to object
-            var likeQuery = this.Bind<LikeQuery>();
+            var likeQuery = this.Bind<PostLikeRequest>();
 
             //check user token
-            if (!helpers.checkToken(likeQuery.userToken))
+            if (!TokenFactory.checkToken(likeQuery.userToken))
                 throw new Exception("Not logged in.");
 
             //check if post exists
-            if (!helpers.postExists(likeQuery.postId))
+            if (!PostController.postExists(likeQuery.postId))
                 throw new Exception("Post does not exist.");
 
             // check if post visible to user
-            if (!helpers.isPostVisible(likeQuery.creatorId, likeQuery.targetId))
+            if (!PostController.isPostVisible(likeQuery.creatorId, likeQuery.targetId))
                 throw new Exception("Post not visible");
 
             /* check if user already liked -> remove like
             *                       else -> add like(suggestion: we can disable like button on post load if user has already liked smth (Ermin))*/
-            if (!helpers.isLiked(likeQuery.userId, likeQuery.postId))
+            if (!PostController.isLiked(likeQuery.userId, likeQuery.postId))
             {
-                helpers.addLike(new LikesBuilder()
+                PostController.addLike(new LikesBuilder()
                     .PostId(likeQuery.postId)
                     .UserId(likeQuery.userToken.userId)
                     .Build());
@@ -80,19 +80,19 @@ namespace SocialNetworkServerNV1
         public dynamic Comment(dynamic parameters)
         {
             //map request to object
-            var commentQuery = this.Bind<CommentQuery>();
+            var commentQuery = this.Bind<CommentCreateRequest>();
 
             //check user token
-            if (!helpers.checkToken(commentQuery.userToken))
+            if (!TokenFactory.checkToken(commentQuery.userToken))
                 throw new Exception("Not logged in.");
 
             //checking the existance of the post by ID
-            if (helpers.postExists(commentQuery.postId))
+            if (PostController.postExists(commentQuery.postId))
             {
                 //here I am nesting if statements because it is probably easier to handle exceptions. this can be done ofc in one if.
-                if (helpers.isPostVisible(commentQuery.userToken.userId, commentQuery.targetId))
+                if (PostController.isPostVisible(commentQuery.userToken.userId, commentQuery.targetId))
                 {
-                    helpers.addComment(new CommentsBuilder()
+                    PostController.addComment(new CommentsBuilder()
                         .CommentText(commentQuery.commentText)
                         .PostId(commentQuery.postId)
                         .UserId(commentQuery.userToken.userId)
@@ -120,18 +120,18 @@ namespace SocialNetworkServerNV1
         public dynamic Create(dynamic parameters)
         {
             //bind request to object
-            var createQuery = this.Bind<CreateQuery>();
+            var createQuery = this.Bind<PostCreateRequest>();
 
             //check user token
-            if (!helpers.checkToken(createQuery.userToken))
+            if (!TokenFactory.checkToken(createQuery.userToken))
                 throw new Exception("Not logged in.");
 
             //check where is post(on users profile or on another wall)
             try
             {
-                if (helpers.isPostVisible(createQuery.userToken.userId, createQuery.targetId))
+                if (PostController.isPostVisible(createQuery.userToken.userId, createQuery.targetId))
                 {
-                    helpers.createPost(new PostsBuilder()
+                    PostController.createPost(new PostsBuilder()
                         .CreatorId(createQuery.userToken.userId)
                         .PostContent(createQuery.postContent)
                         .PostCreationDate(DateTime.Now)
@@ -162,17 +162,17 @@ namespace SocialNetworkServerNV1
         public dynamic Load(dynamic parameters)
         {
             //binding the request to object
-            var loadQuery = this.Bind<LoadQuery>();
+            var loadQuery = this.Bind<PostLoadRequest>();
 
             // checking user token
-            if (!helpers.checkToken(loadQuery.userToken))
+            if (!TokenFactory.checkToken(loadQuery.userToken))
                 throw new Exception("Not logged in.");
 
             // check if the user has the privileges to see the post
-            if (helpers.isPostVisible(loadQuery.creatorId, loadQuery.targetId))
+            if (PostController.isPostVisible(loadQuery.creatorId, loadQuery.targetId))
             {
                 // extract the post from the database and return response
-                return Negotiate.WithModel(helpers.getPost(loadQuery.postCreationDate));
+                return Negotiate.WithModel(PostController.getPost(loadQuery.postId));
             }
             else
             {

@@ -15,7 +15,7 @@ namespace SocialNetworkServerNV1
     /// </summary>
     public class UserModule : NancyModule
     {
-        private FunctionGroup helpers = new FunctionGroup();
+        
 
         /// <summary>
         /// Constructor with route mapping
@@ -39,10 +39,10 @@ namespace SocialNetworkServerNV1
         {
 
             //map request to object
-            var authenticateQuery = this.Bind<AuthenticateQuery>();
+            var authenticateQuery = this.Bind<AuthenticateUserRequest>();
             
             //query user by username
-            var user = helpers.getUser(authenticateQuery.username);
+            var user = UserController.getUser(authenticateQuery.username);
 
             //check if user exists
             if (user == null) return Negotiate.WithStatusCode(404);
@@ -53,13 +53,13 @@ namespace SocialNetworkServerNV1
             if (authenticateQuery.password != user.password) throw new System.Exception("Invalid password");
 
             //if token with userid already found return error
-            if (helpers.checkTokenByUserId(user.userId)) throw new System.Exception("Already logged in");
+            if (TokenFactory.checkTokenByUserId(user.userId)) throw new System.Exception("Already logged in");
 
             //delete all tokens of this user from the database(if any - this is to ensure)
             //TODO
 
             //generate a token
-            var userToken = FunctionGroup.createNewToken(user.userId);
+            var userToken = TokenFactory.createNewToken(user.userId);
 
             return Negotiate.WithModel(userToken);
         }
@@ -74,16 +74,16 @@ namespace SocialNetworkServerNV1
         {
             //map request to an object
 
-            var registerQuery = this.Bind<RegisterQuery>();
+            var registerQuery = this.Bind<RegisterUserRequest>();
             
             //check if username already taken
             // check if data valid
             // save changes to the database
-            if (!helpers.checkUsername(registerQuery.username))
+            if (!SettingsController.checkUsername(registerQuery.username))
             {
                 if(registerQuery.dateOfBirth is DateTime)
                 {
-                    helpers.saveUser(new UserBuilder()
+                    UserController.saveUser(new UserBuilder()
                         .Name(registerQuery.name)
                         .LastName(registerQuery.lastName)
                         .Username(registerQuery.username)
@@ -108,7 +108,7 @@ namespace SocialNetworkServerNV1
             }
             // return a status code
             
-            return Negotiate.WithStatusCode(200);
+            return "User account created";
         }
 
         /// <summary>
@@ -119,16 +119,16 @@ namespace SocialNetworkServerNV1
         public dynamic LogOut(dynamic parameters)
         {
             //binding data
-            var logOutQuery = this.Bind<LogOutQuery>();
+            var logOutQuery = this.Bind<ConfidentialRequest>();
 
             //checking token
-            if (!helpers.checkToken(logOutQuery.userToken))
+            if (!TokenFactory.checkToken(logOutQuery.userToken))
                 throw new Exception("Not logged in.");
 
 
             //deleting token (logging out user) - on client side user should be redirected to log in page
-            helpers.removeTokenDB(logOutQuery.userToken);
-            FunctionGroup.removeToken(logOutQuery.userToken);
+            TokenFactory.removeTokenDB(logOutQuery.userToken);
+            TokenFactory.removeToken(logOutQuery.userToken);
 
 
             return "User logged out!";
@@ -142,13 +142,13 @@ namespace SocialNetworkServerNV1
         /// <returns>Status.</returns>
         public dynamic LoadUserInfo(dynamic parameters)
         {
-            var loadUserInfoQuery = this.Bind<LoadUserInfoQuery>();
+            var loadUserInfoQuery = this.Bind<ConfidentialRequest>();
 
 
-            if (!helpers.checkToken(loadUserInfoQuery.userToken))
+            if (!TokenFactory.checkToken(loadUserInfoQuery.userToken))
                 throw new Exception("Not logged in.");
 
-            var userInfo = helpers.getUserProfileInfo(loadUserInfoQuery.userToken.userId);
+            var userInfo = UserController.getUserProfileInfo(loadUserInfoQuery.userToken.userId);
 
             return userInfo;
         }

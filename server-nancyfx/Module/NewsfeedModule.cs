@@ -16,7 +16,7 @@ namespace SocialNetworkServerNV1
     /// </summary>
     public class NewsfeedModule : NancyModule
     {
-        private FunctionGroup helpers = new FunctionGroup();
+        
 
         /// <summary>
         /// Constructor with route mapping
@@ -35,13 +35,13 @@ namespace SocialNetworkServerNV1
         public dynamic Load(dynamic parameters)
         {
             //map request to objects
-            var loadQuery = this.Bind<LoadNewsfeedQuery>();
+            var loadQuery = this.Bind<LoadNewsfeedRequest>();
             
             // check user token
-            if (!helpers.checkToken(loadQuery.userToken)) throw new Exception("Not logged in");
+            if (!TokenFactory.checkToken(loadQuery.userToken)) throw new Exception("Not logged in");
 
             //extract from database
-            List<Posts> recentPosts = helpers.getRecentPosts(loadQuery.interval, loadQuery.userToken.userId);
+            List<Posts> recentPosts = PostController.getRecentPosts(loadQuery.interval, loadQuery.userToken.userId);
             
             
             //return ""+recentPosts.Count();

@@ -13,8 +13,8 @@ namespace SocialNetworkServerNV1.Module
     /// </summary>
     public class NotificationModule : NancyModule
     {
-        private FunctionGroup helpers = new FunctionGroup();
-        private Dictionary<int, Action> methodDictionary;
+        
+        
 
         /// <summary>
         /// Constructor with route mapping
@@ -34,14 +34,15 @@ namespace SocialNetworkServerNV1.Module
         public dynamic LoadNotifications(dynamic parameters)
         {
             // map request to object
-            var query = this.Bind<NotificationQuery>();
+            var query = this.Bind<ConfidentialRequest>();
 
             // check user token
-            if (!helpers.checkToken(query.userToken)) throw new Exception("Not logged in");
+            if (!TokenFactory.checkToken(query.userToken)) throw new Exception("Not logged in");
 
             // load notifications from database
-            List<Notifications> notifications = helpers.loadNotificationsUser(query.userToken.userId);
-            notifications.AddRange(helpers.loadPostNotifications(query.userToken.userId));
+            
+            List<Notifications> notifications = NotificationsController.loadNotificationsUser(query.userToken.userId);
+            notifications.AddRange(NotificationsController.loadPostNotifications(query.userToken.userId));
 
             return Negotiate.WithModel(notifications);
 

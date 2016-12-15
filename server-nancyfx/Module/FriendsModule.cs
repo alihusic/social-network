@@ -18,8 +18,7 @@ namespace SocialNetworkServerNV1
 
     public class FriendsModule : NancyModule
     {
-        private FunctionGroup helpers = new FunctionGroup();
-
+        
         /// <summary>
         /// Constructor with route mapping
         /// </summary>
@@ -41,24 +40,24 @@ namespace SocialNetworkServerNV1
         /// <returns>Status</returns>
         public dynamic Add(dynamic parameters)
         {
-            var addQuery = this.Bind<AddQuery>();
+            var addQuery = this.Bind<AddFriendRequest>();
 
             // check token
-            if (!helpers.checkToken(addQuery.userToken))
+            if (!TokenFactory.checkToken(addQuery.userToken))
             {
                 throw new Exception("Not logged in.");
             }
 
 
-            if (!helpers.userExists(addQuery.senderId) || !helpers.userExists(addQuery.receiverId))
+            if (!UserController.userExists(addQuery.senderId) || !UserController.userExists(addQuery.receiverId))
             {
                 throw new Exception("User not found.");
             }
 
             //check if friendship exists - order of paramaters doesn't matter
-            if (!helpers.friendshipExists(addQuery.senderId, addQuery.receiverId))
+            if (!FriendsController.friendshipExists(addQuery.senderId, addQuery.receiverId))
             {
-                helpers.addNewPendingFriendshipRequest(new PendingFriendRequestsBuilder()
+                FriendsController.addNewPendingFriendshipRequest(new PendingFriendRequestsBuilder()
                     .FriendRequestConfirmed(false)
                     .SenderId(addQuery.userToken.userId)
                     .ReceiverId(addQuery.receiverId)
@@ -83,19 +82,19 @@ namespace SocialNetworkServerNV1
         public dynamic Confirm(dynamic parameters)
         {
             //bind query
-            var confirmQuery = this.Bind<ConfirmQuery>();
+            var confirmQuery = this.Bind<ConfirmFriendRequest>();
 
             // check token
-            if (!helpers.checkToken(confirmQuery.userToken))
+            if (!TokenFactory.checkToken(confirmQuery.userToken))
             {
                 throw new Exception("Not logged in.");
             }
 
             //check if pending friendship exists- order of parameters doesn't matter
-            if (helpers.pendingFriendshipRequestExists(confirmQuery.senderId, confirmQuery.receiverId))
+            if (FriendsController.pendingFriendshipRequestExists(confirmQuery.senderId, confirmQuery.receiverId))
             {
                 // update database - ova ce ako Bog da raditi. Nemam vremena sad za testiranje detaljno, uglavnom treba sto prije testirati.
-                 helpers.confirmFriendshipRequest(new PendingFriendRequestsBuilder()
+                 FriendsController.confirmFriendshipRequest(new PendingFriendRequestsBuilder()
                      .SenderId(confirmQuery.senderId)
                      .ReceiverId(confirmQuery.receiverId)
                      .FriendRequestConfirmed(false)
@@ -121,19 +120,19 @@ namespace SocialNetworkServerNV1
         public dynamic Remove(dynamic parameters)
         {
             //bind query
-            var deleteQuery = this.Bind<DeleteQuery>();
+            var deleteQuery = this.Bind<DeleteFriendRequest>();
 
             // check token
-            if (!helpers.checkToken(deleteQuery.userToken))
+            if (!TokenFactory.checkToken(deleteQuery.userToken))
             {
                 throw new Exception("Not logged in.");
             }
 
             // check if friendship exists
-            if (helpers.friendshipExists(deleteQuery.senderId, deleteQuery.receiverId))
+            if (FriendsController.friendshipExists(deleteQuery.senderId, deleteQuery.receiverId))
             {
                 //deletes friendship if 2 users are friends
-                helpers.deleteFriendship(deleteQuery.senderId, deleteQuery.receiverId);
+                FriendsController.deleteFriendship(deleteQuery.senderId, deleteQuery.receiverId);
             }
             else
             {
@@ -155,17 +154,17 @@ namespace SocialNetworkServerNV1
         public dynamic GetAll(dynamic parameters)
         {
             //bind query
-            var getAllQuery = this.Bind<GetAllQuery>();
+            var getAllQuery = this.Bind<GetAllFriendsRequest>();
 
             // check token
-            if (!helpers.checkToken(getAllQuery.userToken))
+            if (!TokenFactory.checkToken(getAllQuery.userToken))
             {
                 throw new Exception("Not logged in.");
             }
 
 
             //List<User> friends = helpers.getAllFriends(getAllQuery.userId);
-            List<int> friends = helpers.getAllFriendsId(getAllQuery.userToken.userId);
+            List<int> friends = FriendsController.getAllFriendsId(getAllQuery.userToken.userId);
             return friends.Count();
             /* bind the result to a model
             * return model&status code
@@ -182,9 +181,9 @@ namespace SocialNetworkServerNV1
         public dynamic GetListUsers(dynamic parameters)
         {
             //bind query to object
-            var getListUsersQuery = this.Bind<GetListUsersQuery>();
+            var getListUsersQuery = this.Bind<GetListUsersRequest>();
 
-            List <UserFriendsInfo> users= helpers.getUserFriendsList(getListUsersQuery.listUserId);
+            List <UserFriendsInfo> users= FriendsController.getUserFriendsList(getListUsersQuery.listUserId);
 
             return users;
         }
@@ -201,22 +200,22 @@ namespace SocialNetworkServerNV1
             var getProfileInfoQuery = this.Bind<GetProfileInfoQuery>();
 
             // check token
-            if (!helpers.checkToken(getProfileInfoQuery.userToken))
+            if (!TokenFactory.checkToken(getProfileInfoQuery.userToken))
             {
                 throw new Exception("Not logged in.");
             }
 
-            if (!helpers.userExists(getProfileInfoQuery.targetId))
+            if (!UserController.userExists(getProfileInfoQuery.targetId))
             {
                 throw new Exception("User not found.");
             }
 
-            if (!helpers.getAllFriendsId(getProfileInfoQuery.userToken.userId).Contains(getProfileInfoQuery.targetId))
+            if (!FriendsController.getAllFriendsId(getProfileInfoQuery.userToken.userId).Contains(getProfileInfoQuery.targetId))
             {
                 throw new Exception("User profile not visible.");
             }
 
-            ProfileInfo profileInfo = helpers.getProfileInfo(getProfileInfoQuery.targetId);
+            ProfileInfo profileInfo = UserController.getProfileInfo(getProfileInfoQuery.targetId);
             
 
             //return profileInfo;

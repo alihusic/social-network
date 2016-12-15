@@ -12,7 +12,7 @@ namespace SocialNetworkServerNV1
         /// Class inheriting NancyModule class.
         /// Used to handle Chat-related requests.
         /// </summary>
-        private FunctionGroup helpers = new FunctionGroup();
+        
 
         /// <summary>
         /// Constructor with route mapping
@@ -32,19 +32,19 @@ namespace SocialNetworkServerNV1
         /// <returns>Status code</returns>
         public dynamic EditInfo(dynamic parameters)
         {
-            var editInfoQuery = this.Bind<EditInfoQuery>();
+            var editInfoQuery = this.Bind<EditUserInfoRequest>();
 
             // TODO:
             // check user token
-            if (!helpers.checkToken(editInfoQuery.userToken))
+            if (!TokenFactory.checkToken(editInfoQuery.userToken))
                 throw new Exception("Not logged in.");
 
             // check if new info is valid TODO
             // save changes to the database
-            if (helpers.checkURL(editInfoQuery.pictureURL) && helpers.checkURL(editInfoQuery.coverPictureURL))
+            if (UtilityController.checkURL(editInfoQuery.pictureURL) && UtilityController.checkURL(editInfoQuery.coverPictureURL))
             { 
       
-                helpers.editUserInfo(new ProfileInfoBuilder()
+                SettingsController.editUserInfo(new ProfileInfoBuilder()
                         .Name(editInfoQuery.name)
                         .LastName(editInfoQuery.lastName)
                         .Username(editInfoQuery.username)
@@ -72,17 +72,17 @@ namespace SocialNetworkServerNV1
         /// <returns>Status code</returns>
         public dynamic ChangeProfilePicture(dynamic parameters)
         {
-            var changeProfilePictureQuery = this.Bind<ChangeProfilePictureQuery>();
+            var changeProfilePictureQuery = this.Bind<ChangePictureRequest>();
 
             // check user token
-            if (!helpers.checkToken(changeProfilePictureQuery.userToken)) throw new Exception("Not logged in.");
+            if (!TokenFactory.checkToken(changeProfilePictureQuery.userToken)) throw new Exception("Not logged in.");
 
             // get new url THIS WILL BE HEAVILY MODIFIED Allaha mi
             // save changes to the database
 
-            if (helpers.checkURL(changeProfilePictureQuery.pictureURL))
+            if (UtilityController.checkURL(changeProfilePictureQuery.pictureURL))
             {
-                helpers.updateProfilePicture(changeProfilePictureQuery.userToken.userId, changeProfilePictureQuery.pictureURL);
+                SettingsController.updateProfilePicture(changeProfilePictureQuery.userToken.userId, changeProfilePictureQuery.pictureURL);
             }
             else
             {
@@ -100,16 +100,16 @@ namespace SocialNetworkServerNV1
         /// <returns>Status code</returns>
         public dynamic ChangePassword(dynamic parameters)
         {
-            var changePasswordQuery = this.Bind<ChangePasswordQuery>();
+            var changePasswordQuery = this.Bind<ChangePasswordRequest>();
 
             // check user token
-            if (!helpers.checkToken(changePasswordQuery.userToken)) throw new Exception("Not logged in.");
+            if (!TokenFactory.checkToken(changePasswordQuery.userToken)) throw new Exception("Not logged in.");
 
             // check hash/password
-            if (helpers.checkPassword(changePasswordQuery.oldPassword, changePasswordQuery.userToken.userId))
+            if (UserController.checkPassword(changePasswordQuery.oldPassword, changePasswordQuery.userToken.userId))
             {
                 // save the new password to the database
-                helpers.updatePassword(changePasswordQuery.newPassword, changePasswordQuery.userToken.userId);
+                SettingsController.updatePassword(changePasswordQuery.newPassword, changePasswordQuery.userToken.userId);
             }
             else
             {
@@ -118,10 +118,10 @@ namespace SocialNetworkServerNV1
 
             // remove the token -- ovo ces ti Ali morati dovrisiti (Ermin)
             // brisanje iz liste na serveru
-            FunctionGroup.removeToken(changePasswordQuery.userToken);
+            TokenFactory.removeToken(changePasswordQuery.userToken);
 
             // brisanje iz baze
-            helpers.removeTokenDB(changePasswordQuery.userToken);
+            TokenFactory.removeTokenDB(changePasswordQuery.userToken);
             
 
             // return status code
@@ -135,18 +135,18 @@ namespace SocialNetworkServerNV1
         /// <returns>Status code</returns>
         public dynamic ChangeCoverPicture(dynamic parameters)
         {
-            var changeCoverPictureQuery = new ChangeCoverPictureQuery();
+            var changeCoverPictureQuery = this.Bind<ChangePictureRequest>();
 
             // TODO:
             // check user cookie
-            if (!helpers.checkToken(changeCoverPictureQuery.userToken)) return false;
+            if (!TokenFactory.checkToken(changeCoverPictureQuery.userToken)) return false;
 
             // get new url THIS WILL BE HEAVILY MODIFIED
             // save changes to the database
 
-            if (helpers.checkURL(changeCoverPictureQuery.coverPictureURL))
+            if (UtilityController.checkURL(changeCoverPictureQuery.pictureURL))
             {
-                helpers.updateCoverPicture(changeCoverPictureQuery.userToken.userId, changeCoverPictureQuery.coverPictureURL);
+                SettingsController.updateCoverPicture(changeCoverPictureQuery.userToken.userId, changeCoverPictureQuery.pictureURL);
             }
             else
             {

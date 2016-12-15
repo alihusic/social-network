@@ -16,7 +16,7 @@ namespace SocialNetworkServerNV1
     /// </summary>
     public class ChatModule : NancyModule
     {
-        private FunctionGroup helpers=new FunctionGroup();
+        
 
         /// <summary>
         /// Constructor with route mapping
@@ -38,11 +38,11 @@ namespace SocialNetworkServerNV1
         {
             
             //bind request to object
-            var sendQuery = this.Bind<SendQuery>();
+            var sendQuery = this.Bind<MessageSendRequest>();
 
             
             //check user cookie
-            if (!helpers.checkToken(sendQuery.userToken))
+            if (!TokenFactory.checkToken(sendQuery.userToken))
             {
                 throw new Exception("Your token is: " + sendQuery.userToken.tokenHash);
                 //throw new Exception("You must log in");
@@ -54,7 +54,7 @@ namespace SocialNetworkServerNV1
             //check receiver ID
             try
             {
-                if (!helpers.userExists(sendQuery.userToken.userId) || !helpers.userExists(sendQuery.receiverId))
+                if (!UserController.userExists(sendQuery.userToken.userId) || !UserController.userExists(sendQuery.receiverId))
                 {
                     throw new Exception("Invalid receiver ID"); ;
                 }
@@ -70,28 +70,28 @@ namespace SocialNetworkServerNV1
             //order of passing parameters does not matter
             try
             {
-                if (!helpers.chatExists(sendQuery.userToken.userId, sendQuery.receiverId))
+                if (!ChatController.chatExists(sendQuery.userToken.userId, sendQuery.receiverId))
                 {
                     //creating new chat if one doesn't exist
                     //order of parameters doesn't matter
-                    helpers.createNewChat(new PrivateChatBuilder().User1(sendQuery.userToken.userId)
+                    ChatController.createNewChat(new PrivateChatBuilder().User1(sendQuery.userToken.userId)
                         .User2(sendQuery.receiverId)
                         .ChatCreationDate(DateTime.Now).Build());
                 }
                 
                 //saves message in UnreadMessages and PrivateMessages tables
-                helpers.saveMessage(new PrivateMessagesBuilder()
+                MessagesController.saveMessage(new PrivateMessagesBuilder()
                     .SenderId(sendQuery.userToken.userId)
                     .RecipientId(sendQuery.receiverId)
                     .MessageTimeStamp(DateTime.Now)
                     .MessageText(sendQuery.messageText)
-                    .ChatId(helpers.getChatId(sendQuery.userToken.userId,sendQuery.receiverId)).Build(), 
+                    .ChatId(ChatController.getChatId(sendQuery.userToken.userId,sendQuery.receiverId)).Build(), 
                     new UnreadMessagesBuilder()
                     .SenderId(sendQuery.userToken.userId)
                     .RecipientId(sendQuery.receiverId)
                     .MessageTimeStamp(DateTime.Now)
                     .MessageText(sendQuery.messageText)
-                    .ChatId(helpers.getChatId(sendQuery.userToken.userId, sendQuery.receiverId)).Build());
+                    .ChatId(ChatController.getChatId(sendQuery.userToken.userId, sendQuery.receiverId)).Build());
             }
             catch (Exception ex)
             {
@@ -111,14 +111,14 @@ namespace SocialNetworkServerNV1
         public dynamic CheckNewMessages(dynamic parameters)
         {
             //bind request to model
-            var checkNewMessagesQuery = this.Bind<CheckNewMessagesQuery>();
+            var checkNewMessagesQuery = this.Bind<ConfidentialRequest>();
 
             //check user cookie
-            if (!helpers.checkToken(checkNewMessagesQuery.userToken)) throw new Exception("You must log in");
+            if (!TokenFactory.checkToken(checkNewMessagesQuery.userToken)) throw new Exception("You must log in");
 
             //extract from database
-            if (!helpers.checkUnreadMessages(checkNewMessagesQuery.userToken.userId)) throw new Exception("No new messages");
-            List<UnreadMessages> unreadMessages = helpers.getAllUnreadMessages(checkNewMessagesQuery.userToken.userId);
+            if (!MessagesController.checkUnreadMessages(checkNewMessagesQuery.userToken.userId)) throw new Exception("No new messages");
+            List<UnreadMessages> unreadMessages = MessagesController.getAllUnreadMessages(checkNewMessagesQuery.userToken.userId);
 
             //return a structured model
             return unreadMessages;
