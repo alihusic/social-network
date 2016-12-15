@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 
 namespace SocialNetworkServer
@@ -11,67 +12,105 @@ namespace SocialNetworkServer
         public static string s = "This class should be renamed...";
     }
 
+    
+    public abstract class SNRequest
+    {
+        public DateTime timeStamp;
+        public string ipAddress;
+        public SNRequest()
+        {
+            timeStamp = DateTime.Now;
+            ipAddress = new WebClient().DownloadString("http://icanhazip.com");
+        }
+    }
+
+
+    /// <summary>
+    /// Class used to separate requests which require user authentication/token.
+    /// NOTE: Class is not abstract - can be instantiated due to Liskov Inversion Principle.
+    /// Substituting any subclass into its place will work without problems, therefore we
+    /// consider it acceptable.
+    /// </summary>
+    public class ConfidentialRequest : SNRequest
+    {
+        public Token userToken;
+        public ConfidentialRequest():base()
+        {
+
+        }
+    }
+
+    public class ConfidentialRequestBuilder
+    {
+        public Token userToken;
+        public ConfidentialRequestBuilder UserToken(Token token)
+        {
+            this.userToken = token;
+            return this;
+        }
+        public SNRequest Build()
+        {
+            return new ConfidentialRequest
+            {
+                userToken=userToken
+            };
+        }
+    }
+
+    public class UnrestrictedRequest : SNRequest
+    {
+        public string crawlerStamp;
+    }
+    
+
     /// <summary>
     /// Class used to encapsulate required fields in a send message query
     /// </summary>
-    public class SendQuery
+    public class MessageSendRequest:ConfidentialRequest
     {
-        public Token userToken { get; set; }
         public int receiverId { get; set; }
         public string messageText { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a check new messages query
-    /// </summary>
-    public class CheckNewMessagesQuery
-    {
-        public Token userToken { get; set; }
-    }
-
-    /// <summary>
     /// Class used to encapsulate required fields in a get all friends query
     /// </summary>
-    class GetAllQuery
+    public class GetAllFriendsRequest:ConfidentialRequest
     {
         public int userId { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
     /// Class used to encapsulate required fields in a delete friend
     /// </summary>
-    class DeleteQuery
+    public class DeleteFriendRequest:ConfidentialRequest
     {
         public int senderId { get; set; }
         public int receiverId { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
     /// Class used to encapsulate required fields in a confirm friend query
     /// </summary>
-    class ConfirmQuery
+    public class ConfirmFriendRequest:ConfidentialRequest
     {
         public int senderId { get; set; }
         public int receiverId { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
     /// Class used to encapsulate required fields in a add new friend query
     /// </summary>
-    class AddQuery
+    public class AddFriendRequest:ConfidentialRequest
     {
         public int senderId { get; set; }
         public int receiverId { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
     /// Class used to encapsulate required fields in a authentication query
     /// </summary>
-    public class AuthenticateQuery
+    public class AuthenticateUserRequest:UnrestrictedRequest
     {
         public string username { get; set; }
         public string password { get; set; }
@@ -81,7 +120,7 @@ namespace SocialNetworkServer
     /// <summary>
     /// Class used to encapsulate required fields in a registration query
     /// </summary>
-    public class RegisterQuery
+    public class RegisterUserRequest:UnrestrictedRequest
     {
         public string name { get; set; }
         public string lastName { get; set; }
@@ -98,57 +137,51 @@ namespace SocialNetworkServer
     /// <summary>
     /// Class used to encapsulate required fields in a comment query
     /// </summary>
-    class CommentQuery
+    public class CommentCreateRequest:ConfidentialRequest
     {
         public int userId { get; set; }
         public int postId { get; set; }
         public int creatorId { get; set; }
         public int targetId { get; set; }
         public string commentText { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
     /// Class used to encapsulate required fields in a create new post query
     /// </summary>
-    class CreateQuery
+    public class PostCreateRequest:ConfidentialRequest
     {
         public int targetId { get; set; }
         public int creatorId { get; set; }
-        public Token userToken { get; set; }
         public string postContent { get; set; }
     }
 
     /// <summary>
     /// Class used to encapsulate required fields in a like post query
     /// </summary>
-    class LikeQuery
+    public class PostLikeRequest:ConfidentialRequest
     {
         public int userId { get; set; }
         public int creatorId { get; set; }
         public int targetId { get; set; }
         public int postId { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
     /// Class used to encapsulate required fields in a load post query
     /// </summary>
-    class LoadQuery
+    public class PostLoadRequest:ConfidentialRequest
     {
-        public Token userToken { get; set; }
         public int postId { get; set; }
         public int targetId { get; set; }
         public int creatorId { get; set; }
-        public DateTime postCreationDate { get; set; }
     }
 
     /// <summary>
     /// Class used to encapsulate required fields in a newsfeed load query
     /// </summary>
-    class LoadNewsfeedQuery
+    public class LoadNewsfeedRequest:ConfidentialRequest
     {
-        public Token userToken { get; set; }
         public int interval { get; set; }
     }
 
@@ -156,7 +189,7 @@ namespace SocialNetworkServer
     /// Class used to encapsulate required fields in a settings edit info query
     /// </summary>
 
-    class EditInfoQuery
+    public class EditUserInfoRequest:ConfidentialRequest
     {
         public string name { get; set; }
         public string lastName { get; set; }
@@ -167,61 +200,30 @@ namespace SocialNetworkServer
         public string coverPictureURL { get; set; }
         public string gender { get; set; }
         public DateTime dateOfBirth { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
     /// Class used to encapsulate required fields in a settings change profile picture query
     /// </summary>
-    class ChangeProfilePictureQuery
+    public class ChangePictureRequest:ConfidentialRequest
     {
-        public string username { get; set; }
         public string pictureURL { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
     /// Class used to encapsulate required fields in a settings change password query
     /// </summary>
-    class ChangePasswordQuery
+    public class ChangePasswordRequest:ConfidentialRequest
     {
         public string oldPassword { get; set; }
         public string newPassword { get; set; }
-        public Token userToken { get; set; }
-    }
-
-
-    /// <summary>
-    /// Class used to encapsulate required fields in a settings change cover picture query
-    /// </summary>
-    class ChangeCoverPictureQuery
-    {
-        public string coverPictureURL { get; set; }
-        public Token userToken { get; set; }
-    }
-
-    /// <summary>
-    /// Class used to encapsulate required fields in a notifications query
-    /// </summary>
-    public class NotificationQuery
-    {
-        public Token userToken { get; set; }
-    }
-
-    /// <summary>
-    /// Class used to encapsulate required fields in a log out query
-    /// </summary>
-
-    public class LogOutQuery
-    {
-        public Token userToken { get; set; }
     }
 
     /// <summary>
     /// Class used to encapsulate required fields in a get list of users query
     /// Note: user token not required
     /// </summary>
-    public class GetListUsersQuery
+    public class GetListUsersRequest:UnrestrictedRequest
     {
         public List<int> listUserId { get; set; }
     }
@@ -229,18 +231,9 @@ namespace SocialNetworkServer
     /// <summary>
     /// Class used to encapsulate required fields in a get profile query
     /// </summary>
-    public class GetProfileInfoQuery
+    public class GetProfileInfoQuery:ConfidentialRequest
     {
-        public Token userToken { get; set; }
         public int targetId { get; set; }
     }
 
-
-    /// <summary>
-    /// Class used to encapsulate required fields in a get user's info query
-    /// </summary>
-    public class LoadUserInfoQuery
-    {
-        public Token userToken { get; set; }
-    }
 }
