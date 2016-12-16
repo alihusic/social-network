@@ -52,7 +52,7 @@ namespace NeatClient
 
             try
             {
-                var query = new AuthenticateQuery
+                var query = new AuthenticateUserRequest
                 {
                     username = username,
                     password = password
@@ -71,7 +71,7 @@ namespace NeatClient
                 
                 var responseString = request.requestFromServer();
 
-                MessageBox.Show(responseString);
+                
                 var tempToken = JsonConvert.DeserializeObject<Token>(responseString);
                 
                 if (tempToken.tokenHash != null && tempToken.tokenHash.Length == 40)
@@ -105,7 +105,7 @@ namespace NeatClient
 
             try
             {
-                LogOutQuery query = new LogOutQuery
+                ConfidentialRequest query = new ConfidentialRequest
                 {
                     userToken = ControlGroup.userToken,
                 };
@@ -129,6 +129,16 @@ namespace NeatClient
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void clearUsernameInput(object sender, RoutedEventArgs e)
+        {
+            if(usernameInput.Text.Equals("Username"))usernameInput.Text = "";
+        }
+
+        private void defaultUsernameInput(object sender, RoutedEventArgs e)
+        {
+            if (usernameInput.Text.Equals("")) usernameInput.Text = "Username";
         }
     }
 }

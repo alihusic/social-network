@@ -22,7 +22,7 @@
                     <ScaleTransform ScaleX="1" ScaleY="1"/>
                 </RadioButton.RenderTransform>
             </RadioButton>
-            <RadioButton x:Name="maleButton" BorderThickness="1" HorizontalAlignment="Center" FontFamily="Corbel" FontSize="12" Canvas.Left="375" Canvas.Top="170">
+            <RadioButton x:Name="maleButton" IsChecked="True" BorderThickness="1" HorizontalAlignment="Center" FontFamily="Corbel" FontSize="12" Canvas.Left="375" Canvas.Top="170">
                 <RadioButton.RenderTransform>
                     <ScaleTransform ScaleX="1" ScaleY="1"/>
                 </RadioButton.RenderTransform>

@@ -37,12 +37,12 @@ namespace NeatClient
             string city = this.cityInput.Text;
             string pictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png";
             string coverPictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png";
-            string gender = "male";
+            string gender = femaleButton.IsChecked==true ? "female":"male";
             DateTime dateOfBirth = DateTime.Now;
 
             try
             {
-                var query = new RegisterQuery
+                var query = new RegisterUserRequest
                 {
                     username = username,
                     password = password,

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 
 namespace SocialNetworkServer
@@ -12,65 +13,113 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a send message query
+    /// Class used as base class for all requests.
     /// </summary>
-    public class SendQuery
+    public abstract class SNRequest
     {
-        public Token userToken { get; set; }
+        public DateTime timeStamp;
+        public string ipAddress;
+        public SNRequest()
+        {
+            timeStamp = DateTime.Now;
+            ipAddress = new WebClient().DownloadString("http://icanhazip.com");
+        }
+    }
+
+
+    /// <summary>
+    /// Class used to separate requests which require user authentication/token.
+    /// NOTE: Class is not abstract - can be instantiated due to Liskov Inversion Principle.
+    /// Substituting any subclass into its place will work without problems, therefore we
+    /// consider it acceptable.
+    /// </summary>
+    public class ConfidentialRequest : SNRequest
+    {
+        public Token userToken;
+        public ConfidentialRequest():base()
+        {
+
+        }
+    }
+
+
+    /// <summary>
+    /// Class used to create requests that require tokens.
+    /// </summary>
+    public class ConfidentialRequestBuilder
+    {
+        public Token userToken;
+        public ConfidentialRequestBuilder UserToken(Token token)
+        {
+            this.userToken = token;
+            return this;
+        }
+        public SNRequest Build()
+        {
+            return new ConfidentialRequest
+            {
+                userToken=userToken
+            };
+        }
+    }
+
+    /// <summary>
+    /// Class used to create requests that don't require tokens.
+    /// </summary>
+    public class UnrestrictedRequest : SNRequest
+    {
+        public string crawlerStamp;
+    }
+    
+
+    /// <summary>
+    /// Class used to create request that handles message sending.
+    /// </summary>
+    public class MessageSendRequest:ConfidentialRequest
+    {
         public int receiverId { get; set; }
         public string messageText { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a check new messages query
+    /// Class used to create request that handles friend extraction.
     /// </summary>
-    public class CheckNewMessagesQuery
+    public class GetAllFriendsRequest:ConfidentialRequest
     {
-        public Token userToken { get; set; }
+        public int userId { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a get all friends query
+    /// Class used to create request that handles deleting friendship :(.
     /// </summary>
-    class GetAllQuery
-    {
-        public Token userToken { get; set; }
-    }
-
-    /// <summary>
-    /// Class used to encapsulate required fields in a delete friend
-    /// </summary>
-    class DeleteQuery
+    public class DeleteFriendRequest:ConfidentialRequest
     {
         public int senderId { get; set; }
         public int receiverId { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a confirm friend query
+    /// Class used to create request that handles confirmation of a friendship :).
     /// </summary>
-    class ConfirmQuery
+    public class ConfirmFriendRequest:ConfidentialRequest
     {
         public int senderId { get; set; }
         public int receiverId { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a add new friend query
+    /// Class used to create requests that handles friendship creation.
     /// </summary>
-    class AddQuery
+    public class AddFriendRequest:ConfidentialRequest
     {
         public int senderId { get; set; }
         public int receiverId { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a authentication query
+    /// Class used to create request that handles user authentication.
     /// </summary>
-    public class AuthenticateQuery
+    public class AuthenticateUserRequest:UnrestrictedRequest
     {
         public string username { get; set; }
         public string password { get; set; }
@@ -78,9 +127,9 @@ namespace SocialNetworkServer
 
 
     /// <summary>
-    /// Class used to encapsulate required fields in a registration query
+    /// Class used to create request that handles user registration.
     /// </summary>
-    public class RegisterQuery
+    public class RegisterUserRequest:UnrestrictedRequest
     {
         public string name { get; set; }
         public string lastName { get; set; }
@@ -95,67 +144,61 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a comment query
+    /// Class used to create request that handles comment creation.
     /// </summary>
-    class CommentQuery
+    public class CommentCreateRequest:ConfidentialRequest
     {
         public int userId { get; set; }
         public int postId { get; set; }
         public int creatorId { get; set; }
         public int targetId { get; set; }
         public string commentText { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a create new post query
+    /// Class used to create request that handles post creation.
     /// </summary>
-    class CreateQuery
+    public class PostCreateRequest:ConfidentialRequest
     {
         public int targetId { get; set; }
         public int creatorId { get; set; }
-        public Token userToken { get; set; }
         public string postContent { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a like post query
+    /// Class used to create request that handles like operations.
     /// </summary>
-    class LikeQuery
+    public class PostLikeRequest:ConfidentialRequest
     {
         public int userId { get; set; }
         public int creatorId { get; set; }
         public int targetId { get; set; }
         public int postId { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a load post query
+    /// Class used to create request that handles loading of posts.
     /// </summary>
-    class LoadQuery
+    public class PostLoadRequest:ConfidentialRequest
     {
-        public Token userToken { get; set; }
         public int postId { get; set; }
         public int targetId { get; set; }
         public int creatorId { get; set; }
-        public DateTime postCreationDate { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a newsfeed load query
+    /// Class used to create request that handles newsfeed loading.
     /// </summary>
-    class LoadNewsfeedQuery
+    public class LoadNewsfeedRequest:ConfidentialRequest
     {
-        public Token userToken { get; set; }
         public int interval { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a settings edit info query
+    /// Class used to create request that handles editing of user's info.
     /// </summary>
 
-    class EditInfoQuery
+    public class EditUserInfoRequest:ConfidentialRequest
     {
         public string name { get; set; }
         public string lastName { get; set; }
@@ -166,61 +209,40 @@ namespace SocialNetworkServer
         public string coverPictureURL { get; set; }
         public string gender { get; set; }
         public DateTime dateOfBirth { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a settings change profile picture query
+    /// Class used to create request that handles picutre editing.
     /// </summary>
-    class ChangeProfilePictureQuery
+    public class ChangePictureRequest:ConfidentialRequest
     {
-        public string username { get; set; }
         public string pictureURL { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a settings change password query
+    /// Class used to create request that handles password editing.
     /// </summary>
-    class ChangePasswordQuery
+    public class ChangePasswordRequest:ConfidentialRequest
     {
         public string oldPassword { get; set; }
         public string newPassword { get; set; }
-        public Token userToken { get; set; }
-    }
-
-
-    /// <summary>
-    /// Class used to encapsulate required fields in a settings change cover picture query
-    /// </summary>
-    class ChangeCoverPictureQuery
-    {
-        public string coverPictureURL { get; set; }
-        public Token userToken { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a notifications query
+    /// Class used to create request that handles loading of user id's.
+    /// Note: user token not required
     /// </summary>
-    public class NotificationQuery
+    public class GetListUsersRequest:UnrestrictedRequest
     {
-        public Token userToken { get; set; }
+        public List<int> listUserId { get; set; }
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a log out query
+    /// Class used to create request that handles loading of profile info.
     /// </summary>
-
-    public class LogOutQuery
+    public class GetProfileInfoQuery:ConfidentialRequest
     {
-        public Token userToken { get; set; }
+        public int targetId { get; set; }
     }
 
-    /// <summary>
-    /// Class used to encapsulate required fields in a get user's info query
-    /// </summary>
-    public class LoadUserInfoQuery
-    {
-        public Token userToken { get; set; }
-    }
 }
