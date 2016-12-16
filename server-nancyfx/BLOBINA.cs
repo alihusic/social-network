@@ -12,7 +12,9 @@ namespace SocialNetworkServer
         public static string s = "This class should be renamed...";
     }
 
-    
+    /// <summary>
+    /// Class used as base class for all requests.
+    /// </summary>
     public abstract class SNRequest
     {
         public DateTime timeStamp;
@@ -40,6 +42,10 @@ namespace SocialNetworkServer
         }
     }
 
+
+    /// <summary>
+    /// Class used to create requests that require tokens.
+    /// </summary>
     public class ConfidentialRequestBuilder
     {
         public Token userToken;
@@ -57,6 +63,9 @@ namespace SocialNetworkServer
         }
     }
 
+    /// <summary>
+    /// Class used to create requests that don't require tokens.
+    /// </summary>
     public class UnrestrictedRequest : SNRequest
     {
         public string crawlerStamp;
@@ -64,7 +73,7 @@ namespace SocialNetworkServer
     
 
     /// <summary>
-    /// Class used to encapsulate required fields in a send message query
+    /// Class used to create request that handles message sending.
     /// </summary>
     public class MessageSendRequest:ConfidentialRequest
     {
@@ -73,7 +82,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a get all friends query
+    /// Class used to create request that handles friend extraction.
     /// </summary>
     public class GetAllFriendsRequest:ConfidentialRequest
     {
@@ -81,7 +90,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a delete friend
+    /// Class used to create request that handles deleting friendship :(.
     /// </summary>
     public class DeleteFriendRequest:ConfidentialRequest
     {
@@ -90,7 +99,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a confirm friend query
+    /// Class used to create request that handles confirmation of a friendship :).
     /// </summary>
     public class ConfirmFriendRequest:ConfidentialRequest
     {
@@ -99,7 +108,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a add new friend query
+    /// Class used to create requests that handles friendship creation.
     /// </summary>
     public class AddFriendRequest:ConfidentialRequest
     {
@@ -108,7 +117,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a authentication query
+    /// Class used to create request that handles user authentication.
     /// </summary>
     public class AuthenticateUserRequest:UnrestrictedRequest
     {
@@ -118,7 +127,7 @@ namespace SocialNetworkServer
 
 
     /// <summary>
-    /// Class used to encapsulate required fields in a registration query
+    /// Class used to create request that handles user registration.
     /// </summary>
     public class RegisterUserRequest:UnrestrictedRequest
     {
@@ -135,7 +144,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a comment query
+    /// Class used to create request that handles comment creation.
     /// </summary>
     public class CommentCreateRequest:ConfidentialRequest
     {
@@ -147,7 +156,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a create new post query
+    /// Class used to create request that handles post creation.
     /// </summary>
     public class PostCreateRequest:ConfidentialRequest
     {
@@ -157,7 +166,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a like post query
+    /// Class used to create request that handles like operations.
     /// </summary>
     public class PostLikeRequest:ConfidentialRequest
     {
@@ -168,7 +177,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a load post query
+    /// Class used to create request that handles loading of posts.
     /// </summary>
     public class PostLoadRequest:ConfidentialRequest
     {
@@ -178,7 +187,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a newsfeed load query
+    /// Class used to create request that handles newsfeed loading.
     /// </summary>
     public class LoadNewsfeedRequest:ConfidentialRequest
     {
@@ -186,7 +195,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a settings edit info query
+    /// Class used to create request that handles editing of user's info.
     /// </summary>
 
     public class EditUserInfoRequest:ConfidentialRequest
@@ -203,7 +212,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a settings change profile picture query
+    /// Class used to create request that handles picutre editing.
     /// </summary>
     public class ChangePictureRequest:ConfidentialRequest
     {
@@ -211,7 +220,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a settings change password query
+    /// Class used to create request that handles password editing.
     /// </summary>
     public class ChangePasswordRequest:ConfidentialRequest
     {
@@ -220,7 +229,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a get list of users query
+    /// Class used to create request that handles loading of user id's.
     /// Note: user token not required
     /// </summary>
     public class GetListUsersRequest:UnrestrictedRequest
@@ -229,7 +238,7 @@ namespace SocialNetworkServer
     }
 
     /// <summary>
-    /// Class used to encapsulate required fields in a get profile query
+    /// Class used to create request that handles loading of profile info.
     /// </summary>
     public class GetProfileInfoQuery:ConfidentialRequest
     {
