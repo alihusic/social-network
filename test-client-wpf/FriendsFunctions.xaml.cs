@@ -38,7 +38,7 @@ namespace TestClientSN
 
             try
             {
-                AddQuery query = new AddQuery()
+                AddFriendRequest query = new AddFriendRequest()
                 {
                     senderId = Int32.Parse(senderId.Text),
                     receiverId = Int32.Parse(receiverId.Text),
@@ -76,7 +76,7 @@ namespace TestClientSN
 
             try
             {
-                GetAllQuery query = new GetAllQuery()
+                ConfidentialRequest query = new ConfidentialRequest()
                 {
                     userToken = ControlGroup.userToken
                 };
@@ -125,7 +125,7 @@ namespace TestClientSN
 
             try
             {
-                ConfirmQuery query = new ConfirmQuery()
+                ConfirmFriendRequest query = new ConfirmFriendRequest()
                 {
                     senderId = Int32.Parse(senderId.Text),
                     receiverId = Int32.Parse(receiverId.Text),
@@ -160,7 +160,7 @@ namespace TestClientSN
 
             try
             {
-                DeleteQuery query = new DeleteQuery()
+                DeleteFriendRequest query = new DeleteFriendRequest()
                 {
                     senderId = Int32.Parse(senderId.Text),
                     receiverId = Int32.Parse(receiverId.Text),

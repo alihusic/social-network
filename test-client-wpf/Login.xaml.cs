@@ -48,7 +48,7 @@ namespace SocialNetwork
             string password = this.passwordBox.Password;
             try
             {
-                var query = new AuthenticateQuery
+                var query = new AuthenticateUserRequest
                 {
                     username = username,
                     password = password
@@ -94,7 +94,7 @@ namespace SocialNetwork
 
             try
             {
-                LogOutQuery query = new LogOutQuery
+                ConfidentialRequest query = new ConfidentialRequest
                 {
                     userToken = ControlGroup.userToken,
                 };

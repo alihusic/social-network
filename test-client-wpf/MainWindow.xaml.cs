@@ -81,7 +81,7 @@ namespace SocialNetwork
 
             try
             {
-                LogOutQuery query = new LogOutQuery
+                ConfidentialRequest query = new ConfidentialRequest
                 {
                     userToken = ControlGroup.userToken,
                 };

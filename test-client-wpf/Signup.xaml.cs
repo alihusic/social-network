@@ -47,7 +47,7 @@ namespace SocialNetwork
 
             try
             {
-                var query = new RegisterQuery
+                var query = new RegisterUserRequest
                 {
                     username = username,
                     password = password,
@@ -92,7 +92,7 @@ namespace SocialNetwork
 
             try
             {
-                LoadUserInfoQuery query = new LoadUserInfoQuery()
+                ConfidentialRequest query = new ConfidentialRequest()
                 {
                     userToken = ControlGroup.userToken,
                     
@@ -140,7 +140,7 @@ namespace SocialNetwork
 
             try
             {
-                EditInfoQuery query = new EditInfoQuery()
+                EditUserInfoRequest query = new EditUserInfoRequest()
                 {
                     username = this.username.Text,
                     name = this.name.Text,

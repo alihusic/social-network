@@ -36,7 +36,7 @@ namespace SocialNetwork
             if (ControlGroup.userToken == null) return;
             try
             {
-                CheckNewMessagesQuery query = new CheckNewMessagesQuery
+                ConfidentialRequest query = new ConfidentialRequest
                 {
                     userToken = ControlGroup.userToken
                 };

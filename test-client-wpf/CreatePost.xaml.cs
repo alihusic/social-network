@@ -36,7 +36,7 @@ namespace SocialNetwork
 
             try
             {
-                CreateQuery query = new CreateQuery
+                PostCreateRequest query = new PostCreateRequest
                 {
                     userToken = ControlGroup.userToken,
                     targetId = Int32.Parse(targetTextBox.Text),

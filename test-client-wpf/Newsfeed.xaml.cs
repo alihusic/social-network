@@ -42,7 +42,7 @@ namespace SocialNetwork
 
             try
             {
-                LoadNewsfeedQuery query = new LoadNewsfeedQuery()
+                LoadNewsfeedRequest query = new LoadNewsfeedRequest()
                 {
                     userToken = ControlGroup.userToken,
                     interval = this.interval

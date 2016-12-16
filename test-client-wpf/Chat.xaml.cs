@@ -37,7 +37,7 @@ namespace SocialNetwork
             if (ControlGroup.userToken == null) return;
             try
             {
-                SendQuery query = new SendQuery
+                MessageSendRequest query = new MessageSendRequest
                 {
                     userToken = ControlGroup.userToken,
                     receiverId = Int32.Parse(chatId.Text),
