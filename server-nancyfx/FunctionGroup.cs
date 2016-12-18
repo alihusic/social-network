@@ -432,6 +432,14 @@ namespace SocialNetworkServerNV1
                 var friendship = context.friendRequest.Where(fr => fr.receiverId == request.receiverId && fr.senderId == request.senderId).FirstOrDefault();
                 friendship.friendRequestConfirmed = true;
 
+                Notifications notification = new NotificationsBuilder()
+                    .CreatorId(request.receiverId)
+                    .EntityTargetId(request.senderId)
+                    .NotificationType(2)
+                    .Build();
+
+                context.notifications.Add(notification);
+
                 bool saveFailed;
                 do
                 {
@@ -459,7 +467,12 @@ namespace SocialNetworkServerNV1
         {
             using (var context = new SocialNetworkDBContext())
             {
-
+                Notifications notification = new NotificationsBuilder()
+                    .CreatorId(request.senderId)
+                    .EntityTargetId(request.receiverId)
+                    .NotificationType(1)
+                    .Build();
+                context.notifications.Add(notification);
                 context.friendRequest.Add(request);
                 context.SaveChanges();
             }
@@ -604,6 +617,13 @@ namespace SocialNetworkServerNV1
         {
             using (var context = new SocialNetworkDBContext())
             {
+                Notifications notification = new NotificationsBuilder()
+                    .CreatorId(like.userId)
+                    .EntityTargetId(like.postId)
+                    .NotificationType(3)
+                    .Build();
+                context.notifications.Add(notification);
+
                 var post = context.posts.Find(like.postId);
                 post.numOfLikes++;
                 context.likes.Add(like);
@@ -623,7 +643,13 @@ namespace SocialNetworkServerNV1
         {
             using (var context = new SocialNetworkDBContext())
             {
+                Notifications notification = new NotificationsBuilder()
+                    .CreatorId(comment.userId)
+                    .EntityTargetId(comment.postId)
+                    .NotificationType(4)
+                    .Build();
 
+                context.notifications.Add(notification);
                 context.comments.Add(comment);
                 context.SaveChanges();
             }
@@ -639,7 +665,19 @@ namespace SocialNetworkServerNV1
         {
             using (var context = new SocialNetworkDBContext())
             {
+                
                 context.posts.Add(post);
+                /**/
+
+                //context.notifications.Add(notification);
+                context.SaveChanges();
+                post = context.posts.Where(p => (p.targetId==post.targetId && p.creatorId==post.creatorId)).First();
+                Notifications notification = new NotificationsBuilder()
+                    .CreatorId(post.creatorId)
+                    .EntityTargetId(post.postsId)
+                    .NotificationType(5)
+                    .Build();
+                context.notifications.Add(notification);
                 context.SaveChanges();
             }
         }
@@ -867,7 +905,7 @@ namespace SocialNetworkServerNV1
         {
             using (var context = new SocialNetworkDBContext())
             {
-                return context.notifications.Where(n => (n.entityTargetId == userId && n.notificationType != 4)).ToList();
+                return context.notifications.Where(n => (n.entityTargetId == userId && n.notificationType <3)).ToList();
             }
 
         }
@@ -882,7 +920,7 @@ namespace SocialNetworkServerNV1
         {
             using (var context = new SocialNetworkDBContext())
             {
-                return context.notifications.Where(n => (context.posts.Find(n.entityTargetId).creatorId == userId && n.notificationType == 4)).ToList();
+                return context.notifications.Where(n => (context.posts.Find(n.entityTargetId).creatorId == userId && n.notificationType >=3 && n.notificationType <=5)).ToList();
             }
         }
     }

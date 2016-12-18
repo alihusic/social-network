@@ -13,7 +13,11 @@ namespace SocialNetworkServerNV1.Module
     /// </summary>
     public class NotificationModule : NancyModule
     {
-        
+        /// Notification type 1 - Person has sent you a friend request
+        /// Notification type 2 - Person has confirmed your friend request
+        /// Notification type 3 - Person has liked your post
+        /// Notification type 4 - Person has commented your post
+        /// Notification type 5 - Person has posted on your wall
         
 
         /// <summary>
