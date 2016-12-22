@@ -36,24 +36,27 @@ namespace SocialNetworkServer
     public class ConfidentialRequest : SNRequest
     {
         public Token userToken;
+
         public ConfidentialRequest():base()
         {
 
         }
     }
 
-
+    
     /// <summary>
     /// Class used to create requests that require tokens.
     /// </summary>
     public class ConfidentialRequestBuilder
     {
         public Token userToken;
+
         public ConfidentialRequestBuilder UserToken(Token token)
         {
             this.userToken = token;
             return this;
         }
+
         public SNRequest Build()
         {
             return new ConfidentialRequest
@@ -62,7 +65,7 @@ namespace SocialNetworkServer
             };
         }
     }
-
+    
     /// <summary>
     /// Class used to create requests that don't require tokens.
     /// </summary>
