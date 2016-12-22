@@ -15,13 +15,13 @@ namespace SocialNetwork.Model
         public int privateChatId { get; set; }
         public int user1 { get; set; }
         public int user2 { get; set; }
-        public DateTime chatCreationDate { get; set; }
+        public DateTime chatCreationTimeStamp { get; set; }
 
 
 
         //setting up 1:n relation with PrivateMessages
         [JsonIgnore]
-        public virtual ICollection<PrivateMessages> privateMessages { get; set; }
+        public virtual ICollection<PrivateMessage> privateMessages { get; set; }
 
         //setting up 1:n relation with User
         public virtual User user { get; set; }

@@ -33,19 +33,19 @@ namespace SocialNetwork.Model
 
         //setting up 1:n relation with PrivateMessages
         [JsonIgnore]
-        public virtual ICollection<PrivateMessages> privateMessages { get; set; }
+        public virtual ICollection<PrivateMessage> privateMessages { get; set; }
 
         //setting up 1:n relation with Posts
         [JsonIgnore]
-        public virtual ICollection<Posts> posts { get; set; }
+        public virtual ICollection<Post> posts { get; set; }
 
         //setting up 1:n connection with PendingFriendRequest
         [JsonIgnore]
-        public virtual ICollection<PendingFriendRequests> pendingFriendRequests { get; set; }
+        public virtual ICollection<PendingFriendRequest> pendingFriendRequests { get; set; }
 
         //setting up 1:n connection with Likes
         [JsonIgnore]
-        public virtual ICollection<Likes> likes { get; set; }
+        public virtual ICollection<Like> likes { get; set; }
 
         //setting up 1:1 connection with Token
         [JsonIgnore]
@@ -53,14 +53,14 @@ namespace SocialNetwork.Model
 
         //setting up 1:n connection with Comments
         [JsonIgnore]
-        public virtual ICollection<Comments> comments { get; set; }
+        public virtual ICollection<Comment> comments { get; set; }
 
         //setting up 1:n realtion with Notifications
         [JsonIgnore]
-        public virtual ICollection<Notifications> notifications { get; set; }
+        public virtual ICollection<Notification> notifications { get; set; }
 
         //setting up 1:n relation with unreadMessages
         [JsonIgnore]
-        public virtual ICollection<UnreadMessages> unreadMessages { get; set; }
+        public virtual ICollection<UnreadMessage> unreadMessages { get; set; }
     }
 }
