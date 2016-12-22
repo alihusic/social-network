@@ -11,7 +11,7 @@ namespace SocialNetworkServer.Builder
     {
         private int user1;
         private int user2;
-        private DateTime chatCreationDate;
+        private DateTime chatCreationTimeStamp;
 
         public PrivateChatBuilder User1(int user1)
         {
@@ -27,7 +27,7 @@ namespace SocialNetworkServer.Builder
 
         public PrivateChatBuilder ChatCreationDate(DateTime chatCreationDate)
         {
-            this.chatCreationDate = chatCreationDate;
+            this.chatCreationTimeStamp = chatCreationDate;
             return this;
         }
 
@@ -37,7 +37,7 @@ namespace SocialNetworkServer.Builder
             {
                 user1 = user1,
                 user2 = user2,
-                chatCreationDate = chatCreationDate
+                chatCreationTimeStamp = chatCreationTimeStamp
             };
         }
 
