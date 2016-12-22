@@ -57,7 +57,7 @@ namespace SocialNetworkServerNV1
             //check if friendship exists - order of paramaters doesn't matter
             if (!FriendsController.friendshipExists(addQuery.senderId, addQuery.receiverId))
             {
-                FriendsController.addNewPendingFriendshipRequest(new PendingFriendRequestsBuilder()
+                FriendsController.addNewPendingFriendshipRequest(new PendingFriendRequestBuilder()
                     .FriendRequestConfirmed(false)
                     .SenderId(addQuery.userToken.userId)
                     .ReceiverId(addQuery.receiverId)
@@ -94,7 +94,7 @@ namespace SocialNetworkServerNV1
             if (FriendsController.pendingFriendshipRequestExists(confirmQuery.senderId, confirmQuery.receiverId))
             {
                 // update database - ova ce ako Bog da raditi. Nemam vremena sad za testiranje detaljno, uglavnom treba sto prije testirati.
-                 FriendsController.confirmFriendshipRequest(new PendingFriendRequestsBuilder()
+                 FriendsController.confirmFriendshipRequest(new PendingFriendRequestBuilder()
                      .SenderId(confirmQuery.senderId)
                      .ReceiverId(confirmQuery.receiverId)
                      .FriendRequestConfirmed(false)

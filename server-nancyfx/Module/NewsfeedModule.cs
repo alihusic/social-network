@@ -41,7 +41,7 @@ namespace SocialNetworkServerNV1
             if (!TokenFactory.checkToken(loadQuery.userToken)) throw new Exception("Not logged in");
 
             //extract from database
-            List<Posts> recentPosts = PostController.getRecentPosts(loadQuery.interval, loadQuery.userToken.userId);
+            List<Post> recentPosts = PostController.getRecentPosts(loadQuery.interval, loadQuery.userToken.userId);
             
             
             //return ""+recentPosts.Count();

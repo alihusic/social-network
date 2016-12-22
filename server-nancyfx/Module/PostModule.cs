@@ -56,7 +56,7 @@ namespace SocialNetworkServerNV1
             *                       else -> add like(suggestion: we can disable like button on post load if user has already liked smth (Ermin))*/
             if (!PostController.isLiked(likeQuery.userId, likeQuery.postId))
             {
-                PostController.addLike(new LikesBuilder()
+                PostController.addLike(new LikeBuilder()
                     .PostId(likeQuery.postId)
                     .UserId(likeQuery.userToken.userId)
                     .Build());
@@ -92,7 +92,7 @@ namespace SocialNetworkServerNV1
                 //here I am nesting if statements because it is probably easier to handle exceptions. this can be done ofc in one if.
                 if (PostController.isPostVisible(commentQuery.userToken.userId, commentQuery.targetId))
                 {
-                    PostController.addComment(new CommentsBuilder()
+                    PostController.addComment(new CommentBuilder()
                         .CommentText(commentQuery.commentText)
                         .PostId(commentQuery.postId)
                         .UserId(commentQuery.userToken.userId)
@@ -131,7 +131,7 @@ namespace SocialNetworkServerNV1
             {
                 if (PostController.isPostVisible(createQuery.userToken.userId, createQuery.targetId))
                 {
-                    PostController.createPost(new PostsBuilder()
+                    PostController.createPost(new PostBuilder()
                         .CreatorId(createQuery.userToken.userId)
                         .PostContent(createQuery.postContent)
                         .PostCreationDate(DateTime.Now)

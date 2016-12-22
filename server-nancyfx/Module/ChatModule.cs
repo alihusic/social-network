@@ -80,13 +80,13 @@ namespace SocialNetworkServerNV1
                 }
                 
                 //saves message in UnreadMessages and PrivateMessages tables
-                MessagesController.saveMessage(new PrivateMessagesBuilder()
+                MessagesController.saveMessage(new PrivateMessageBuilder()
                     .SenderId(sendQuery.userToken.userId)
                     .RecipientId(sendQuery.receiverId)
                     .MessageTimeStamp(DateTime.Now)
                     .MessageText(sendQuery.messageText)
                     .ChatId(ChatController.getChatId(sendQuery.userToken.userId,sendQuery.receiverId)).Build(), 
-                    new UnreadMessagesBuilder()
+                    new UnreadMessageBuilder()
                     .SenderId(sendQuery.userToken.userId)
                     .RecipientId(sendQuery.receiverId)
                     .MessageTimeStamp(DateTime.Now)
@@ -118,7 +118,7 @@ namespace SocialNetworkServerNV1
 
             //extract from database
             if (!MessagesController.checkUnreadMessages(checkNewMessagesQuery.userToken.userId)) throw new Exception("No new messages");
-            List<UnreadMessages> unreadMessages = MessagesController.getAllUnreadMessages(checkNewMessagesQuery.userToken.userId);
+            List<UnreadMessage> unreadMessages = MessagesController.getAllUnreadMessages(checkNewMessagesQuery.userToken.userId);
 
             //return a structured model
             return unreadMessages;

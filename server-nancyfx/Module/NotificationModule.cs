@@ -13,11 +13,7 @@ namespace SocialNetworkServerNV1.Module
     /// </summary>
     public class NotificationModule : NancyModule
     {
-        /// Notification type 1 - Person has sent you a friend request
-        /// Notification type 2 - Person has confirmed your friend request
-        /// Notification type 3 - Person has liked your post
-        /// Notification type 4 - Person has commented your post
-        /// Notification type 5 - Person has posted on your wall
+        
         
 
         /// <summary>
@@ -45,7 +41,7 @@ namespace SocialNetworkServerNV1.Module
 
             // load notifications from database
             
-            List<Notifications> notifications = NotificationsController.loadNotificationsUser(query.userToken.userId);
+            List<Notification> notifications = NotificationsController.loadNotificationsUser(query.userToken.userId);
             notifications.AddRange(NotificationsController.loadPostNotifications(query.userToken.userId));
 
             return Negotiate.WithModel(notifications);
