@@ -1,9 +1,10 @@
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
+using SocialNetwork2.Factory;
 using System;
 
-namespace SocialNetworkServerNV1
+namespace SocialNetwork2
 {
     public class SocialNetworkBootstrapper : DefaultNancyBootstrapper
     {

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using SocialNetwork.Model;
+using SocialNetwork2.Model;
 
 namespace SocialNetworkServer.Model
 {

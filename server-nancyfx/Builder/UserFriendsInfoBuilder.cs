@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using TestClientSN.Model;
 
-namespace SocialNetworkServerNV1.Builder
+namespace SocialNetwork2.Builder
 {
     public class UserFriendsInfoBuilder
     {

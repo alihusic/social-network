@@ -1,10 +1,10 @@
-namespace SocialNetwork
-{
-    using System.Data.Entity;
-    using Model;
-    using System.Data.Entity.ModelConfiguration.Conventions;
-    using SocialNetworkServer.Model;
+using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using SocialNetworkServer.Model;
+using SocialNetwork2.Model;
 
+namespace SocialNetwork2
+{
     public partial class SocialNetworkDBContext : DbContext
     {
         public SocialNetworkDBContext()

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using SocialNetworkServer.Model;
 using Newtonsoft.Json;
 
-namespace SocialNetwork.Model
+namespace SocialNetwork2.Model
 {
 
     //model for User table

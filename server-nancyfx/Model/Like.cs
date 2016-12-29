@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SocialNetwork.Model
+namespace SocialNetwork2.Model
 {
     //model for table Likes
     //will be used to store likes info

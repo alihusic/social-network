@@ -1,11 +1,14 @@
 ﻿using Nancy;
 using Nancy.ModelBinding;
+using SocialNetwork2.Controller;
+using SocialNetwork2.Factory;
+using SocialNetwork2.Request;
 using SocialNetworkServer;
 using SocialNetworkServer.Model;
 using System;
 using System.Collections.Generic;
 
-namespace SocialNetworkServerNV1.Module
+namespace SocialNetwork2.Module
 {
     /// <summary>
     /// Class inheriting NancyModule class.

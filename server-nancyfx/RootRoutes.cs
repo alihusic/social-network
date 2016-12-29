@@ -1,10 +1,9 @@
 using Nancy;
-using Nancy.ModelBinding;
-using SocialNetwork;
-using SocialNetwork.Model;
+using SocialNetwork2;
+using SocialNetwork2.Model;
 using System;
 
-namespace SocialNetworkServerNV1
+namespace SocialNetwork2
 {
     public class RootRoutes : NancyModule
     {

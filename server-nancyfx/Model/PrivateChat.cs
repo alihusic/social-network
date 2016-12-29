@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace SocialNetwork.Model
+namespace SocialNetwork2.Model
 {
 
     //model for privateChat table

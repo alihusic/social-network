@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestClientSN.Model
+namespace SocialNetwork2.Model
 {
     public class ProfileInfo
     {

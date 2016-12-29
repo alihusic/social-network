@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace SocialNetwork.Model
+namespace SocialNetwork2.Model
 {
     public class Comment
     {

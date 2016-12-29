@@ -1,10 +1,13 @@
 using Nancy;
 using Nancy.ModelBinding;
+using SocialNetwork2.Controller;
+using SocialNetwork2.Factory;
+using SocialNetwork2.Request;
 using SocialNetworkServer;
 using SocialNetworkServer.Builder;
 using System;
 
-namespace SocialNetworkServerNV1
+namespace SocialNetwork2
 {
     public class SettingsModule : NancyModule
     {

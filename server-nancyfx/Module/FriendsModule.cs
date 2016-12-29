@@ -1,7 +1,10 @@
 using Nancy;
 using Nancy.ModelBinding;
-using SocialNetwork;
-using SocialNetwork.Model;
+using SocialNetwork2;
+using SocialNetwork2.Model;
+using SocialNetwork2.Controller;
+using SocialNetwork2.Factory;
+using SocialNetwork2.Request;
 using SocialNetworkServer;
 using SocialNetworkServer.Builder;
 using System;
@@ -9,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TestClientSN.Model;
 
-namespace SocialNetworkServerNV1
+namespace SocialNetwork2
 {
     /// <summary>
     /// Class inheriting NancyModule class.
@@ -154,17 +157,17 @@ namespace SocialNetworkServerNV1
         public dynamic GetAll(dynamic parameters)
         {
             //bind query
-            var getAllQuery = this.Bind<GetAllFriendsRequest>();
+            var getAllFriendsRequest = this.Bind<GetAllFriendRequest>();
 
             // check token
-            if (!TokenFactory.checkToken(getAllQuery.userToken))
+            if (!TokenFactory.checkToken(getAllFriendsRequest.userToken))
             {
                 throw new Exception("Not logged in.");
             }
 
 
             //List<User> friends = helpers.getAllFriends(getAllQuery.userId);
-            List<int> friends = FriendsController.getAllFriendsId(getAllQuery.userToken.userId);
+            List<int> friends = FriendsController.getAllFriendsId(getAllFriendsRequest.userToken.userId);
             return friends.Count();
             /* bind the result to a model
             * return model&status code
