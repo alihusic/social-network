@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SocialNetwork2.Request;
 using SocialNetworkServer;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace SocialNetwork
         public MainWindow()
         {
             ServerData.host = "http://localhost";
-            ServerData.port = "60749";
+            ServerData.port = "51980";
             
             InitializeComponent();
         }
@@ -77,29 +78,16 @@ namespace SocialNetwork
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (ControlGroup.userToken == null) return;
+            if (ClientInfo.Instance.sessionToken == null) return;
 
             try
             {
                 ConfidentialRequest query = new ConfidentialRequest
                 {
-                    userToken = ControlGroup.userToken,
+                    userToken = ClientInfo.Instance.sessionToken
                 };
 
-                string requestBody = JsonConvert.SerializeObject(query);
-
-                var request = new SNRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/user/log_out")
-                    .Build();
-
-                var responseString = request.requestFromServer();
-
-                ControlGroup.userToken = null;
-                //statusLabel.Text = "" + responseString;
+                if (new ServiceConnector().logOut(query)) ClientInfo.Instance.sessionToken = null;
             }
             catch (Exception ex)
             {

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace testClientWPF
 {
-    public class SNRequestBuilder
+    public class SNServiceRequestBuilder
     {
         private string requestBody { get; set; }
         private string urlSubPath { get; set; }
@@ -13,39 +13,39 @@ namespace testClientWPF
         private string accept { get; set; }
         private string contentType { get; set; }
 
-        public SNRequestBuilder RequestBody(string requestBody)
+        public SNServiceRequestBuilder RequestBody(string requestBody)
         {
             this.requestBody = requestBody;
             return this;
         }
 
-        public SNRequestBuilder UrlSubPath(string urlSubPath)
+        public SNServiceRequestBuilder UrlSubPath(string urlSubPath)
         {
             this.urlSubPath = urlSubPath;
             return this;
         }
 
-        public SNRequestBuilder RequestMethod(string requestMethod)
+        public SNServiceRequestBuilder RequestMethod(string requestMethod)
         {
             this.requestMethod = requestMethod;
             return this;
         }
 
-        public SNRequestBuilder Accept(string accept)
+        public SNServiceRequestBuilder Accept(string accept)
         {
             this.accept = accept;
             return this;
         }
 
-        public SNRequestBuilder ContentType(string contentType)
+        public SNServiceRequestBuilder ContentType(string contentType)
         {
             this.contentType = contentType;
             return this;
         }
 
-        public SNRequest Build()
+        public SNServiceRequest Build()
         {
-            return new SNRequest
+            return new SNServiceRequest
             {
                 urlSubPath = this.urlSubPath,
                 requestBody = this.requestBody,

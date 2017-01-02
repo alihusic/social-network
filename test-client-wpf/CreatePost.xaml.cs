@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SocialNetwork2.Request;
 using SocialNetworkServer;
 using System;
 using System.Collections.Generic;
@@ -32,30 +33,20 @@ namespace SocialNetwork
 
         private void post(object sender, RoutedEventArgs e)
         {
-            if (ControlGroup.userToken == null) return;
+            if (ClientInfo.Instance.sessionToken == null) return;
 
             try
             {
-                PostCreateRequest query = new PostCreateRequest
+                PostCreateRequest request = new PostCreateRequest
                 {
-                    userToken = ControlGroup.userToken,
+                    userToken = ClientInfo.Instance.sessionToken,
                     targetId = Int32.Parse(targetTextBox.Text),
-                    creatorId = ControlGroup.userToken.userId,
+                    creatorId = ClientInfo.Instance.sessionToken.userId,
                     postContent = postContent.Text
                 };
 
-                string requestBody = JsonConvert.SerializeObject(query);
-
-                var request = new SNRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/post/create")
-                    .Build();
-
-                var responseString = request.requestFromServer();
-                postContent.Text = "SENT";
+                if (new ServiceConnector().createPost(request)) postContent.Text = "Post successfully created.";
+                else postContent.Text = "Post not created successfully.";
 
             }
             catch (Exception ex)

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
-using SocialNetwork.Model;
+using SocialNetwork2.Model;
+using SocialNetwork2.Request;
 using SocialNetworkServer;
 using System;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace SocialNetwork
 
             try
             {
-                var query = new RegisterUserRequest
+                var request = new RegisterUserRequest
                 {
                     username = username,
                     password = password,
@@ -62,18 +63,8 @@ namespace SocialNetwork
 
                 };
 
-                string requestBody = JsonConvert.SerializeObject(query);
-
-                var request = new SNRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/user/register")
-                    .Build();
-
-                var responseString = request.requestFromServer();
-                this.username.Text = responseString;
+                if (new ServiceConnector().registerUser(request)) this.username.Text = "Registration successful.";
+                else this.username.Text = "Registration not successful.";
 
 
 
@@ -87,20 +78,20 @@ namespace SocialNetwork
 
         private void loadUserInfo(object sender, RoutedEventArgs e)
         {
-            if (ControlGroup.userToken == null) return;
+            if (ClientInfo.Instance.sessionToken == null) return;
 
 
             try
             {
                 ConfidentialRequest query = new ConfidentialRequest()
                 {
-                    userToken = ControlGroup.userToken,
+                    userToken = ClientInfo.Instance.sessionToken,
                     
                 };
 
                 string requestBody = JsonConvert.SerializeObject(query);
 
-                var request = new SNRequestBuilder()
+                var request = new SNServiceRequestBuilder()
                     .Accept("application/json")
                     .ContentType("application/json")
                     .RequestBody(requestBody)
@@ -111,7 +102,7 @@ namespace SocialNetwork
                 var responseString = request.requestFromServer();
 
                 //newsfeedContent.Text += responseString;
-                if (responseString == null) throw new Exception("No more posts!");
+                if (responseString == null) throw new Exception("No more Post!");
                 var profileInfo = JsonConvert.DeserializeObject<ProfileInfo>(responseString);
 
                 if (profileInfo != null)
@@ -136,7 +127,7 @@ namespace SocialNetwork
 
         private void editUserInfo(object sender, RoutedEventArgs e)
         {
-            if (ControlGroup.userToken == null) return;
+            if (ClientInfo.Instance.sessionToken == null) return;
 
             try
             {
@@ -151,12 +142,12 @@ namespace SocialNetwork
                     coverPictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png",
                     gender = "male",
                     dateOfBirth = DateTime.Now,
-                    userToken = ControlGroup.userToken
+                    userToken = ClientInfo.Instance.sessionToken
                 };
 
                 string requestBody = JsonConvert.SerializeObject(query);
 
-                var request = new SNRequestBuilder()
+                var request = new SNServiceRequestBuilder()
                     .Accept("application/json")
                     .ContentType("application/json")
                     .RequestBody(requestBody)

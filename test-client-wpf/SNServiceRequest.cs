@@ -8,7 +8,7 @@ using System.Text;
 
 namespace testClientWPF
 {
-    public class SNRequest
+    public class SNServiceRequest
     {
         public string requestBody { get; set; }
         public string urlSubPath { get; set; }

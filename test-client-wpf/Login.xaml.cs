@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using SocialNetwork.Model;
+using SocialNetwork2.Request;
 using SocialNetworkServer;
 using System;
 using System.Collections.Generic;
@@ -21,16 +21,7 @@ using testClientWPF;
 
 namespace SocialNetwork
 {
-    class ControlGroup
-    {
-        public static Token userToken { get; set; }
-        public static HttpWebRequest formalizeRequest(HttpWebRequest request)
-        {
-            request.Accept = "application/json";
-            request.ContentType = "application/json";
-            return null;
-        }
-    }
+    
 
     /// <summary>
     /// Interaction logic for Login.xaml
@@ -54,25 +45,9 @@ namespace SocialNetwork
                     password = password
                 };
 
-                string requestBody = JsonConvert.SerializeObject(query);
+                ClientInfo.Instance.sessionToken = new ServiceConnector().authenticate(query);
 
-                var request = new SNRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/user/authenticate")
-                    .Build();
-
-                var responseString = request.requestFromServer();
-
-                statusLabel.Text = responseString;
-                var tempToken = JsonConvert.DeserializeObject<Token>(responseString);
-                if (tempToken.tokenHash != null && tempToken.tokenHash.Length == 40)
-                {
-                    ControlGroup.userToken = tempToken;
-                    statusLabel.Text += "Token successfully added";
-                }
+                statusLabel.Text += "Token successfully added";
 
 
                 //statusLabel.Text = ControlGroup.userToken.tokenHash + "\n" + ControlGroup.userToken.userId;
@@ -90,29 +65,19 @@ namespace SocialNetwork
 
         private void logOutButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ControlGroup.userToken == null) return;
+            if (ClientInfo.Instance.sessionToken == null) return;
 
             try
             {
                 ConfidentialRequest query = new ConfidentialRequest
                 {
-                    userToken = ControlGroup.userToken,
+                    userToken = ClientInfo.Instance.sessionToken
                 };
 
-                string requestBody = JsonConvert.SerializeObject(query);
+                
 
-                var request = new SNRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/user/log_out")
-                    .Build();
-
-                var responseString = request.requestFromServer();
-
-                ControlGroup.userToken = null;
-                statusLabel.Text = ""+ responseString;
+                if(new ServiceConnector().logOut(query)) ClientInfo.Instance.sessionToken = null;
+                statusLabel.Text = "Logged out";
             }
             catch (Exception ex)
             {

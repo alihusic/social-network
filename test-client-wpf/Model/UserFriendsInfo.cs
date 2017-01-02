@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TestClientSN.Model
+﻿namespace TestClientSN.Model
 {
-    class UserFriendsInfo
+    public class UserFriendsInfo
     {
         public int userId { get; set; }
         public string name { get; set; }

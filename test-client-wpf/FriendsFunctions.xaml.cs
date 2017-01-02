@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SocialNetwork;
-using SocialNetwork.Model;
+using SocialNetwork2.Request;
 using SocialNetworkServer;
 using System;
 using System.Collections.Generic;
@@ -33,31 +33,22 @@ namespace TestClientSN
 
         private void createFriendship(object sender, RoutedEventArgs e)
         {
-            if (ControlGroup.userToken == null) return;
+            if (ClientInfo.Instance.sessionToken == null) return;
 
 
             try
             {
-                AddFriendRequest query = new AddFriendRequest()
+                AddFriendRequest request = new AddFriendRequest()
                 {
                     senderId = Int32.Parse(senderId.Text),
                     receiverId = Int32.Parse(receiverId.Text),
-                    userToken = ControlGroup.userToken
+                    userToken = ClientInfo.Instance.sessionToken
                 };
 
-                string requestBody = JsonConvert.SerializeObject(query);
 
-                var request = new SNRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/user/friends/add")
-                    .Build();
 
-                var responseString = request.requestFromServer();
-
-                friendsTextBox.Text = responseString;
+                if (new ServiceConnector().addFriend(request)) friendsTextBox.Text = "Friend successfully added.";
+                else friendsTextBox.Text = "Friend not added.";
 
             }
             catch (Exception ex)
@@ -71,33 +62,22 @@ namespace TestClientSN
 
         private void loadFriends(object sender, RoutedEventArgs e)
         {
-            if (ControlGroup.userToken == null) return;
+            if (ClientInfo.Instance.sessionToken == null) return;
 
 
             try
             {
-                ConfidentialRequest query = new ConfidentialRequest()
+                ConfidentialRequest request = new ConfidentialRequest()
                 {
-                    userToken = ControlGroup.userToken
+                    userToken = ClientInfo.Instance.sessionToken
                 };
 
-                string requestBody = JsonConvert.SerializeObject(query);
+                ClientInfo.Instance.friendsThumbList = new ServiceConnector().getAllFriendsInfo(request);
 
-                var request = new SNRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/user/friends/get_all")
-                    .Build();
-
-                var responseString = request.requestFromServer();
-
-                List<UserFriendsInfo> listFriends = JsonConvert.DeserializeObject<List<UserFriendsInfo>>(responseString);
-
-                if (listFriends != null && listFriends.Any() && listFriends.ElementAt(0).name.Length > 0)
+                if (ClientInfo.Instance.friendsThumbList != null && ClientInfo.Instance.friendsThumbList.Any() 
+                    && ClientInfo.Instance.friendsThumbList.ElementAt(0).name.Length > 0)
                 {
-                    foreach (var friend in listFriends)
+                    foreach (var friend in ClientInfo.Instance.friendsThumbList)
                     {
                         friendsTextBox.Text += "\nname: " + friend.name;
                         friendsTextBox.Text += "\n";
@@ -107,7 +87,7 @@ namespace TestClientSN
                 }
                 else
                 {
-                    throw new Exception("No more posts");
+                    throw new Exception("No more Post");
                 }
 
             }
@@ -120,31 +100,20 @@ namespace TestClientSN
 
         private void confirmFriendship(object sender, RoutedEventArgs e)
         {
-            if (ControlGroup.userToken == null) return;
+            if (ClientInfo.Instance.sessionToken == null) return;
 
 
             try
             {
-                ConfirmFriendRequest query = new ConfirmFriendRequest()
+                ConfirmFriendRequest request = new ConfirmFriendRequest()
                 {
                     senderId = Int32.Parse(senderId.Text),
                     receiverId = Int32.Parse(receiverId.Text),
-                    userToken = ControlGroup.userToken
+                    userToken = ClientInfo.Instance.sessionToken
                 };
 
-                string requestBody = JsonConvert.SerializeObject(query);
-
-                var request = new SNRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/user/friends/confirm")
-                    .Build();
-
-                var responseString = request.requestFromServer();
-                
-                friendsTextBox.Text = responseString;
+                if (new ServiceConnector().confirmFriend(request)) friendsTextBox.Text = "Friendship successfully confirmed.";
+                else friendsTextBox.Text ="Something went wrong";
             }
             catch (Exception ex)
             {
@@ -155,31 +124,21 @@ namespace TestClientSN
 
         private void removeFriendship(object sender, RoutedEventArgs e)
         {
-            if (ControlGroup.userToken == null) return;
+            if (ClientInfo.Instance.sessionToken == null) return;
 
 
             try
             {
-                DeleteFriendRequest query = new DeleteFriendRequest()
+                DeleteFriendRequest request = new DeleteFriendRequest()
                 {
                     senderId = Int32.Parse(senderId.Text),
                     receiverId = Int32.Parse(receiverId.Text),
-                    userToken = ControlGroup.userToken
+                    userToken = ClientInfo.Instance.sessionToken
                 };
 
-                string requestBody = JsonConvert.SerializeObject(query);
 
-                var request = new SNRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/user/friends/remove")
-                    .Build();
-
-                var responseString = request.requestFromServer();
-
-                friendsTextBox.Text = responseString;
+                if (new ServiceConnector().removeFriend(request)) friendsTextBox.Text = "Friend successfully removed.";
+                else friendsTextBox.Text = "Something went wrong.";
 
             }
             catch (Exception ex)

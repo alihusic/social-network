@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using SocialNetwork.Model;
+using SocialNetwork2.Request;
 using SocialNetworkServer;
 using System;
 using System.Collections.Generic;
@@ -37,36 +37,23 @@ namespace SocialNetwork
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            if (ControlGroup.userToken == null) return;
+            if (ClientInfo.Instance.sessionToken == null) return;
 
 
             try
             {
-                LoadNewsfeedRequest query = new LoadNewsfeedRequest()
+                LoadNewsfeedRequest request = new LoadNewsfeedRequest()
                 {
-                    userToken = ControlGroup.userToken,
+                    userToken = ClientInfo.Instance.sessionToken,
                     interval = this.interval
                 };
 
-                string requestBody = JsonConvert.SerializeObject(query);
+                ClientInfo.Instance.newsfeedPostList.AddRange(new ServiceConnector().loadNewsfeed(request));
 
-                var request = new SNRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/newsfeed/load")
-                    .Build();
-
-                var responseString = request.requestFromServer();
-
-                //newsfeedContent.Text += responseString;
-                if (responseString == null) throw new Exception("No more posts!");
-                List<Posts> listPosts = JsonConvert.DeserializeObject<List<Posts>>(responseString);
-
-                 if (listPosts != null  && listPosts.Any() && listPosts.ElementAt(0).postContent.Length > 0)
+                 if (ClientInfo.Instance.newsfeedPostList != null  && ClientInfo.Instance.newsfeedPostList.Any() 
+                    && ClientInfo.Instance.newsfeedPostList.ElementAt(0).postContent.Length > 0)
                  {
-                     foreach (var post in listPosts)
+                     foreach (var post in ClientInfo.Instance.newsfeedPostList)
                      {
                          newsfeedContent.Text += "\ncreatorId: " + post.creatorId;
                          newsfeedContent.Text += "\n";
@@ -80,7 +67,7 @@ namespace SocialNetwork
                  }
                  else
                  {
-                     throw new Exception("No more posts");
+                     throw new Exception("No more Post");
                  }
 
             }

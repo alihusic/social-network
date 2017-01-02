@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using SocialNetwork.Model;
+using SocialNetwork2.Request;
 using SocialNetworkServer;
 using System;
 using System.Collections.Generic;
@@ -33,28 +33,17 @@ namespace SocialNetwork
 
         private void loadNewMessages(object sender, RoutedEventArgs e)
         {
-            if (ControlGroup.userToken == null) return;
+            if (ClientInfo.Instance.sessionToken == null) return;
             try
             {
                 ConfidentialRequest query = new ConfidentialRequest
                 {
-                    userToken = ControlGroup.userToken
+                    userToken = ClientInfo.Instance.sessionToken
                 };
 
-                string requestBody = JsonConvert.SerializeObject(query);
+                ClientInfo.Instance.unreadMessages = new ServiceConnector().checkNewMessages(query);
 
-                var request = new SNRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/chat/new_messages")
-                    .Build();
-
-                var responseString = request.requestFromServer();
-
-                List<PrivateMessages> listMessages = JsonConvert.DeserializeObject<List<PrivateMessages>>(responseString);
-                if(listMessages!=null && listMessages.Any() && listMessages.ElementAt(0).messageText.Length > 0)
+                /*if(listMessages!=null && listMessages.Any() && listMessages.ElementAt(0).messageText.Length > 0)
                 {
                     foreach(var message in listMessages)
                     {
@@ -65,7 +54,7 @@ namespace SocialNetwork
                     }
                     return;
                 }
-                newMessageContent.Text += responseString;
+                newMessageContent.Text += responseString;*/
             }
             catch(Exception ex)
             {
