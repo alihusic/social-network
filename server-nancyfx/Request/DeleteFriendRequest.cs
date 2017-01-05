@@ -2,6 +2,7 @@
 {
     /// <summary>
     /// Class used to create request that handles deleting friendship :(.
+    /// Class created by Ermin & Ali.
     /// </summary>
     public class DeleteFriendRequest : ConfidentialRequest
     {

@@ -11,6 +11,7 @@ namespace SocialNetwork2.Controller
 {
     /// <summary>
     /// Class used as controller for notification related operations and queries.
+    /// Class created by Ermin & Ali.
     /// </summary>
     public static class NotificationsController
     {

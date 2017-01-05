@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace SocialNetwork2.Model
 {
+    /// <summary>
+    /// Class used as model for profile information.
+    /// Class created by Ermin.
+    /// </summary>
     public class ProfileInfo
     {
         public int userId { get; set; }

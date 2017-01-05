@@ -4,9 +4,10 @@ using System.ComponentModel.DataAnnotations;
 namespace SocialNetwork2.Model
 {
 
-    //model for PendingFriendRequest table
-    //will be used to create and regulate friendsip requests in database
-
+    /// <summary>
+    /// Class used as database model for PendingFriendRequest table.
+    /// Class created by Ermin.
+    /// </summary>
 
     public class PendingFriendRequest
     {

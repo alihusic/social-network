@@ -5,11 +5,14 @@ using System;
 
 namespace SocialNetwork2
 {
+    /// <summary>
+    /// Class used for starting get request, and for fast population.
+    /// Class created by Ermin & Ali.
+    /// </summary>
     public class RootRoutes : NancyModule
     {
         //handlers - a group of handler functions enforcing encapsulation to improve reusability and readability
-
-
+        
         //private HandlerFunctionGroup handlers = new HandlerFunctionGroup();
         
         //method used to force the module to pack the received object into a model for response 

@@ -5,6 +5,10 @@ using System.Web;
 
 namespace SocialNetwork2.Model
 {
+    /// <summary>
+    /// Class used as model for information about posts.
+    /// Class created by Ermin.
+    /// </summary>
     public class PostInfo
     {
         public int postId { get; set; }

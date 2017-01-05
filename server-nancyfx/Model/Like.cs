@@ -2,8 +2,10 @@
 
 namespace SocialNetwork2.Model
 {
-    //model for table Likes
-    //will be used to store likes info
+    /// <summary>
+    /// Class used as database model for Like table.
+    /// Class created by Ermin.
+    /// </summary>
 
     public class Like
     {

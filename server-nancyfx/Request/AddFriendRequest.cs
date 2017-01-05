@@ -2,6 +2,7 @@
 {
     /// <summary>
     /// Class used to create requests that handles friendship creation.
+    /// Class created by Ermin & Ali.
     /// </summary>
     public class AddFriendRequest : ConfidentialRequest
     {

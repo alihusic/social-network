@@ -9,6 +9,10 @@ namespace SocialNetwork2.Model
 
     public class UnreadMessage
     {
+        /// <summary>
+        /// Class used as database model for UnreadMessage table.
+        /// Class created by Ermin.
+        /// </summary>
         [Key]
         public int unreadMessageId { get; set; }
         public string messageText { get; set; }

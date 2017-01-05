@@ -5,6 +5,10 @@ using SocialNetwork2.Model;
 
 namespace SocialNetwork2
 {
+    /// <summary>
+    /// Class used for communication with database.
+    /// Class created by Ermin.
+    /// </summary>
     public partial class SocialNetworkDBContext : DbContext
     {
         public SocialNetworkDBContext()

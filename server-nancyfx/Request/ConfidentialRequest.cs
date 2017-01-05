@@ -7,6 +7,7 @@ namespace SocialNetwork2.Request
     /// NOTE: Class is not abstract - can be instantiated due to Liskov Inversion Principle.
     /// Substituting any subclass into its place will work without problems, therefore we
     /// consider it acceptable.
+    /// Class created by Ermin & Ali.
     /// </summary>
     public class ConfidentialRequest : SNRequest
     {

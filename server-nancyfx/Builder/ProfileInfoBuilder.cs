@@ -8,6 +8,9 @@ using TestClientSN.Model;
 
 namespace SocialNetworkServer.Builder
 {
+    /// <summary>
+    /// Class created by Ermin & Ali.
+    /// </summary>
     class ProfileInfoBuilder
     {
         private string name;

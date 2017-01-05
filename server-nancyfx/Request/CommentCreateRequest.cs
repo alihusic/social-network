@@ -2,6 +2,7 @@
 {
     /// <summary>
     /// Class used to create request that handles comment creation.
+    /// Class created by Ermin & Ali.
     /// </summary>
     public class CommentCreateRequest : ConfidentialRequest
     {

@@ -6,8 +6,10 @@ using System.ComponentModel.DataAnnotations;
 namespace SocialNetwork2.Model
 {
 
-    //model for privateChat table
-    //will be used to store all  chats
+    /// <summary>
+    /// Class used as database model for PrivateChat table.
+    /// Class created by Ermin.
+    /// </summary>
 
     public class PrivateChat
     {

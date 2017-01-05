@@ -8,8 +8,10 @@ using Newtonsoft.Json;
 namespace SocialNetwork2.Model
 {
 
-    //model for User table
-    //used for sotrage of users information 
+    /// <summary>
+    /// Class used as database model for User table.
+    /// Class created by Ermin.
+    /// </summary>
 
     public class User
     {

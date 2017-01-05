@@ -7,6 +7,7 @@ namespace SocialNetwork2.Controller
 {
     /// <summary>
     /// Class used as common controller for all classes.
+    /// Class created by Ermin & Ali.
     /// </summary>
     public static class UtilityController
     {

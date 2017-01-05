@@ -5,8 +5,10 @@ namespace SocialNetwork2.Model
 {
 
 
-    //Creation of private messages model.
-    //Will be used for saving messages that are read
+    /// <summary>
+    /// Class used as database model for PrivateMessage table.
+    /// Class created by Ermin.
+    /// </summary>
 
     public class PrivateMessage
     {

@@ -4,6 +4,7 @@ namespace SocialNetwork2.Request
 {
     /// <summary>
     /// Class used to create request that handles user registration.
+    /// Class created by Ermin & Ali.
     /// </summary>
     public class RegisterUserRequest : UnrestrictedRequest
     {

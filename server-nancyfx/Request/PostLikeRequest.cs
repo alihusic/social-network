@@ -2,6 +2,7 @@
 {
     /// <summary>
     /// Class used to create request that handles like operations.
+    /// Class created by Ermin & Ali.
     /// </summary>
     public class PostLikeRequest : ConfidentialRequest
     {

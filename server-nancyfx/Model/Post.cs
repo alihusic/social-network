@@ -6,8 +6,10 @@ using System.ComponentModel.DataAnnotations;
 namespace SocialNetwork2.Model
 {
 
-    //model for Posts table
-    //used for storage of posts 
+    /// <summary>
+    /// Class used as database model for Post table.
+    /// Class created by Ermin.
+    /// </summary>
 
     public class Post
     {

@@ -13,6 +13,7 @@ namespace SocialNetwork2.Module
     /// <summary>
     /// Class inheriting NancyModule class.
     /// Used to handle Notification-related requests.
+    /// Class created by Ermin & Ali.
     /// </summary>
     public class NotificationModule : NancyModule
     {

@@ -5,6 +5,7 @@ namespace SocialNetwork2.Controller
 {
     /// <summary>
     /// Class used as controller for chat related operations and queries.
+    /// Class created by Ermin & Ali.
     /// </summary>
     public static class ChatController
     {

@@ -9,6 +9,7 @@ namespace SocialNetwork2.Factory
 {
     /// <summary>
     /// Class used to generate new tokens for user sessions
+    /// Class created by Ali.
     /// </summary>
     public static class TokenFactory
     {

@@ -16,6 +16,7 @@ namespace SocialNetwork2
     /// <summary>
     /// Class inheriting NancyModule class.
     /// Used to handle Newsfeed-related requests.
+    /// Class created by Ermin & Ali.
     /// </summary>
     public class NewsfeedModule : NancyModule
     {

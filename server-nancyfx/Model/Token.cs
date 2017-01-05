@@ -4,6 +4,10 @@ namespace SocialNetwork2.Model
 {
     public class Token
     {
+        /// <summary>
+        /// Class used as database model for Token table.
+        /// Class created by Ermin.
+        /// </summary>
         [Key]
         public int tokenId { get; set; }
         public int userId { get; set; }

@@ -6,6 +6,9 @@ using System.Web;
 
 namespace SocialNetwork2.Builder
 {
+    /// <summary>
+    /// Class created by Ermin & Ali.
+    /// </summary>
     public class PostInfoBuilder
     {
         public int postId { get; set; }

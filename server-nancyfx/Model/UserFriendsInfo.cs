@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace TestClientSN.Model
 {
+    /// <summary>
+    /// Class used as model for information about user's friends.
+    /// Class created by Ermin.
+    /// </summary>
     public class UserFriendsInfo
     {
         public int userId { get; set; }

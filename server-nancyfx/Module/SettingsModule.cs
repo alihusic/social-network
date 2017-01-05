@@ -14,8 +14,9 @@ namespace SocialNetwork2
         /// <summary>
         /// Class inheriting NancyModule class.
         /// Used to handle Chat-related requests.
+        /// Class created by Ermin & Ali.
         /// </summary>
-        
+
 
         /// <summary>
         /// Constructor with route mapping

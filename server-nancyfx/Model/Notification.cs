@@ -3,6 +3,10 @@ using SocialNetwork2.Model;
 
 namespace SocialNetworkServer.Model
 {
+    /// <summary>
+    /// Class used as database model for Notification table.
+    /// Class created by Ermin.
+    /// </summary>
     public class Notification
     {
         [Key]

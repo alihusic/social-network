@@ -6,6 +6,9 @@ using TestClientSN.Model;
 
 namespace SocialNetwork2.Builder
 {
+    /// <summary>
+    /// Class created by Ermin & Ali.
+    /// </summary>
     public class UserFriendsInfoBuilder
     {
         private int userId { get; set; }

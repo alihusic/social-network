@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SocialNetworkServer.Builder
 {
+    /// <summary>
+    /// Class created by Ermin & Ali.
+    /// </summary>
     class PrivateChatBuilder
     {
         private int user1;

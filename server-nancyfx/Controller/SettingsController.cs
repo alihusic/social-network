@@ -6,6 +6,7 @@ namespace SocialNetwork2.Controller
 {
     /// <summary>
     /// Class used as controller for settings related operations and queries.
+    /// Class created by Ermin & Ali.
     /// </summary>
     public static class SettingsController
     {

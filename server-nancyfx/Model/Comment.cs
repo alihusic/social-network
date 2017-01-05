@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SocialNetwork2.Model
 {
+    /// <summary>
+    /// Class used as database model for Comment table.
+    /// Class created by Ermin.
+    /// </summary>
     public class Comment
     {
         [Key]

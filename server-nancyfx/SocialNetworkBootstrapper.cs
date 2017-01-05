@@ -6,6 +6,9 @@ using System;
 
 namespace SocialNetwork2
 {
+    /// <summary>
+    /// Class created by Ali.
+    /// </summary>
     public class SocialNetworkBootstrapper : DefaultNancyBootstrapper
     {
         // The bootstrapper enables you to reconfigure the composition of the framework,

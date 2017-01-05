@@ -5,6 +5,7 @@ namespace SocialNetwork2.Request
 {
     /// <summary>
     /// Class used as base class for all requests.
+    /// Class created by Ermin & Ali.
     /// </summary>
     public abstract class SNRequest
     {

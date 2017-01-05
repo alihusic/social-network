@@ -4,6 +4,7 @@ namespace SocialNetwork2.Request
 {
     /// <summary>
     /// Class used to create request that handles editing of user's info.
+    /// Class created by Ermin & Ali.
     /// </summary>
 
     public class EditUserInfoRequest : ConfidentialRequest
