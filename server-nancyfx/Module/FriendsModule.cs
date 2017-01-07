@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TestClientSN.Model;
+using SocialNetworkServerNV1.Response;
 
 namespace SocialNetwork2
 {
@@ -49,13 +50,13 @@ namespace SocialNetwork2
             // check token
             if (!TokenFactory.checkToken(addQuery.userToken))
             {
-                throw new Exception("Not logged in.");
+                return new ErrorResponse("You must log in first.");
             }
 
 
             if (!UserController.userExists(addQuery.senderId) || !UserController.userExists(addQuery.receiverId))
             {
-                throw new Exception("User not found.");
+                return new ErrorResponse("User not found.");
             }
 
             //check if friendship exists - order of paramaters doesn't matter
@@ -69,12 +70,12 @@ namespace SocialNetwork2
             }
             else
             {
-                throw new Exception("User already added.");
+                return new ErrorResponse("User already added.");
             }
 
             /* return status code
             */
-            return Negotiate.WithStatusCode(200);
+            return new MessageResponse("You must log in first.");
         }
 
         /// <summary>
@@ -91,7 +92,7 @@ namespace SocialNetwork2
             // check token
             if (!TokenFactory.checkToken(confirmQuery.userToken))
             {
-                throw new Exception("Not logged in.");
+                return new ErrorResponse("You must log in first.");
             }
 
             //check if pending friendship exists- order of parameters doesn't matter
@@ -107,13 +108,13 @@ namespace SocialNetwork2
             }
             else
             {
-                throw new Exception("Friendship request does not exist.");
+                return new ErrorResponse("Friendship does not exist.");
                 //neka baci neki exception da ne postoji taj friendship request
             }
 
             /* return status code
             */
-            return "You are now friends!!!";
+            return new MessageResponse("You are now friends.");
         }
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace SocialNetwork2
             // check token
             if (!TokenFactory.checkToken(deleteQuery.userToken))
             {
-                throw new Exception("Not logged in.");
+                return new ErrorResponse("You must log in first.");
             }
 
             // check if friendship exists
@@ -140,13 +141,13 @@ namespace SocialNetwork2
             }
             else
             {
-                throw new Exception("Friendship does not exist.");
+                return new ErrorResponse("Friendship does not exist.");
                 //nek mozda baci neki exception da nije pronadjen taj friendship
             }
             /* update database
             * return status code
             */
-            return Negotiate.WithStatusCode(200);
+            return new MessageResponse("You are no longer friends.");
         }
 
         /// <summary>
@@ -163,17 +164,16 @@ namespace SocialNetwork2
             // check token
             if (!TokenFactory.checkToken(getAllFriendsRequest.userToken))
             {
-                throw new Exception("Not logged in.");
+                return new ErrorResponse("You must log in first.");
             }
 
 
             //List<User> friends = helpers.getAllFriends(getAllQuery.userId);
             List<int> friends = FriendsController.getAllFriendsId(getAllFriendsRequest.userToken.userId);
-            return friends.Count();
-            /* bind the result to a model
-            * return model&status code
-            */
-            return Negotiate.WithStatusCode(200).WithModel(friends);
+
+            /// Structured response bound to JSON on return
+            return new IdListResponse(friends);
+            
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace SocialNetwork2
 
             List <UserFriendsInfo> users= FriendsController.getUserFriendsList(getListUsersQuery.listUserId);
 
-            return users;
+            return new UserFriendsInfoListResponse(users);
         }
 
         /// <summary>
@@ -206,29 +206,24 @@ namespace SocialNetwork2
             // check token
             if (!TokenFactory.checkToken(getProfileInfoQuery.userToken))
             {
-                throw new Exception("Not logged in.");
+                return new ErrorResponse("You must log in first.");
             }
 
             if (!UserController.userExists(getProfileInfoQuery.targetId))
             {
-                throw new Exception("User not found.");
+                return new ErrorResponse("User not found.");
             }
 
             if (!FriendsController.getAllFriendsId(getProfileInfoQuery.userToken.userId).Contains(getProfileInfoQuery.targetId))
             {
-                throw new Exception("User profile not visible.");
+                return new ErrorResponse("User profile not visible to you.");
             }
 
             ProfileInfo profileInfo = UserController.getProfileInfo(getProfileInfoQuery.targetId);
-            
 
-            //return profileInfo;
-            return null;
+            return new ProfileInfoResponse(profileInfo);
+          
         }
-
-        /*todo: 
-         * add a status report class
-         */
 
     }
 

@@ -9,6 +9,7 @@ using SocialNetworkServer;
 using SocialNetworkServer.Builder;
 using System;
 using System.Linq;
+using SocialNetworkServerNV1.Response;
 
 namespace SocialNetwork2
 {
@@ -49,15 +50,18 @@ namespace SocialNetwork2
             var user = UserController.getUser(authenticateQuery.username);
 
             //check if user exists
-            if (user == null) return Negotiate.WithStatusCode(404);
+            if (user == null)
+                return new ErrorResponse("User account does not exist.");
 
             //if (!helpers.userExists(authenticateQuery.username)) return false;
 
             //check password
-            if (authenticateQuery.password != user.password) throw new System.Exception("Invalid password");
+            if (authenticateQuery.password != user.password)
+                return new ErrorResponse("Invalid password.");
 
             //if token with userid already found return error
-            if (TokenFactory.checkTokenByUserId(user.userId)) throw new System.Exception("Already logged in");
+            if (TokenFactory.checkTokenByUserId(user.userId))
+                return new ErrorResponse("Already logged in.");
 
             //delete all tokens of this user from the database(if any - this is to ensure)
             //TODO
@@ -65,7 +69,7 @@ namespace SocialNetwork2
             //generate a token
             var userToken = TokenFactory.createNewToken(user.userId);
 
-            return Negotiate.WithModel(userToken);
+            return new TokenResponse(userToken);
         }
 
 
@@ -103,16 +107,16 @@ namespace SocialNetwork2
                 else
                 {
                     //typeMissmatchException
-                    throw new Exception("Fail");
+                    return new ErrorResponse("Invalid registration data.");
                 }
             }
             else
             {
-                throw new Exception("Username already taken.");
+                return new ErrorResponse("This username is already taken.");
             }
             // return a status code
-            
-            return "User account created";
+
+            return new MessageResponse("User account successfully created.");
         }
 
         /// <summary>
@@ -127,7 +131,7 @@ namespace SocialNetwork2
 
             //checking token
             if (!TokenFactory.checkToken(logOutQuery.userToken))
-                throw new Exception("Not logged in.");
+                return new ErrorResponse("You must log in first.");
 
 
             //deleting token (logging out user) - on client side user should be redirected to log in page
@@ -135,12 +139,12 @@ namespace SocialNetwork2
             TokenFactory.removeToken(logOutQuery.userToken);
 
 
-            return "User logged out!";
+            return new MessageResponse("User successfully logged out.");
 
         }
 
         /// <summary>
-        /// MEthod used to log out a User
+        /// MEthod used to load user information
         /// </summary>
         /// <param name="parameters">dynamic.</param>
         /// <returns>Status.</returns>
@@ -150,11 +154,11 @@ namespace SocialNetwork2
 
 
             if (!TokenFactory.checkToken(loadUserInfoQuery.userToken))
-                throw new Exception("Not logged in.");
+                return new ErrorResponse("You must log in first.");
 
             var userInfo = UserController.getUserProfileInfo(loadUserInfoQuery.userToken.userId);
 
-            return userInfo;
+            return new ProfileInfoResponse(userInfo);
         }
 
     }

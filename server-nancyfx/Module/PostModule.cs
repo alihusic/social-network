@@ -10,6 +10,7 @@ using SocialNetworkServer.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SocialNetworkServerNV1.Response;
 
 namespace SocialNetwork2
 {
@@ -46,15 +47,15 @@ namespace SocialNetwork2
 
             //check user token
             if (!TokenFactory.checkToken(likeQuery.userToken))
-                throw new Exception("Not logged in.");
+                return new ErrorResponse("You must log in first.");
 
             //check if post exists
             if (!PostController.postExists(likeQuery.postId))
-                throw new Exception("Post does not exist.");
+                return new ErrorResponse("This post does not exist.");
 
             // check if post visible to user
             if (!PostController.isPostVisible(likeQuery.creatorId, likeQuery.targetId))
-                throw new Exception("Post not visible");
+                return new ErrorResponse("This post is not visible to you.");
 
             /* check if user already liked -> remove like
             *                       else -> add like(suggestion: we can disable like button on post load if user has already liked smth (Ermin))*/
@@ -67,13 +68,13 @@ namespace SocialNetwork2
             }
             else
             {
-                throw new Exception("Post already liked.");
+                return new ErrorResponse("This post is already liked.");
                 //mozda disable button na loadu posta, ili staviti na buttonu kada se klikne nek se disable-a
             }
 
             /* return status code
             */
-            return Negotiate.WithStatusCode(200);
+            return new MessageResponse("Post successfully liked.");
         }
 
         /// <summary>
@@ -88,7 +89,7 @@ namespace SocialNetwork2
 
             //check user token
             if (!TokenFactory.checkToken(commentQuery.userToken))
-                throw new Exception("Not logged in.");
+                return new ErrorResponse("You must log in first.");
 
             //checking the existance of the post by ID
             if (PostController.postExists(commentQuery.postId))
@@ -104,16 +105,16 @@ namespace SocialNetwork2
                 }
                 else
                 {
-                    throw new Exception("Post not visible.");
+                    return new ErrorResponse("This post is not visible.");
                 }
             }
             else
             {
-                throw new Exception("Post does not exist.");
+                return new ErrorResponse("This post does not exist.");
             }
 
             //return status code
-            return Negotiate.WithStatusCode(200);
+            return new MessageResponse("Comment successfully created.");
         }
 
         /// <summary>
@@ -128,7 +129,7 @@ namespace SocialNetwork2
 
             //check user token
             if (!TokenFactory.checkToken(createQuery.userToken))
-                throw new Exception("Not logged in.");
+                return new ErrorResponse("You must log in first.");
 
             //check where is post(on users profile or on another wall)
             try
@@ -145,17 +146,17 @@ namespace SocialNetwork2
                 }
                 else
                 {
-                    throw new Exception("Target user not in friend list.");
+                    return new ErrorResponse("This user is not in your friend list.");
                     //neka baci exception da nisu prijatelji
                 }
             }
             catch (Exception ex)
             {
-                return false;
+                return new ErrorResponse("Something went horribly wrong on serverside.");
             }
 
             //return status code
-            return Negotiate.WithStatusCode(200);
+            return new MessageResponse("Post successfully created.");
         }
 
         /// <summary>
@@ -170,17 +171,17 @@ namespace SocialNetwork2
 
             // checking user token
             if (!TokenFactory.checkToken(loadQuery.userToken))
-                throw new Exception("Not logged in.");
+                return new ErrorResponse("You must log in first.");
 
             // check if the user has the privileges to see the post
             if (PostController.isPostVisible(loadQuery.creatorId, loadQuery.targetId))
             {
                 // extract the post from the database and return response
-                return Negotiate.WithModel(PostController.getPost(loadQuery.postId));
+                return new PostResponse(PostController.getPost(loadQuery.postId));
             }
             else
             {
-                throw new Exception("Post not visible.");
+                return new ErrorResponse("This post is not visible to you.");
             }
             
         }

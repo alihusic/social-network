@@ -5,6 +5,7 @@ using SocialNetwork2.Factory;
 using SocialNetwork2.Request;
 using SocialNetworkServer;
 using SocialNetworkServer.Builder;
+using SocialNetworkServerNV1.Response;
 using System;
 
 namespace SocialNetwork2
@@ -41,7 +42,7 @@ namespace SocialNetwork2
             // TODO:
             // check user token
             if (!TokenFactory.checkToken(editInfoQuery.userToken))
-                throw new Exception("Not logged in.");
+                return new ErrorResponse("You must log in first.");
 
             // check if new info is valid TODO
             // save changes to the database
@@ -62,11 +63,11 @@ namespace SocialNetwork2
             }
             else
             {
-                throw new Exception("Invalid profile picture URL.");
+                return new ErrorResponse("Invalid profile picture URL.");
             }
 
             // return status code
-            return "User info updated!";
+            return new MessageResponse("User info successfully updated.");
         }
 
         /// <summary>
@@ -79,7 +80,8 @@ namespace SocialNetwork2
             var changeProfilePictureQuery = this.Bind<ChangePictureRequest>();
 
             // check user token
-            if (!TokenFactory.checkToken(changeProfilePictureQuery.userToken)) throw new Exception("Not logged in.");
+            if (!TokenFactory.checkToken(changeProfilePictureQuery.userToken))
+                return new ErrorResponse("You must log in first.");
 
             // get new url THIS WILL BE HEAVILY MODIFIED Allaha mi
             // save changes to the database
@@ -90,11 +92,11 @@ namespace SocialNetwork2
             }
             else
             {
-                throw new Exception("Invalid URL.");
+                return new ErrorResponse("Invalid picture URL.");
             }
             // return status code
 
-            return Negotiate.WithStatusCode(200);
+            return new MessageResponse("User profile picture successfully updated.");
         }
 
         /// <summary>
@@ -107,7 +109,8 @@ namespace SocialNetwork2
             var changePasswordQuery = this.Bind<ChangePasswordRequest>();
 
             // check user token
-            if (!TokenFactory.checkToken(changePasswordQuery.userToken)) throw new Exception("Not logged in.");
+            if (!TokenFactory.checkToken(changePasswordQuery.userToken))
+                return new ErrorResponse("You must log in first.");
 
             // check hash/password
             if (UserController.checkPassword(changePasswordQuery.oldPassword, changePasswordQuery.userToken.userId))
@@ -117,19 +120,19 @@ namespace SocialNetwork2
             }
             else
             {
-                throw new Exception("Invalid password.");
+                return new ErrorResponse("Invalid password.");
             }
 
-            // remove the token -- ovo ces ti Ali morati dovrisiti (Ermin)
+            
             // brisanje iz liste na serveru
             TokenFactory.removeToken(changePasswordQuery.userToken);
 
             // brisanje iz baze
             TokenFactory.removeTokenDB(changePasswordQuery.userToken);
-            
+
 
             // return status code
-            return Negotiate.WithStatusCode(200);
+            return new MessageResponse("Password successfully updated.");
         }
 
         /// <summary>
@@ -143,7 +146,8 @@ namespace SocialNetwork2
 
             // TODO:
             // check user cookie
-            if (!TokenFactory.checkToken(changeCoverPictureQuery.userToken)) return false;
+            if (!TokenFactory.checkToken(changeCoverPictureQuery.userToken))
+                return new ErrorResponse("You must log in first.");
 
             // get new url THIS WILL BE HEAVILY MODIFIED
             // save changes to the database
@@ -154,11 +158,11 @@ namespace SocialNetwork2
             }
             else
             {
-                return false;
+                return new ErrorResponse("Invalid picture URL.");
             }
             // return status code
 
-            return Negotiate.WithStatusCode(200);
+            return new MessageResponse("Cover picture successfully updated.");
         }
     }
 }

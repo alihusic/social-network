@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SocialNetwork2.Model;
+﻿using SocialNetwork2.Model;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 
 namespace SocialNetwork2.Controller

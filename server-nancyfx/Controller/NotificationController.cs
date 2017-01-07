@@ -1,11 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SocialNetwork2;
-using SocialNetworkServer.Model;
-using System;
+﻿using SocialNetworkServer.Model;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Profile;
 
 namespace SocialNetwork2.Controller
 {

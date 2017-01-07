@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SocialNetwork2.Model;
+﻿using SocialNetwork2.Model;
 using SocialNetwork2.Builder;
 using System.Collections.Generic;
 using System.Linq;
 using TestClientSN.Model;
+using System.Data.Entity.Infrastructure;
 
 namespace SocialNetwork2.Controller
 {

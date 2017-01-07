@@ -17,11 +17,39 @@ namespace SocialNetwork2
 
        
 
-        // dynamic function customErrorHandle used to handle custom exceptions and behavior
+        /// <summary>
+        /// Method used to handle unexpected exception reporting.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="exception"></param>
+        /// <returns></returns>
         private dynamic customErrorHandle(dynamic context, dynamic exception)
         {
-            return ((Exception)exception).Message;
+            return "FATAL SERVER ERROR: " + ((Exception)exception).Message;
         }
+
+        /// <summary>
+        /// Method used to handle client request logging.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        private dynamic customRequestLogging(dynamic context, dynamic exception)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Method used to handle server response logging.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        private dynamic customResponseLogging(dynamic context, dynamic exception)
+        {
+            return null;
+        }
+
         /**
          ApplicationStartup overriden to introduce custom-made error handling
              */
@@ -29,7 +57,11 @@ namespace SocialNetwork2
         {
             TokenFactory.deleteAllTokens();
             pipelines.OnError += (context, exception) => customErrorHandle(context, exception);
+            //pipelines.BeforeRequest += (context, exception) => customRequestLogging(context, exception);
+            //pipelines.AfterRequest += (context, exception) => customResponseLogging(context, exception);
             base.ApplicationStartup(container, pipelines);
         }
+
+        
     }
 }

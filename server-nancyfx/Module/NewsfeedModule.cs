@@ -10,6 +10,7 @@ using SocialNetworkServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SocialNetworkServerNV1.Response;
 
 namespace SocialNetwork2
 {
@@ -40,9 +41,12 @@ namespace SocialNetwork2
         {
             //map request to objects
             var loadQuery = this.Bind<LoadNewsfeedRequest>();
-            
+
             // check user token
-            if (!TokenFactory.checkToken(loadQuery.userToken)) throw new Exception("Not logged in");
+            if (!TokenFactory.checkToken(loadQuery.userToken))
+            {
+                return new ErrorResponse("You must log in first.");
+            }
 
             //extract from database
             List<Post> recentPosts = PostController.getRecentPosts(loadQuery.interval, loadQuery.userToken.userId);
@@ -51,11 +55,15 @@ namespace SocialNetwork2
             //return ""+recentPosts.Count();
             if (recentPosts.Count() == 0)
             {
-                return null;
+                return new ErrorResponse("No more posts.");
             }
 
             //return model
-            return JsonConvert.SerializeObject(recentPosts,
+
+            PostListResponse responseObject = new PostListResponse(recentPosts);
+
+            /// This is a lazy way to prevent the serialization chaos caused by lazy loading
+            return JsonConvert.SerializeObject(responseObject,
                              Newtonsoft.Json.Formatting.None,
                              new JsonSerializerSettings
                              {

@@ -7,6 +7,7 @@ using SocialNetwork2.Request;
 using SocialNetworkServer.Builder;
 using System;
 using System.Collections.Generic;
+using SocialNetworkServerNV1.Response;
 
 namespace SocialNetwork2
 {
@@ -37,19 +38,14 @@ namespace SocialNetwork2
         /// <returns>Successfulnes of operation</returns>
         public dynamic SendMessage(dynamic parameters)
         {
-            
             //bind request to object
             var sendQuery = this.Bind<MessageSendRequest>();
-
             
             //check user cookie
             if (!TokenFactory.checkToken(sendQuery.userToken))
             {
-                throw new Exception("Your token is: " + sendQuery.userToken.tokenHash);
-                //throw new Exception("You must log in");
+                return new ErrorResponse("You must log in first.");
             }
-
-
 
             //check sender ID
             //check receiver ID
@@ -57,7 +53,8 @@ namespace SocialNetwork2
             {
                 if (!UserController.userExists(sendQuery.userToken.userId) || !UserController.userExists(sendQuery.receiverId))
                 {
-                    throw new Exception("Invalid receiver ID"); ;
+                    return new ErrorResponse("Invalid receiver ID.");
+                    //throw new Exception("Invalid receiver ID"); ;
                 }
             }catch(Exception e)
             {
@@ -96,11 +93,11 @@ namespace SocialNetwork2
             }
             catch (Exception ex)
             {
-                return "";
+                return new ErrorResponse("Something went horribly wrong on serverside 0.0");
             }
 
             //return response code
-            return Negotiate.WithStatusCode(200);
+            return new MessageResponse("Message sent successfully");
         }
 
         
@@ -115,14 +112,20 @@ namespace SocialNetwork2
             var checkNewMessagesQuery = this.Bind<ConfidentialRequest>();
 
             //check user cookie
-            if (!TokenFactory.checkToken(checkNewMessagesQuery.userToken)) throw new Exception("You must log in");
+            if (!TokenFactory.checkToken(checkNewMessagesQuery.userToken))
+            {
+                return new ErrorResponse("You must log in first.");
+            }
 
             //extract from database
-            if (!MessagesController.checkUnreadMessages(checkNewMessagesQuery.userToken.userId)) throw new Exception("No new messages");
+            if (!MessagesController.checkUnreadMessages(checkNewMessagesQuery.userToken.userId))
+            {
+                return new ErrorResponse("No new messages.");
+            }
             List<UnreadMessage> unreadMessages = MessagesController.getAllUnreadMessages(checkNewMessagesQuery.userToken.userId);
 
             //return a structured model
-            return unreadMessages;
+            return new UnreadMessageListResponse(unreadMessages);
             //checks if there is any new entry in unread messages.
             //note: this userId will be recipientId in table ureadMessages
 

@@ -5,6 +5,7 @@ using SocialNetwork2.Factory;
 using SocialNetwork2.Request;
 using SocialNetworkServer;
 using SocialNetworkServer.Model;
+using SocialNetworkServerNV1.Response;
 using System;
 using System.Collections.Generic;
 
@@ -41,14 +42,17 @@ namespace SocialNetwork2.Module
             var query = this.Bind<ConfidentialRequest>();
 
             // check user token
-            if (!TokenFactory.checkToken(query.userToken)) throw new Exception("Not logged in");
+            if (!TokenFactory.checkToken(query.userToken))
+            {
+                return new ErrorResponse("You must log in first.");
+            }
 
             // load notifications from database
             
             List<Notification> notifications = NotificationsController.loadNotificationsUser(query.userToken.userId);
             notifications.AddRange(NotificationsController.loadPostNotifications(query.userToken.userId));
 
-            return Negotiate.WithModel(notifications);
+            return new NotificationListResponse(notifications);
 
         }
 
