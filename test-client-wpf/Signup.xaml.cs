@@ -82,27 +82,16 @@ namespace SocialNetwork
 
             try
             {
-                ConfidentialRequest query = new ConfidentialRequest()
+                ConfidentialRequest request = new ConfidentialRequest()
                 {
                     userToken = ClientInfo.Instance.SessionToken,
                     
                 };
 
-                string requestBody = JsonConvert.SerializeObject(query);
-
-                var request = new SNServiceRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/user/user_info")
-                    .Build();
-
-                var responseString = request.requestFromServer();
+                var profileInfo = new ServiceConnector().loadUserInfo(request);
 
                 //newsfeedContent.Text += responseString;
-                if (responseString == null) throw new Exception("No more Post!");
-                var profileInfo = JsonConvert.DeserializeObject<ProfileInfo>(responseString);
+               
 
                 if (profileInfo != null)
                 {

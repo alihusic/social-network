@@ -244,6 +244,26 @@ namespace testClientWPF
             return generateMessageFromResponse(responseString);
         }
 
+        public ProfileInfo loadUserInfo(ConfidentialRequest requestInfo)
+        {
+            string requestBody = JsonConvert.SerializeObject(requestInfo);
+
+            var request = new SNServiceRequestBuilder()
+                .Accept("application/json")
+                .ContentType("application/json")
+                .RequestBody(requestBody)
+                .RequestMethod("POST")
+                .UrlSubPath("/user/user_info")
+                .Build();
+
+            var responseString = request.requestFromServer();
+            if (isResponseError(responseString))
+            {
+                throw generateExceptionFromResponse(responseString);
+            }
+            return JsonConvert.DeserializeObject<ProfileInfoResponse>(responseString).profileInfo;
+        }
+
         public string removeFriend(DeleteFriendRequest requestInfo)
         {
             string requestBody = JsonConvert.SerializeObject(requestInfo);
