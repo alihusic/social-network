@@ -61,7 +61,12 @@ namespace SocialNetwork2
 
             //if token with userid already found return error
             if (TokenFactory.checkTokenByUserId(user.userId))
-                return new ErrorResponse("Already logged in.");
+            {
+                Token token = TokenFactory.getTokenByUserId(user.userId);
+                TokenFactory.removeTokenDB(token);
+                TokenFactory.removeToken(token);
+            }
+            //return new ErrorResponse("Already logged in.");
 
             //delete all tokens of this user from the database(if any - this is to ensure)
             //TODO

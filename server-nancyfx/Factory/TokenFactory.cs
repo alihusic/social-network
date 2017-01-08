@@ -139,6 +139,11 @@ namespace SocialNetwork2.Factory
 
         }
 
+        public static Token getTokenByUserId(int userId)
+        {
+            return tokenList.Find(t => (t.userId == userId));
+        }
+
         /// <summary>
         /// Method used to check whether a token with a certain user ID exists
         /// </summary>

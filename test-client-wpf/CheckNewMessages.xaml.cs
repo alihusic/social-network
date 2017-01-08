@@ -43,18 +43,16 @@ namespace SocialNetwork
 
                 ClientInfo.Instance.UnreadMessagesList = new ServiceConnector().checkNewMessages(query);
 
-                /*if(listMessages!=null && listMessages.Any() && listMessages.ElementAt(0).messageText.Length > 0)
+                foreach (var message in ClientInfo.Instance.UnreadMessagesList)
                 {
-                    foreach(var message in listMessages)
-                    {
-                        newMessageContent.Text += "\n";
-                        newMessageContent.Text += message.senderId;
-                        newMessageContent.Text += "\n";
-                        newMessageContent.Text += message.messageText;
-                    }
-                    return;
+                    newMessageContent.Text += "\n";
+                    newMessageContent.Text += message.senderId;
+                    newMessageContent.Text += "\n";
+                    newMessageContent.Text += message.messageText;
                 }
-                newMessageContent.Text += responseString;*/
+
+
+
             }
             catch(Exception ex)
             {
