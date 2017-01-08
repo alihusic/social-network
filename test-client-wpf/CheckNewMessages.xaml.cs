@@ -33,15 +33,15 @@ namespace SocialNetwork
 
         private void loadNewMessages(object sender, RoutedEventArgs e)
         {
-            if (ClientInfo.Instance.sessionToken == null) return;
+            if (ClientInfo.Instance.SessionToken == null) return;
             try
             {
                 ConfidentialRequest query = new ConfidentialRequest
                 {
-                    userToken = ClientInfo.Instance.sessionToken
+                    userToken = ClientInfo.Instance.SessionToken
                 };
 
-                ClientInfo.Instance.unreadMessages = new ServiceConnector().checkNewMessages(query);
+                ClientInfo.Instance.UnreadMessagesList = new ServiceConnector().checkNewMessages(query);
 
                 /*if(listMessages!=null && listMessages.Any() && listMessages.ElementAt(0).messageText.Length > 0)
                 {

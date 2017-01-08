@@ -30,8 +30,8 @@ namespace SocialNetwork
     {
         public MainWindow()
         {
-            ServerData.host = "http://localhost";
-            ServerData.port = "51980";
+            ServerData.host = "http://svab0ni-001-site1.etempurl.com";
+            ServerData.port = "80";
             
             InitializeComponent();
         }
@@ -78,16 +78,16 @@ namespace SocialNetwork
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (ClientInfo.Instance.sessionToken == null) return;
+            if (ClientInfo.Instance.SessionToken == null) return;
 
             try
             {
                 ConfidentialRequest query = new ConfidentialRequest
                 {
-                    userToken = ClientInfo.Instance.sessionToken
+                    userToken = ClientInfo.Instance.SessionToken
                 };
 
-                if (new ServiceConnector().logOut(query)) ClientInfo.Instance.sessionToken = null;
+                if (new ServiceConnector().logOut(query)) ClientInfo.Instance.SessionToken = null;
             }
             catch (Exception ex)
             {

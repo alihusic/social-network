@@ -33,7 +33,7 @@ namespace TestClientSN
 
         private void createFriendship(object sender, RoutedEventArgs e)
         {
-            if (ClientInfo.Instance.sessionToken == null) return;
+            if (ClientInfo.Instance.SessionToken == null) return;
 
 
             try
@@ -42,13 +42,11 @@ namespace TestClientSN
                 {
                     senderId = Int32.Parse(senderId.Text),
                     receiverId = Int32.Parse(receiverId.Text),
-                    userToken = ClientInfo.Instance.sessionToken
+                    userToken = ClientInfo.Instance.SessionToken
                 };
 
 
-
-                if (new ServiceConnector().addFriend(request)) friendsTextBox.Text = "Friend successfully added.";
-                else friendsTextBox.Text = "Friend not added.";
+                friendsTextBox.Text = new ServiceConnector().addFriend(request);
 
             }
             catch (Exception ex)
@@ -62,45 +60,35 @@ namespace TestClientSN
 
         private void loadFriends(object sender, RoutedEventArgs e)
         {
-            if (ClientInfo.Instance.sessionToken == null) return;
+            if (ClientInfo.Instance.SessionToken == null) return;
 
 
             try
             {
                 ConfidentialRequest request = new ConfidentialRequest()
                 {
-                    userToken = ClientInfo.Instance.sessionToken
+                    userToken = ClientInfo.Instance.SessionToken
                 };
 
-                ClientInfo.Instance.friendsThumbList = new ServiceConnector().getAllFriendsInfo(request);
-
-                if (ClientInfo.Instance.friendsThumbList != null && ClientInfo.Instance.friendsThumbList.Any() 
-                    && ClientInfo.Instance.friendsThumbList.ElementAt(0).name.Length > 0)
+                ClientInfo.Instance.FriendsThumbList = new ServiceConnector().getAllFriendsInfo(request);
+                foreach (var friend in ClientInfo.Instance.FriendsThumbList)
                 {
-                    foreach (var friend in ClientInfo.Instance.friendsThumbList)
-                    {
-                        friendsTextBox.Text += "\nname: " + friend.name;
-                        friendsTextBox.Text += "\n";
-                        friendsTextBox.Text += "last name: " + friend.lastName;
-                    }
-                    return;
-                }
-                else
-                {
-                    throw new Exception("No more Post");
+                    friendsTextBox.Text += "\nname: " + friend.name;
+                    friendsTextBox.Text += "\n";
+                    friendsTextBox.Text += "last name: " + friend.lastName;
                 }
 
             }
             catch (Exception ex)
             {
                 friendsTextBox.Text += ex.Message;
-                return;
+                friendsTextBox.Text += ex.StackTrace;
             }
         }
 
         private void confirmFriendship(object sender, RoutedEventArgs e)
         {
-            if (ClientInfo.Instance.sessionToken == null) return;
+            if (ClientInfo.Instance.SessionToken == null) return;
 
 
             try
@@ -109,11 +97,10 @@ namespace TestClientSN
                 {
                     senderId = Int32.Parse(senderId.Text),
                     receiverId = Int32.Parse(receiverId.Text),
-                    userToken = ClientInfo.Instance.sessionToken
+                    userToken = ClientInfo.Instance.SessionToken
                 };
 
-                if (new ServiceConnector().confirmFriend(request)) friendsTextBox.Text = "Friendship successfully confirmed.";
-                else friendsTextBox.Text ="Something went wrong";
+                friendsTextBox.Text = new ServiceConnector().confirmFriend(request);
             }
             catch (Exception ex)
             {
@@ -124,7 +111,7 @@ namespace TestClientSN
 
         private void removeFriendship(object sender, RoutedEventArgs e)
         {
-            if (ClientInfo.Instance.sessionToken == null) return;
+            if (ClientInfo.Instance.SessionToken == null) return;
 
 
             try
@@ -133,12 +120,10 @@ namespace TestClientSN
                 {
                     senderId = Int32.Parse(senderId.Text),
                     receiverId = Int32.Parse(receiverId.Text),
-                    userToken = ClientInfo.Instance.sessionToken
+                    userToken = ClientInfo.Instance.SessionToken
                 };
 
-
-                if (new ServiceConnector().removeFriend(request)) friendsTextBox.Text = "Friend successfully removed.";
-                else friendsTextBox.Text = "Something went wrong.";
+                friendsTextBox.Text = new ServiceConnector().removeFriend(request);
 
             }
             catch (Exception ex)

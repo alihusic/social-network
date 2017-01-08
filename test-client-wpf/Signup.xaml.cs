@@ -63,8 +63,7 @@ namespace SocialNetwork
 
                 };
 
-                if (new ServiceConnector().registerUser(request)) this.username.Text = "Registration successful.";
-                else this.username.Text = "Registration not successful.";
+                this.username.Text = new ServiceConnector().registerUser(request);
 
 
 
@@ -78,14 +77,14 @@ namespace SocialNetwork
 
         private void loadUserInfo(object sender, RoutedEventArgs e)
         {
-            if (ClientInfo.Instance.sessionToken == null) return;
+            if (ClientInfo.Instance.SessionToken == null) return;
 
 
             try
             {
                 ConfidentialRequest query = new ConfidentialRequest()
                 {
-                    userToken = ClientInfo.Instance.sessionToken,
+                    userToken = ClientInfo.Instance.SessionToken,
                     
                 };
 
@@ -127,7 +126,7 @@ namespace SocialNetwork
 
         private void editUserInfo(object sender, RoutedEventArgs e)
         {
-            if (ClientInfo.Instance.sessionToken == null) return;
+            if (ClientInfo.Instance.SessionToken == null) return;
 
             try
             {
@@ -142,7 +141,7 @@ namespace SocialNetwork
                     coverPictureURL = "https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png",
                     gender = "male",
                     dateOfBirth = DateTime.Now,
-                    userToken = ClientInfo.Instance.sessionToken
+                    userToken = ClientInfo.Instance.SessionToken
                 };
 
                 string requestBody = JsonConvert.SerializeObject(query);

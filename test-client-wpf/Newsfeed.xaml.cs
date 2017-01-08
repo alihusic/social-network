@@ -37,23 +37,23 @@ namespace SocialNetwork
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            if (ClientInfo.Instance.sessionToken == null) return;
+            if (ClientInfo.Instance.SessionToken == null) return;
 
 
             try
             {
                 LoadNewsfeedRequest request = new LoadNewsfeedRequest()
                 {
-                    userToken = ClientInfo.Instance.sessionToken,
+                    userToken = ClientInfo.Instance.SessionToken,
                     interval = this.interval
                 };
 
-                ClientInfo.Instance.newsfeedPostList.AddRange(new ServiceConnector().loadNewsfeed(request));
+                ClientInfo.Instance.NewsfeedPostList.AddRange(new ServiceConnector().loadNewsfeed(request));
 
-                 if (ClientInfo.Instance.newsfeedPostList != null  && ClientInfo.Instance.newsfeedPostList.Any() 
-                    && ClientInfo.Instance.newsfeedPostList.ElementAt(0).postContent.Length > 0)
+                 if (ClientInfo.Instance.NewsfeedPostList != null  && ClientInfo.Instance.NewsfeedPostList.Any() 
+                    && ClientInfo.Instance.NewsfeedPostList.ElementAt(0).postContent.Length > 0)
                  {
-                     foreach (var post in ClientInfo.Instance.newsfeedPostList)
+                     foreach (var post in ClientInfo.Instance.NewsfeedPostList)
                      {
                          newsfeedContent.Text += "\ncreatorId: " + post.creatorId;
                          newsfeedContent.Text += "\n";

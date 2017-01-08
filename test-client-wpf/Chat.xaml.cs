@@ -20,18 +20,18 @@ namespace SocialNetwork
         private void sendMessage(object sender, RoutedEventArgs e)
         {
             
-            if (ClientInfo.Instance.sessionToken == null) return;
+            if (ClientInfo.Instance.SessionToken == null) return;
             try
             {
                 MessageSendRequest request = new MessageSendRequest
                 {
-                    userToken = ClientInfo.Instance.sessionToken,
+                    userToken = ClientInfo.Instance.SessionToken,
                     receiverId = Int32.Parse(chatId.Text),
                     messageText = messageContent.Text
                 };
 
-                if (new ServiceConnector().sendMessage(request)) messageContent.Text = "Message sent successfully.";
-                else messageContent.Text = "Message not sent.";
+                messageContent.Text = new ServiceConnector().sendMessage(request);
+
             }
             catch(Exception ex) { }
             

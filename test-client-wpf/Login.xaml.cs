@@ -45,7 +45,10 @@ namespace SocialNetwork
                     password = password
                 };
 
-                ClientInfo.Instance.sessionToken = new ServiceConnector().authenticate(query);
+                if (ClientInfo.Instance == null) throw new Exception("SELAM ALEJK");
+                ClientInfo.Instance.SessionToken = new ServiceConnector().authenticate(query);
+
+                //var sessionToken = new ServiceConnector().authenticate(query);
 
                 statusLabel.Text += "Token successfully added";
 
@@ -54,6 +57,8 @@ namespace SocialNetwork
             }
             catch (Exception ex)
             {
+                statusLabel.Text += ex.Message;
+                Console.WriteLine(ex.StackTrace);
                 //statusLabel.Text = ex.StackTrace;
             }
         }
@@ -65,23 +70,24 @@ namespace SocialNetwork
 
         private void logOutButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ClientInfo.Instance.sessionToken == null) return;
+            if (ClientInfo.Instance.SessionToken == null) return;
 
             try
             {
                 ConfidentialRequest query = new ConfidentialRequest
                 {
-                    userToken = ClientInfo.Instance.sessionToken
+                    userToken = ClientInfo.Instance.SessionToken
                 };
 
                 
 
-                if(new ServiceConnector().logOut(query)) ClientInfo.Instance.sessionToken = null;
+                if(new ServiceConnector().logOut(query)) ClientInfo.Instance.SessionToken = null;
                 statusLabel.Text = "Logged out";
             }
             catch (Exception ex)
             {
                 statusLabel.Text = ex.Message;
+                Console.Write(ex.StackTrace);
             }
         }
     }

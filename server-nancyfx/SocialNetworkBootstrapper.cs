@@ -2,6 +2,7 @@ using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
 using SocialNetwork2.Factory;
+using SocialNetworkServerNV1.Response;
 using System;
 
 namespace SocialNetwork2
@@ -25,7 +26,7 @@ namespace SocialNetwork2
         /// <returns></returns>
         private dynamic customErrorHandle(dynamic context, dynamic exception)
         {
-            return "FATAL SERVER ERROR: " + ((Exception)exception).Message;
+            return new ErrorResponse("FATAL SERVER ERROR: " + ((Exception)exception).Message + '\n' + ((Exception)exception).StackTrace);
         }
 
         /// <summary>

@@ -48,6 +48,7 @@ namespace SocialNetwork2
             var addQuery = this.Bind<AddFriendRequest>();
 
             // check token
+            
             if (!TokenFactory.checkToken(addQuery.userToken))
             {
                 return new ErrorResponse("You must log in first.");
@@ -75,7 +76,7 @@ namespace SocialNetwork2
 
             /* return status code
             */
-            return new MessageResponse("You must log in first.");
+            return new MessageResponse("Friendship request successfully sent.");
         }
 
         /// <summary>
@@ -133,6 +134,8 @@ namespace SocialNetwork2
                 return new ErrorResponse("You must log in first.");
             }
 
+            //if(deleteQuery.userToken) FIX DIS PLS
+
             // check if friendship exists
             if (FriendsController.friendshipExists(deleteQuery.senderId, deleteQuery.receiverId))
             {
@@ -159,7 +162,7 @@ namespace SocialNetwork2
         public dynamic GetAll(dynamic parameters)
         {
             //bind query
-            var getAllFriendsRequest = this.Bind<GetAllFriendRequest>();
+            var getAllFriendsRequest = this.Bind<ConfidentialRequest>();
 
             // check token
             if (!TokenFactory.checkToken(getAllFriendsRequest.userToken))

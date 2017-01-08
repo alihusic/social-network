@@ -11,6 +11,7 @@ namespace testClientWPF
         public static string host { get; set; }
         public static string getServerURL()
         {
+            //return host;
             return host + ":" + port;
         }
     }

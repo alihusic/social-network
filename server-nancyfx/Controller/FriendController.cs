@@ -128,7 +128,7 @@ namespace SocialNetwork2.Controller
         {
             using (var context = new SocialNetworkDBContext())
             {
-                var friendship = context.friendRequest.Where(fr => ((fr.senderId == senderId) && (fr.receiverId == receiverId))).First();
+                var friendship = context.friendRequest.Where(fr => (((fr.senderId == senderId) && (fr.receiverId == receiverId))) || ((fr.senderId==receiverId) && (fr.receiverId==senderId))).First();
                 context.friendRequest.Remove(friendship);
                 context.SaveChanges();
             }

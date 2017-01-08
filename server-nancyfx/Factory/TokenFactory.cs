@@ -127,6 +127,7 @@ namespace SocialNetwork2.Factory
         /// <returns>Truth value of existance</returns>
         public static bool checkToken(Token token)
         {
+            if (token == null) return false;
             try
             {
                 return tokenList.Exists(e => (e.tokenHash.Equals(token.tokenHash) && e.userId == token.userId)) || token.tokenHash.Equals("testtoken");

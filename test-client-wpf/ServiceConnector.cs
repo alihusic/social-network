@@ -2,6 +2,7 @@
 using SocialNetwork2.Model;
 using SocialNetwork2.Request;
 using SocialNetworkServer;
+using SocialNetworkServerNV1.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,24 @@ namespace testClientWPF
 {
     public class ServiceConnector
     {
+        private static bool isResponseError(string responseString)
+        {
+            StatusResponse responseObject = JsonConvert.DeserializeObject<StatusResponse>(responseString);
+            return !responseObject.isSuccessful;
+        }
+
+        private static Exception generateExceptionFromResponse(string responseString)
+        {
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseString);
+            return new Exception(errorResponse.errorMessage);
+        }
+
+        private static string generateMessageFromResponse(string responseString)
+        {
+            MessageResponse responseObject = JsonConvert.DeserializeObject<MessageResponse>(responseString);
+            return responseObject.responseMessage;
+        }
+
         public Token authenticate(AuthenticateUserRequest requestInfo)
         {
             string requestBody = JsonConvert.SerializeObject(requestInfo);
@@ -26,14 +45,12 @@ namespace testClientWPF
 
             var responseString = request.requestFromServer();
 
-            //statusLabel.Text = responseString;
-            var tempToken = JsonConvert.DeserializeObject<Token>(responseString);
-
-            if (tempToken.tokenHash != null && tempToken.tokenHash.Length == 40)
+            if (isResponseError(responseString))
             {
-                return tempToken;
+
+                throw generateExceptionFromResponse(responseString);
             }
-            throw new Exception("Invalid login.");
+            return JsonConvert.DeserializeObject<TokenResponse>(responseString).userToken;
         }
 
         public bool logOut(ConfidentialRequest requestInfo)
@@ -47,18 +64,18 @@ namespace testClientWPF
                 .RequestMethod("POST")
                 .UrlSubPath("/user/log_out")
                 .Build();
-            try
+
+            var responseString = request.requestFromServer();
+            //throw new Exception(responseString);
+            if (isResponseError(responseString))
             {
-                var responseString = request.requestFromServer();
+                throw generateExceptionFromResponse(responseString);
             }
-            catch (Exception e)
-            {
-                throw new Exception("Something went wrong");
-            }
-            return true;
+            //return true;
+            return JsonConvert.DeserializeObject<StatusResponse>(responseString).isSuccessful;
         }
 
-        public List<PrivateMessage> checkNewMessages(ConfidentialRequest requestInfo)
+        public List<UnreadMessage> checkNewMessages(ConfidentialRequest requestInfo)
         {
 
             string requestBody = JsonConvert.SerializeObject(requestInfo);
@@ -73,197 +90,222 @@ namespace testClientWPF
 
             var responseString = request.requestFromServer();
 
-            List<PrivateMessage> listMessages = JsonConvert.DeserializeObject<List<PrivateMessage>>(responseString);
+            if (isResponseError(responseString))
+            {
+                throw generateExceptionFromResponse(responseString);
+            }
 
-            return listMessages;
+            UnreadMessageListResponse listMessages = JsonConvert.DeserializeObject<UnreadMessageListResponse>(responseString);
+
+            return listMessages.unreadMessageList;
         }
 
-        public bool sendMessage(MessageSendRequest requestInfo)
+        public string sendMessage(MessageSendRequest requestInfo)
         {
-            try
-            {
-                string requestBody = JsonConvert.SerializeObject(requestInfo);
 
-                var request = new SNServiceRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/chat/send_message")
-                    .Build();
+            string requestBody = JsonConvert.SerializeObject(requestInfo);
 
-                var responseString = request.requestFromServer();
-            }
-            catch (Exception e)
+            var request = new SNServiceRequestBuilder()
+                .Accept("application/json")
+                .ContentType("application/json")
+                .RequestBody(requestBody)
+                .RequestMethod("POST")
+                .UrlSubPath("/chat/send_message")
+                .Build();
+
+            var responseString = request.requestFromServer();
+
+            if (isResponseError(responseString))
             {
-                return false;
+                throw generateExceptionFromResponse(responseString);
             }
-            return true;
+
+            return generateMessageFromResponse(responseString);
         }
 
-        public bool createPost(PostCreateRequest requestInfo)
+        public string createPost(PostCreateRequest requestInfo)
         {
-            try
-            {
-                string requestBody = JsonConvert.SerializeObject(requestInfo);
 
-                var request = new SNServiceRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/post/create")
-                    .Build();
+            string requestBody = JsonConvert.SerializeObject(requestInfo);
 
-                var responseString = request.requestFromServer();
-                return true;
-            } catch (Exception e)
+            var request = new SNServiceRequestBuilder()
+                .Accept("application/json")
+                .ContentType("application/json")
+                .RequestBody(requestBody)
+                .RequestMethod("POST")
+                .UrlSubPath("/post/create")
+                .Build();
+
+            var responseString = request.requestFromServer();
+            if (isResponseError(responseString))
             {
-                return false;
+                throw generateExceptionFromResponse(responseString);
             }
+
+            return generateMessageFromResponse(responseString);
+
 
         }
 
-        public bool addFriend(AddFriendRequest requestInfo)
+        public string addFriend(AddFriendRequest requestInfo)
         {
-            try
+            string requestBody = JsonConvert.SerializeObject(requestInfo);
+
+            var request = new SNServiceRequestBuilder()
+                .Accept("application/json")
+                .ContentType("application/json")
+                .RequestBody(requestBody)
+                .RequestMethod("POST")
+                .UrlSubPath("/user/friends/add")
+                .Build();
+
+            var responseString = request.requestFromServer();
+            if (isResponseError(responseString))
             {
-                string requestBody = JsonConvert.SerializeObject(requestInfo);
-
-                var request = new SNServiceRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/user/friends/add")
-                    .Build();
-
-                var responseString = request.requestFromServer();
-
-                return true;
+                throw generateExceptionFromResponse(responseString);
             }
-            catch (Exception e)
+            return generateMessageFromResponse(responseString);
+
+        }
+
+        public List<UserFriendsInfo> getUserInfoFromIdList(List<int> idList)
+        {
+            GetListUsersRequest requestInfo = new GetListUsersRequest
             {
-                return false;
+                listUserId = idList
+            };
+
+            string requestBody = JsonConvert.SerializeObject(requestInfo);
+
+            var request = new SNServiceRequestBuilder()
+                .Accept("application/json")
+                .ContentType("application/json")
+                .RequestBody(requestBody)
+                .RequestMethod("POST")
+                .UrlSubPath("/user/friends/get_list_users")
+                .Build();
+
+            var responseString = request.requestFromServer();
+
+            if (isResponseError(responseString))
+            {
+                throw generateExceptionFromResponse(responseString);
             }
+
+            return JsonConvert.DeserializeObject<UserFriendsInfoListResponse>(responseString).userFriendsInfoList;
+
 
         }
 
         public List<UserFriendsInfo> getAllFriendsInfo(ConfidentialRequest requestInfo)
         {
-            try
+            string requestBody = JsonConvert.SerializeObject(requestInfo);
+
+            var request = new SNServiceRequestBuilder()
+                .Accept("application/json")
+                .ContentType("application/json")
+                .RequestBody(requestBody)
+                .RequestMethod("POST")
+                .UrlSubPath("/user/friends/get_all")
+                .Build();
+
+            var responseString = request.requestFromServer();
+
+            if (isResponseError(responseString))
             {
-                string requestBody = JsonConvert.SerializeObject(requestInfo);
-
-                var request = new SNServiceRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/user/friends/get_all")
-                    .Build();
-
-                var responseString = request.requestFromServer();
-
-                return JsonConvert.DeserializeObject<List<UserFriendsInfo>>(responseString);
-            } catch(Exception e)
-            {
-                throw new Exception("Something went wrong.\n"+e.Message);
+                throw generateExceptionFromResponse(responseString);
             }
+
+            List<int> allFriendsIdList = JsonConvert.DeserializeObject<IdListResponse>(responseString).idList;
+
+
+
+            return getUserInfoFromIdList(allFriendsIdList);
             
     }
 
-        public bool confirmFriend(ConfirmFriendRequest requestInfo)
+        public string confirmFriend(ConfirmFriendRequest requestInfo)
         {
-            try
-            {
-                string requestBody = JsonConvert.SerializeObject(requestInfo);
+            string requestBody = JsonConvert.SerializeObject(requestInfo);
 
-                var request = new SNServiceRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/user/friends/confirm")
-                    .Build();
+            var request = new SNServiceRequestBuilder()
+                .Accept("application/json")
+                .ContentType("application/json")
+                .RequestBody(requestBody)
+                .RequestMethod("POST")
+                .UrlSubPath("/user/friends/confirm")
+                .Build();
 
-                var responseString = request.requestFromServer();
-                return true;
-            }catch(Exception e)
+            var responseString = request.requestFromServer();
+            if (isResponseError(responseString))
             {
-                return false;
+                throw generateExceptionFromResponse(responseString);
             }
-            
+            return generateMessageFromResponse(responseString);
         }
 
-        public bool removeFriend(DeleteFriendRequest requestInfo)
+        public string removeFriend(DeleteFriendRequest requestInfo)
         {
-            try
-            {
-                string requestBody = JsonConvert.SerializeObject(requestInfo);
+            string requestBody = JsonConvert.SerializeObject(requestInfo);
 
-                var request = new SNServiceRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/user/friends/remove")
-                    .Build();
+            var request = new SNServiceRequestBuilder()
+                .Accept("application/json")
+                .ContentType("application/json")
+                .RequestBody(requestBody)
+                .RequestMethod("POST")
+                .UrlSubPath("/user/friends/remove")
+                .Build();
 
-                var responseString = request.requestFromServer();
-                return true;
-            }catch (Exception e)
+            var responseString = request.requestFromServer();
+            if (isResponseError(responseString))
             {
-                return false;
+                throw generateExceptionFromResponse(responseString);
             }
+            return generateMessageFromResponse(responseString);
         }
 
         public List<Post> loadNewsfeed(LoadNewsfeedRequest requestInfo)
         {
-            try
+            string requestBody = JsonConvert.SerializeObject(requestInfo);
+
+            var request = new SNServiceRequestBuilder()
+                .Accept("application/json")
+                .ContentType("application/json")
+                .RequestBody(requestBody)
+                .RequestMethod("POST")
+                .UrlSubPath("/newsfeed/load")
+                .Build();
+
+            var responseString = request.requestFromServer();
+
+
+            if (isResponseError(responseString))
             {
-                string requestBody = JsonConvert.SerializeObject(requestInfo);
-
-                var request = new SNServiceRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/newsfeed/load")
-                    .Build();
-
-                var responseString = request.requestFromServer();
-
-
-                if (responseString == null) throw new Exception("No more Post!");
-                return JsonConvert.DeserializeObject<List<Post>>(responseString);
+                throw generateExceptionFromResponse(responseString);
             }
-            catch(Exception e)
-            {
-                throw new Exception("No more Post!");
-            }
+
+            return JsonConvert.DeserializeObject<PostListResponse>(responseString).postList;
         }
 
-        public bool registerUser(RegisterUserRequest requestInfo)
+        public string registerUser(RegisterUserRequest requestInfo)
         {
-            try
-            {
-                string requestBody = JsonConvert.SerializeObject(requestInfo);
+            string requestBody = JsonConvert.SerializeObject(requestInfo);
 
-                var request = new SNServiceRequestBuilder()
-                    .Accept("application/json")
-                    .ContentType("application/json")
-                    .RequestBody(requestBody)
-                    .RequestMethod("POST")
-                    .UrlSubPath("/user/register")
-                    .Build();
+            var request = new SNServiceRequestBuilder()
+                .Accept("application/json")
+                .ContentType("application/json")
+                .RequestBody(requestBody)
+                .RequestMethod("POST")
+                .UrlSubPath("/user/register")
+                .Build();
 
-                var responseString = request.requestFromServer();
-                return true;
-            }catch(Exception e)
+            var responseString = request.requestFromServer();
+            if (isResponseError(responseString))
             {
-                return false;
+                throw generateExceptionFromResponse(responseString);
             }
+            return generateMessageFromResponse(responseString);
         }
+
     }
 }

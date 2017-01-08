@@ -33,20 +33,20 @@ namespace SocialNetwork
 
         private void post(object sender, RoutedEventArgs e)
         {
-            if (ClientInfo.Instance.sessionToken == null) return;
+            if (ClientInfo.Instance.SessionToken == null) return;
 
             try
             {
                 PostCreateRequest request = new PostCreateRequest
                 {
-                    userToken = ClientInfo.Instance.sessionToken,
+                    userToken = ClientInfo.Instance.SessionToken,
                     targetId = Int32.Parse(targetTextBox.Text),
-                    creatorId = ClientInfo.Instance.sessionToken.userId,
+                    creatorId = ClientInfo.Instance.SessionToken.userId,
                     postContent = postContent.Text
                 };
 
-                if (new ServiceConnector().createPost(request)) postContent.Text = "Post successfully created.";
-                else postContent.Text = "Post not created successfully.";
+
+                postContent.Text = new ServiceConnector().createPost(request);
 
             }
             catch (Exception ex)
