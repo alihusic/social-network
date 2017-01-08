@@ -32,6 +32,8 @@ namespace SocialNetwork2
             Post["/create"] = parameters => Create(parameters);
             Post["/like"] = parameters => Like(parameters);
             Post["/comment"] = parameters => Comment(parameters);
+            Post["/load"] = parameters => Load(parameters);
+            Post["/load_comments"] = parameters => LoadComments(parameters);
             Get["/"] = _ => "Hello, this is doge";
         }
 
@@ -186,9 +188,33 @@ namespace SocialNetwork2
             
         }
 
-    }
+        /// <summary>
+        /// Method used to handle the action of loading all comments of a post.
+        /// This is separated from post loading due to the buggy behaviour of
+        /// lazy loading.
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public dynamic LoadComments(dynamic parameters)
+        {
+            //map request to object
+            var postLoadRequest = this.Bind<PostLoadRequest>();
 
-    //todo: improve Queries, put them in one file, make them inherit from an ancestor class
+            if (!TokenFactory.checkToken(postLoadRequest.userToken))
+                return new ErrorResponse("You must log in first.");
+
+            if (PostController.isPostVisible(postLoadRequest.creatorId, postLoadRequest.targetId))
+            {
+                // extract the post from the database and return response
+                return new CommentListResponse(PostController.getCommentList(postLoadRequest.postId));
+            }
+            else
+            {
+                return new ErrorResponse("This post is not visible to you.");
+            }
+
+        }
+    }
 
     
 }

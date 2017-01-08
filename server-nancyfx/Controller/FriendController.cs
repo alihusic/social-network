@@ -83,7 +83,9 @@ namespace SocialNetwork2.Controller
         {
             using (var context = new SocialNetworkDBContext())
             {
-                var friendship = context.friendRequest.Where(fr => fr.receiverId == request.receiverId && fr.senderId == request.senderId).FirstOrDefault();
+                var friendship = context.friendRequest.Where(fr => 
+                (fr.receiverId == request.receiverId && fr.senderId == request.senderId)
+                ||(fr.receiverId==request.senderId && fr.senderId==request.receiverId)).FirstOrDefault();
                 friendship.friendRequestConfirmed = true;
 
                 bool saveFailed;

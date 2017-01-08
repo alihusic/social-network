@@ -181,5 +181,14 @@ namespace SocialNetwork2.Controller
             return postId;
         }
 
+        public static List<Comment> getCommentList(int postId)
+        {
+            List<Comment> commentList = new List<Comment>();
+            using (var context = new SocialNetworkDBContext())
+            {
+                commentList = context.comments.Where(c => (c.postId==postId)).ToList();
+            }
+            return commentList;
+        }
     }
 }
