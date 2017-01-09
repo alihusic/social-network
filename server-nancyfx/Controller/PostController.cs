@@ -3,6 +3,7 @@ using SocialNetwork2.Model;
 using SocialNetworkServer.Builder;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web;
 
@@ -15,9 +16,9 @@ namespace SocialNetwork2.Controller
     public static class PostController
     {
         /// <summary>
-        /// Method used to retrieve post for a certain creation time
+        /// Method used to retrieve post by specific ID
         /// </summary>
-        /// <param name="postCreationDate">DateTime. time when post was created</param>
+        /// <param name="postId">Post ID</param>
         /// <returns>
         /// Object of type Posts</returns>
         public static Post getPost(int postId)
@@ -114,9 +115,25 @@ namespace SocialNetwork2.Controller
                     .EntityTargetId(comment.postId)
                     .NotificationType(4)
                     .Build());
+                context.SaveChanges();
 
                 context.comments.Add(comment);
-                context.SaveChanges();
+
+                bool saveFailed;
+                do
+                {
+                    saveFailed = false;
+                    try
+                    {
+                        context.SaveChanges();
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        saveFailed = true;
+                        var entry = ex.Entries.Single();
+                        entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                    }
+                } while (saveFailed);
             }
         }
 

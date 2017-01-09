@@ -170,17 +170,17 @@ namespace SocialNetwork2
         public dynamic Load(dynamic parameters)
         {
             //binding the request to object
-            var loadQuery = this.Bind<PostLoadRequest>();
+            var loadRequest = this.Bind<PostLoadRequest>();
 
             // checking user token
-            if (!TokenFactory.checkToken(loadQuery.userToken))
+            if (!TokenFactory.checkToken(loadRequest.userToken))
                 return new ErrorResponse("You must log in first.");
 
             // check if the user has the privileges to see the post
-            if (PostController.isPostVisible(loadQuery.creatorId, loadQuery.targetId))
+            if (PostController.isPostVisible(loadRequest.creatorId, loadRequest.targetId))
             {
                 // extract the post from the database and return response
-                return new PostResponse(PostController.getPost(loadQuery.postId));
+                return new PostResponse(PostController.getPost(loadRequest.postId));
             }
             else
             {

@@ -20,7 +20,7 @@ namespace SocialNetwork2.Controller
         {
             using (var context = new SocialNetworkDBContext())
             {
-                return context.notifications.Where(n => (n.entityTargetId == userId && n.notificationType != 4)).ToList();
+                return context.notifications.Where(n => (n.entityTargetId == userId && n.notificationType <3)).ToList();
             }
 
         }
@@ -35,7 +35,7 @@ namespace SocialNetwork2.Controller
         {
             using (var context = new SocialNetworkDBContext())
             {
-                return context.notifications.Where(n => (context.posts.Find(n.entityTargetId).creatorId == userId && n.notificationType == 4)).ToList();
+                return context.notifications.Where(n => (context.posts.Find(n.entityTargetId).creatorId == userId && n.notificationType >= 3)).ToList();
             }
         }
     }
