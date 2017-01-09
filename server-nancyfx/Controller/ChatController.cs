@@ -27,7 +27,7 @@ namespace SocialNetwork2.Controller
 
 
         /// <summary>
-        /// Method used to retrieve in which chat conversation is happening
+        /// Method used to retrieve ID of PrivateChat in which conversation is happening
         /// </summary>
         /// <param name="user1Id">int. Id of user 1</param>
         /// <param name="user2Id">int. Id of user 2</param>
@@ -40,6 +40,19 @@ namespace SocialNetwork2.Controller
                 return context.privateChat.Where(n => (n.user1 == user1Id && n.user2 == user2Id) || (n.user1 == user2Id && n.user2 == user1Id)).First().privateChatId;
             }
 
+        }
+
+        /// <summary>
+        /// Method used to retrieve PrivateChat object by ID
+        /// </summary>
+        /// <param name="chatId">Chat ID</param>
+        /// <returns></returns>
+        public static PrivateChat getChatById(int chatId)
+        {
+            using(var context = new SocialNetworkDBContext())
+            {
+                return context.privateChat.Find(chatId);
+            }
         }
 
         /// <summary>

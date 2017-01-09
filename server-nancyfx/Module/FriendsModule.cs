@@ -204,7 +204,7 @@ namespace SocialNetwork2
         public dynamic GetProfileInfo(dynamic parameters)
         {
             //bind query to object
-            var getProfileInfoQuery = this.Bind<GetProfileInfoQuery>();
+            var getProfileInfoQuery = this.Bind<GetProfileInfoRequest>();
 
             // check token
             if (!TokenFactory.checkToken(getProfileInfoQuery.userToken))

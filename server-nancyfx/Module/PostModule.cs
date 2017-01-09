@@ -61,8 +61,9 @@ namespace SocialNetwork2
 
             /* check if user already liked -> remove like
             *                       else -> add like(suggestion: we can disable like button on post load if user has already liked smth (Ermin))*/
-            if (!PostController.isLiked(likeQuery.userId, likeQuery.postId))
+            if (!PostController.isLiked(likeQuery.userToken.userId, likeQuery.postId))
             {
+                
                 PostController.addLike(new LikeBuilder()
                     .PostId(likeQuery.postId)
                     .UserId(likeQuery.userToken.userId)

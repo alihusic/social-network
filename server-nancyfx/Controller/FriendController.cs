@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TestClientSN.Model;
 using System.Data.Entity.Infrastructure;
+using SocialNetworkServer.Builder;
 
 namespace SocialNetwork2.Controller
 {
@@ -94,6 +95,11 @@ namespace SocialNetwork2.Controller
                     saveFailed = false;
                     try
                     {
+                        context.notifications.Add(new NotificationBuilder()
+                            .CreatorId(request.receiverId)
+                            .EntityTargetId(request.senderId)
+                            .NotificationType(2)
+                            .Build());
                         context.SaveChanges();
                     }
                     catch (DbUpdateConcurrencyException ex)
@@ -115,7 +121,11 @@ namespace SocialNetwork2.Controller
         {
             using (var context = new SocialNetworkDBContext())
             {
-
+                context.notifications.Add(new NotificationBuilder()
+                    .CreatorId(request.senderId)
+                    .EntityTargetId(request.receiverId)
+                    .NotificationType(1)
+                    .Build());
                 context.friendRequest.Add(request);
                 context.SaveChanges();
             }

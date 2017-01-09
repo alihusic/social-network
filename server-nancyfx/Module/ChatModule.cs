@@ -28,6 +28,7 @@ namespace SocialNetwork2
             Get["/"] = _ => "Hello, this is chat";
             Post["/send_message"] = parameters => SendMessage(parameters);
             Post["/new_messages"] = parameters => CheckNewMessages(parameters);
+            Post["/load_conversation"] = parameters => LoadConversation(parameters);
         }
 
         
@@ -109,25 +110,52 @@ namespace SocialNetwork2
         public dynamic CheckNewMessages(dynamic parameters)
         {
             //bind request to model
-            var checkNewMessagesQuery = this.Bind<ConfidentialRequest>();
+            var checkNewMessagesRequest = this.Bind<ConfidentialRequest>();
 
             //check user cookie
-            if (!TokenFactory.checkToken(checkNewMessagesQuery.userToken))
+            if (!TokenFactory.checkToken(checkNewMessagesRequest.userToken))
             {
                 return new ErrorResponse("You must log in first.");
             }
 
             //extract from database
-            if (!MessagesController.checkUnreadMessages(checkNewMessagesQuery.userToken.userId))
+            if (!MessagesController.checkUnreadMessages(checkNewMessagesRequest.userToken.userId))
             {
                 return new ErrorResponse("No new messages.");
             }
-            List<UnreadMessage> unreadMessages = MessagesController.getAllUnreadMessages(checkNewMessagesQuery.userToken.userId);
+            List<UnreadMessage> unreadMessages = MessagesController.getAllUnreadMessages(checkNewMessagesRequest.userToken.userId);
 
             //return a structured model
             return new UnreadMessageListResponse(unreadMessages);
             //checks if there is any new entry in unread messages.
             //note: this userId will be recipientId in table ureadMessages
+
+        }
+
+        public dynamic LoadConversation(dynamic parameters)
+        {
+            //bind request to model
+            var loadConversationRequest = this.Bind<GetProfileInfoRequest>();
+
+            //check user cookie
+            if (!TokenFactory.checkToken(loadConversationRequest.userToken))
+            {
+                return new ErrorResponse("You must log in first.");
+            }
+
+            PrivateChat chat = ChatController.getChatById(
+                ChatController.getChatId(loadConversationRequest.userToken.userId,
+                                            loadConversationRequest.targetId));
+
+            Conversation conversation = new ConversationBuilder()
+                .PrivateChatId(chat.privateChatId)
+                .PrivateMessages(chat.privateMessages)
+                .User1(chat.user1)
+                .User2(chat.user2)
+                .Build();
+
+
+            return new ConversationResponse(conversation);
 
         }
 

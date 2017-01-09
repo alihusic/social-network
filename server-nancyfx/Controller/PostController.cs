@@ -1,5 +1,6 @@
 ﻿using SocialNetwork2;
 using SocialNetwork2.Model;
+using SocialNetworkServer.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,11 +81,20 @@ namespace SocialNetwork2.Controller
         {
             using (var context = new SocialNetworkDBContext())
             {
+
+
                 var post = context.posts.Find(like.postId);
                 post.numOfLikes++;
                 context.likes.Add(like);
                 context.posts.Attach(post);
                 context.Entry(post).Property(p => p.numOfLikes).IsModified = true;
+
+                context.notifications.Add(new NotificationBuilder()
+                    .CreatorId(like.userId)
+                    .EntityTargetId(like.postId)
+                    .NotificationType(3)
+                    .Build());
+
                 context.SaveChanges();
             }
         }
@@ -99,6 +109,11 @@ namespace SocialNetwork2.Controller
         {
             using (var context = new SocialNetworkDBContext())
             {
+                context.notifications.Add(new NotificationBuilder()
+                    .CreatorId(comment.userId)
+                    .EntityTargetId(comment.postId)
+                    .NotificationType(4)
+                    .Build());
 
                 context.comments.Add(comment);
                 context.SaveChanges();
@@ -115,6 +130,12 @@ namespace SocialNetwork2.Controller
         {
             using (var context = new SocialNetworkDBContext())
             {
+                context.notifications.Add(new NotificationBuilder()
+                    .CreatorId(post.creatorId)
+                    .EntityTargetId(post.postId)
+                    .NotificationType(5)
+                    .Build());
+
                 context.posts.Add(post);
                 context.SaveChanges();
             }
