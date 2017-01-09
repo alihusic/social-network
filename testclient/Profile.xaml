@@ -9,25 +9,66 @@
       Title="Profile">
 
     <Grid>
+        <Grid.Resources>
+
+            <Style x:Key="profilePostPresenter" TargetType="ItemsControl">
+                <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
+                <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+                <Setter Property="ItemTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <Border BorderThickness="2" BorderBrush="#1D9FEA" CornerRadius="15" Background="#E0DBC5" Margin="0,10,0,0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="120*"></RowDefinition>
+                                        <RowDefinition Height="40"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="120"></ColumnDefinition>
+                                        <ColumnDefinition Width="420*" Name="rightColumn"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Width="60" Height="60" VerticalAlignment="Top" Margin="0,15,0,0"/>
+                                    <Label Content="Name lastName" VerticalAlignment="Top" Margin="0,75,0,0" Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                                    <TextBox Grid.Column="1" Text="Responsive?" Margin="10" FontSize="20" IsEnabled="False" TextWrapping="WrapWithOverflow" Width="{Binding ElementName=rightColumn,Path=Width}"/>
+                                    <Button Grid.Row="1" Style="{StaticResource likeButton}" Grid.Column="1" Width="30" Height="30" HorizontalAlignment="Right" Margin="0,0,105,0"/>
+                                    <Button x:Name="commentButton" Style="{StaticResource commentButton}" Grid.Row="1" Grid.Column="1" Width="30" Height="30" HorizontalAlignment="Right" Margin="0,0,70,0" Click="openCommentSection"/>
+                                    <Button Grid.Row="1" Grid.Column="1" Width="50" Height="30" HorizontalAlignment="Right" Margin="0,0,15,0" Content="View"/>
+
+                                    <WrapPanel x:Name="commentSection" Grid.Row="2" Grid.ColumnSpan="2" Visibility="Collapsed">
+                                        <Rectangle RadiusY="15" RadiusX="15" Width="30" Height="30">
+                                            <Rectangle.Fill>
+                                                <ImageBrush x:Name="profilePicture" Stretch="UniformToFill"/>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                        <TextBox Text="comment here"></TextBox>
+                                    </WrapPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Grid.Resources>
         <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
             <RowDefinition Height="320"/>
             <RowDefinition Height="360"/>
         </Grid.RowDefinitions>
-        <Image x:Name="image" Source="cover.jpg" Grid.Row="1" Width="670" Height="180" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="UniformToFill"/>
-        <Rectangle x:Name="profilePicture" Grid.Row="1" Grid.RowSpan="2" Width="130" Height="130" HorizontalAlignment="Left" VerticalAlignment="Top" RadiusX="25" RadiusY="25" Margin="290,100,0,0">
+        <Image x:Name="image" Source="cover.jpg" Grid.Row="0" Width="auto" Height="200" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="UniformToFill"/>
+        <Rectangle x:Name="profilePicture"  Width="130" Height="130" HorizontalAlignment="Center" VerticalAlignment="Top" RadiusX="25" RadiusY="25" Margin="0,140,0,0">
             <Rectangle.Fill>
                 <ImageBrush x:Name="profile" ImageSource="cover.jpg"/>
             </Rectangle.Fill>
         </Rectangle>
-        <Label x:Name="name" Width="120" Height="50" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Corbel" FontSize="26" Content="name" Foreground="Black" Margin="260,230,0,0"/>
-        <Label x:Name="lastName" Width="120" Height="50" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Corbel" FontSize="26" Content="lastname" Foreground="Black" Margin="330,230,0,0"/>
-        <Label x:Name="username" Width="120" Height="50" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Corbel" FontSize="20" Content="@username" Foreground="Silver" Margin="290,270,0,0"/>
-        <Button x:Name="addUser" Width="130" Height="50" Grid.Row="1" HorizontalAlignment="Left" FontFamily="Corbel" FontSize="20" Content="Add user" Foreground="White" Background="#1D9FEA" Margin="30,170,0,0"/>
-        <Rectangle x:Name="postRectangle" Width="650" Height="150" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" RadiusX="25" RadiusY="25" Stroke="#1D9FEA" Margin="10,30,0,0"/>
-        <Rectangle x:Name="rectanglePicture" Width="70" Height="70" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" RadiusX="12" RadiusY="12" Fill="#FFF4F4F5" Margin="30,50,0,0"/>
-        <TextBlock x:Name="textInput" Width="490" Height="120" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="130,50,0,0" Text="Type in something..." FontFamily="Corbel" FontSize="20"/>
-        <Rectangle x:Name="post" Width="650" Height="150" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" RadiusX="25" RadiusY="25" Stroke="#1D9FEA" Margin="10,200,0,0"/>
-        <ListBox x:Name="listBox" Width="320" Height="680" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Left" Margin="670,0,0,0"/>
+        <Canvas Margin="404,121,396,0" VerticalAlignment="Top" HorizontalAlignment="Center" Height="230" Width="200">
+            <Label x:Name="name" Width="120" Height="50"  HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Corbel" FontSize="26" Content="name" Foreground="Black" Canvas.Left="-9" Canvas.Top="150"/>
+            <Label x:Name="lastName" Width="120" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Corbel" FontSize="26" Content="lastname" Foreground="Black" Canvas.Left="80" Canvas.Top="150" />
+            <Label x:Name="username" Width="120" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Corbel" FontSize="20" Content="@username" Foreground="Silver" Canvas.Top="176" Canvas.Left="39" />
+        </Canvas>
+        <Button x:Name="addUser" Width="130" Height="50" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="Corbel" FontSize="20" Content="Add user" Foreground="White" Background="#1D9FEA" Margin="0,0,0,20"/>
+        <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" Grid.Column="0" Grid.Row="1">
+            <ItemsControl x:Name="profilePostPresenter" Style="{StaticResource profilePostPresenter}"  ItemsSource="{Binding}">
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </Page>

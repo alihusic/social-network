@@ -48,5 +48,10 @@ namespace NeatClient
         {
             pageContainer.Content = new Profile();
         }
+
+        private void exit(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

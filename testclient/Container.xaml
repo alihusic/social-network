@@ -38,7 +38,7 @@
                 <Button x:Name="profileButton" Grid.Column="1" Content="Profile" Style="{StaticResource headerButtonStyle}" Click="openProfile"></Button>
                 <Button x:Name="messagesButton" Grid.Column="2" Content="Messages"  Style="{StaticResource headerButtonStyle}"></Button>
                 <Button x:Name="settingsButton" Grid.Column="3" Content="Settings"  Style="{StaticResource headerButtonStyle}" Click="openSettings"></Button>
-                <Button x:Name="logOutButton" Grid.Column="4" Content="Log Out" Style="{StaticResource headerButtonStyle}"></Button>
+                <Button x:Name="logOutButton" Grid.Column="4" Content="Log Out" Style="{StaticResource headerButtonStyle}" Click="exit"></Button>
             </Grid>
             <Frame x:Name="pageContainer" Grid.ColumnSpan="2" Grid.Row="1" NavigationUIVisibility="Hidden"></Frame>
             <ListBox Grid.Column="2" Grid.Row="1" Style="{StaticResource chatListBox}" ItemsSource="{Binding}"></ListBox>

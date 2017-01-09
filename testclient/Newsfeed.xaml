@@ -41,7 +41,7 @@
                                                 <ImageBrush x:Name="profilePicture" Stretch="UniformToFill"/>
                                             </Rectangle.Fill>
                                         </Rectangle>
-                                        <TextBox Text="yo wtf"></TextBox>
+                                        <TextBox Text="comment here"></TextBox>
                                     </WrapPanel>
                                 </Grid>
                             </Border>
