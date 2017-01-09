@@ -1,0 +1,47 @@
+﻿<Window x:Class="NeatClient.Container"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NeatClient"
+        mc:Ignorable="d"
+        Title="NEAT" Height="576" Width="1024">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Border Background="#1D9FEA" Grid.ColumnSpan="3"></Border>
+        <Border Background="#f3efe0" Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="2"></Border>
+        <Grid MaxWidth="1200" Grid.RowSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="30"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="180*"/>
+                <ColumnDefinition Width="600*"/>
+                <ColumnDefinition Width="220*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80*"></ColumnDefinition>
+                    <ColumnDefinition Width="80*"></ColumnDefinition>
+                    <ColumnDefinition Width="80*"></ColumnDefinition>
+                    <ColumnDefinition Width="80*"></ColumnDefinition>
+                    <ColumnDefinition Width="80*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="homeButton" Content="Home"  Style="{StaticResource headerButtonStyle}" Click="openNewsfeed"></Button>
+                <Button x:Name="profileButton" Grid.Column="1" Content="Profile" Style="{StaticResource headerButtonStyle}" Click="openProfile"></Button>
+                <Button x:Name="messagesButton" Grid.Column="2" Content="Messages"  Style="{StaticResource headerButtonStyle}"></Button>
+                <Button x:Name="settingsButton" Grid.Column="3" Content="Settings"  Style="{StaticResource headerButtonStyle}" Click="openSettings"></Button>
+                <Button x:Name="logOutButton" Grid.Column="4" Content="Log Out" Style="{StaticResource headerButtonStyle}"></Button>
+            </Grid>
+            <Frame x:Name="pageContainer" Grid.ColumnSpan="2" Grid.Row="1" NavigationUIVisibility="Hidden"></Frame>
+            <ListBox Grid.Column="2" Grid.Row="1" Style="{StaticResource chatListBox}" ItemsSource="{Binding}"></ListBox>
+        </Grid>
+    </Grid>
+</Window>

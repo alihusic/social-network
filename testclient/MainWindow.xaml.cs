@@ -1,6 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using SocialNetwork.Model;
+using SocialNetworkServer;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,23 +17,79 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using testClientWPF;
 
-namespace Neat
+namespace NeatClient
 {
+    class ControlGroup
+    {
+        public static Token userToken { get; set; }
+        public static HttpWebRequest formalizeRequest(HttpWebRequest request)
+        {
+            request.Accept = "application/json";
+            request.ContentType = "application/json";
+            return null;
+        }
+    }
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class LogIn : Window
+    /// 
+    public partial class MainWindow : Window
     {
-        public LogIn()
+        public MainWindow()
         {
+            ServerData.host = "http://localhost";
+            ServerData.port = "60749";
             InitializeComponent();
         }
 
         private void logInButtonClick(object sender, RoutedEventArgs e)
         {
-            //checks that client makes go here !
-            Main neat = new Main();
+            /*
+            string username = this.usernameInput.Text;
+            string password = this.passwordBox.Password;
+
+            try
+            {
+                var query = new AuthenticateUserRequest
+                {
+                    username = username,
+                    password = password
+                };
+
+                string requestBody = JsonConvert.SerializeObject(query);
+                
+
+                var request = new SNRequestBuilder()
+                    .Accept("application/json")
+                    .ContentType("application/json")
+                    .RequestBody(requestBody)
+                    .RequestMethod("POST")
+                    .UrlSubPath("/user/authenticate")
+                    .Build();
+                
+                var responseString = request.requestFromServer();
+
+                
+                var tempToken = JsonConvert.DeserializeObject<Token>(responseString);
+                
+                if (tempToken.tokenHash != null && tempToken.tokenHash.Length == 40)
+                {
+                    ControlGroup.userToken = tempToken;
+                    //throw new Exception("Log In incorrect");
+                }
+
+                MessageBox.Show(responseString);
+                //statusLabel.Text = ControlGroup.userToken.tokenHash + "\n" + ControlGroup.userToken.userId;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            */
+            Container neat = new Container();
             neat.Show();
             this.Close();
         }
@@ -38,6 +99,48 @@ namespace Neat
             SignUp signUp = new SignUp();
             signUp.Show();
             this.Close();
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (ControlGroup.userToken == null) return;
+
+            try
+            {
+                ConfidentialRequest query = new ConfidentialRequest
+                {
+                    userToken = ControlGroup.userToken,
+                };
+
+                string requestBody = JsonConvert.SerializeObject(query);
+
+                var request = new SNRequestBuilder()
+                    .Accept("application/json")
+                    .ContentType("application/json")
+                    .RequestBody(requestBody)
+                    .RequestMethod("POST")
+                    .UrlSubPath("/user/log_out")
+                    .Build();
+
+                var responseString = request.requestFromServer();
+
+                ControlGroup.userToken = null;
+                //statusLabel.Text = "" + responseString;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void clearUsernameInput(object sender, RoutedEventArgs e)
+        {
+            if(usernameInput.Text.Equals("Username"))usernameInput.Text = "";
+        }
+
+        private void defaultUsernameInput(object sender, RoutedEventArgs e)
+        {
+            if (usernameInput.Text.Equals("")) usernameInput.Text = "Username";
         }
     }
 }
