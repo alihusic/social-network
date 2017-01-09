@@ -1,4 +1,4 @@
-﻿using SocialNetworkServer.Model;
+﻿using SocialNetwork2.Model;
 using System.Collections.Generic;
 using System.Linq;
 

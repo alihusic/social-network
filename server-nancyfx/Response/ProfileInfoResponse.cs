@@ -1,6 +1,6 @@
 ﻿using SocialNetwork2.Model;
 
-namespace SocialNetworkServerNV1.Response
+namespace SocialNetwork2.Response
 {
     public class ProfileInfoResponse:StatusResponse
     {

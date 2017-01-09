@@ -2,10 +2,9 @@
 using Nancy.ModelBinding;
 using SocialNetwork2.Controller;
 using SocialNetwork2.Factory;
+using SocialNetwork2.Model;
 using SocialNetwork2.Request;
-using SocialNetworkServer;
-using SocialNetworkServer.Model;
-using SocialNetworkServerNV1.Response;
+using SocialNetwork2.Response;
 using System;
 using System.Collections.Generic;
 

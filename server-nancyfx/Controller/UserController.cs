@@ -1,5 +1,5 @@
 ﻿using SocialNetwork2.Model;
-using SocialNetworkServer.Builder;
+using SocialNetwork2.Model.Builder;
 using System.Linq;
 
 

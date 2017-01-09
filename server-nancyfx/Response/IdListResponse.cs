@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SocialNetworkServerNV1.Response
+namespace SocialNetwork2.Response
 {
     public class IdListResponse:StatusResponse
     {

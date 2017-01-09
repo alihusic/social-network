@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace SocialNetworkServerNV1.Response
+namespace SocialNetwork2.Response
 {
     public class StatusResponse
     {

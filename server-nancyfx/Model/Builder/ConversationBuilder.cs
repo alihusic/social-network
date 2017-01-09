@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace SocialNetworkServer.Builder
+namespace SocialNetwork2.Model.Builder
 {
     /// <summary>
     /// Class created by Ermin & Ali.

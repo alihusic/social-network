@@ -2,7 +2,7 @@ using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
 using SocialNetwork2.Factory;
-using SocialNetworkServerNV1.Response;
+using SocialNetwork2.Response;
 using System;
 
 namespace SocialNetwork2

@@ -1,7 +1,7 @@
-﻿using SocialNetworkServer.Model;
+﻿using SocialNetwork2.Model;
 using System.Collections.Generic;
 
-namespace SocialNetworkServerNV1.Response
+namespace SocialNetwork2.Response
 {
     public class NotificationListResponse:StatusResponse
     {

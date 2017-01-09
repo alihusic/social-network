@@ -1,9 +1,8 @@
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using SocialNetworkServer.Model;
 using SocialNetwork2.Model;
 
-namespace SocialNetwork2
+namespace SocialNetwork2.Model
 {
     /// <summary>
     /// Class used for communication with database.

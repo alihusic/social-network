@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using TestClientSN.Model;
 
-namespace SocialNetwork2.Builder
+namespace SocialNetwork2.Model.Builder
 {
     /// <summary>
     /// Class created by Ermin & Ali.

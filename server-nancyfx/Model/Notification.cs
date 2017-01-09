@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using SocialNetwork2.Model;
 
-namespace SocialNetworkServer.Model
+namespace SocialNetwork2.Model
 {
     /// <summary>
     /// Class used as database model for Notification table.

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestClientSN.Model
+namespace SocialNetwork2.Model
 {
     /// <summary>
     /// Class used as model for information about user's friends.

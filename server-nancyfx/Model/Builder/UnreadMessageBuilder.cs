@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocialNetworkServer.Builder
+namespace SocialNetwork2.Model.Builder
 {
     /// <summary>
     /// Class created by Ermin & Ali.
